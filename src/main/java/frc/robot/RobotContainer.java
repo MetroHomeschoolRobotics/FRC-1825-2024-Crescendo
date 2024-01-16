@@ -18,6 +18,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -74,7 +75,17 @@ public class RobotContainer {
 
         HolonomicDriveController holonomicController = new HolonomicDriveController(new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0), new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0), new ProfiledPIDController(Constants.autoConstants.kpTurnVelocity, 0, 0, null));
 
-        SwerveControllerCommand swerveCommand = new SwerveControllerCommand(trajectory, null, null, holonomicController, null, null)
+        SwerveControllerCommand swerveCommand = new SwerveControllerCommand(
+          trajectory, 
+          null, 
+          null, 
+          holonomicController, 
+          null, 
+          null);
+      
+        SendableRegistry.setName(swerveCommand, "Swerve Command");
+
+        return swerveCommand;
       }
 
   /**

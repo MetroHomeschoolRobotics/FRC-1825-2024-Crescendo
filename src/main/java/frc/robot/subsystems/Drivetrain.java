@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.swerveConstants;
@@ -44,6 +45,8 @@ public class Drivetrain extends SubsystemBase {
 
   private SlewRateLimiter accelLimiter = new SlewRateLimiter(.95);
 
+  
+
   public Drivetrain() {
     gyro.reset();
   }
@@ -73,7 +76,12 @@ public class Drivetrain extends SubsystemBase {
   
   
   
-  
+
+
+  /*
+   * Drive the robot
+   */
+
   public void translateSpin(double speedX, double speedY, double turnX) {
     speedX = -speedX;
 

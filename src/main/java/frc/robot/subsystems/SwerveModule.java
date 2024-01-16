@@ -7,21 +7,29 @@ import com.revrobotics.CANSparkLowLevel;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveModule extends SubsystemBase {
-  private CANcoder angleEncoder;
-
-  private CANSparkMax angleMotor;
   
+  // encoders and motors
+  private CANcoder angleEncoder;
+  private CANSparkMax angleMotor;
   private CANSparkMax driveMotor;
   
+  // turn pid
   private PIDController turnPID = new PIDController(0.005, 0, 0.0001);
   
+  // offset of the angle encoders & placement on the robot
   private String placement;
-
   private double angleOffset;
+
+  // stuff for dist per rotation
+  private double wheelRadiusInches = 2;
+  private double gearRatio = 6.12;
   
   public SwerveModule(
     String modulePlacement, 
@@ -40,6 +48,12 @@ public class SwerveModule extends SubsystemBase {
     driveMotor.setIdleMode(IdleMode.kBrake);
     angleMotor.setIdleMode(IdleMode.kBrake);
 
+    driveMotor.setSmartCurrentLimit(20, 60);
+    angleMotor.setSmartCurrentLimit(20, 60);
+
+    driveMotor.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)/(gearRatio)));
+    driveMotor.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)/(gearRatio)));
+
     turnPID.enableContinuousInput(-180, 180);
 
     placement = modulePlacement;
@@ -48,25 +62,23 @@ public class SwerveModule extends SubsystemBase {
   }
   
   public void periodic() {
-    SmartDashboard.putNumber(placement + " Module Angle", moduleAngle());
+    SmartDashboard.putNumber(placement + " Module Angle", getModuleAngle());
   }
   
-  // Angle Motor
-  public double moduleAngle() {
-    return (angleEncoder.getAbsolutePosition().getValueAsDouble()*(360/1))+angleOffset;
+
+  /*
+   * Angle Motor
+   */
+  public double getModuleAngle() {
+    return (angleEncoder.getAbsolutePosition().getValueAsDouble()*(360/1))+angleOffset; // in degrees
   }
   
   public void setAngle(double theta) {
-    
-    // post angles to the smart dashboard 0-360
-    //if(theta >= 0){
+
     SmartDashboard.putNumber(placement + " Angle", theta);
-    //}else{
-      //SmartDashboard.putNumber(placement + " Angle", theta+360);
-    //}
 
     // reverses the wheels instead of spinning 180°
-    double actualAngleDist = moduleAngle()-theta;
+    double actualAngleDist = getModuleAngle()-theta;
 
     if(actualAngleDist >= 90 || actualAngleDist <=-90){
       theta = theta+180;
@@ -75,7 +87,7 @@ public class SwerveModule extends SubsystemBase {
       driveMotor.setInverted(false);
     }
 
-    double anglePID = MathUtil.clamp(turnPID.calculate(moduleAngle(), theta), -1, 1);
+    double anglePID = MathUtil.clamp(turnPID.calculate(getModuleAngle(), theta), -1, 1);
 
     SmartDashboard.putNumber(placement + " PID", anglePID);
     
@@ -85,9 +97,14 @@ public class SwerveModule extends SubsystemBase {
   public Boolean angleTurnFinished() {
     return turnPID.atSetpoint();
   }
-  
 
-  // Drive Motor
+  public Rotation2d wheelRotation2d() {
+    return new Rotation2d(getModuleAngle()*(Math.PI/180));
+  }
+  
+  /*
+   * Drive Motor
+   */
   public double getDistance() {
     return driveMotor.getEncoder().getPosition();
   }
@@ -97,7 +114,19 @@ public class SwerveModule extends SubsystemBase {
     driveMotor.set(speed);
   }
   
-  // this could be used for destinguishing between modules
+  public double getVelocity() {
+    return driveMotor.getEncoder().getVelocity();
+  }
+
+  /*
+   * Both Motors
+   */
+  public SwerveModuleState moduleState() {
+    return new SwerveModuleState(getVelocity(), wheelRotation2d());
+  }
+
+
+  // used for destinguishing between modules
   public String getPlacement() {
     return placement;
   }

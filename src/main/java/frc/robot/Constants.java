@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.ExponentialProfile.Constraints;
 
 /**
@@ -69,6 +70,7 @@ public final class Constants {
   public static final class autoConstants {
     public static final double kpDriveVelocity = 0;
     public static final double kpTurnVelocity = 0;
+    public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(null);
   }
 
   public static final int intakeMotorID = 9;
