@@ -4,9 +4,14 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.swerveConstants;
 
 public class Drivetrain extends SubsystemBase {
@@ -45,6 +50,8 @@ public class Drivetrain extends SubsystemBase {
 
   private SlewRateLimiter accelLimiter = new SlewRateLimiter(.95);
 
+  private SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.autoConstants.swerveKinematics, gyro.getRotation2d(), getModulePositions());
+
   
 
   public Drivetrain() {
@@ -72,10 +79,19 @@ public class Drivetrain extends SubsystemBase {
    * Auto Stuffs
    */
   
+  public SwerveModuleState[] getModuleStates() {
+    SwerveModuleState[] states = {frontLeftMod.getModuleState(), frontRightMod.getModuleState(), backLeftMod.getModuleState(), backRightMod.getModuleState()};
+    return states;
+  }
   
+  public SwerveModulePosition[] getModulePositions() {
+    SwerveModulePosition[] modulePositions = {frontLeftMod.getModulePosition(), frontRightMod.getModulePosition(), backLeftMod.getModulePosition(), backRightMod.getModulePosition()};
+    return modulePositions;
+  }
   
-  
-  
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
+  }
 
 
   /*

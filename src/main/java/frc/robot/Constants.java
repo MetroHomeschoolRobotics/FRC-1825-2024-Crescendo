@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.ExponentialProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -70,7 +73,17 @@ public final class Constants {
   public static final class autoConstants {
     public static final double kpDriveVelocity = 0;
     public static final double kpTurnVelocity = 0;
-    public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(null);
+
+    // front vs back
+    public static final double trackWidth = Units.inchesToMeters(20+(7/16));
+    // left vs right
+    public static final double trackHeight = Units.inchesToMeters(20+(7/16));
+    public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
+      new Translation2d(trackHeight/2, -trackWidth/2),
+      new Translation2d(trackHeight/2, trackWidth/2), 
+      new Translation2d(-trackHeight/2, -trackWidth/2), 
+      new Translation2d(-trackHeight/2, trackWidth/2));
+    public static final TrapezoidProfile.Constraints spinPIDConstraints = new TrapezoidProfile.Constraints((7 * 2 * Math.PI)/14, Math.PI/2);
   }
 
   public static final int intakeMotorID = 9;

@@ -7,7 +7,9 @@ import com.revrobotics.CANSparkLowLevel;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,6 +24,12 @@ public class SwerveModule extends SubsystemBase {
   
   // turn pid
   private PIDController turnPID = new PIDController(0.005, 0, 0.0001);
+
+  // speed controller
+  private PIDController speedController = new PIDController(0.001, 0, 0);
+  private SimpleMotorFeedforward feedforwardSpeedController = new SimpleMotorFeedforward(1, 3);
+  private PIDController turnSpeedController = new PIDController(0.001, 0, 0);
+  private SimpleMotorFeedforward feedforwardTurnController = new SimpleMotorFeedforward(1, 0.5);
   
   // offset of the angle encoders & placement on the robot
   private String placement;
@@ -121,8 +129,33 @@ public class SwerveModule extends SubsystemBase {
   /*
    * Both Motors
    */
-  public SwerveModuleState moduleState() {
+  public SwerveModuleState getModuleState() {
     return new SwerveModuleState(getVelocity(), wheelRotation2d());
+  }
+  public SwerveModulePosition getModulePosition() {
+    return new SwerveModulePosition(getDistance(), wheelRotation2d());
+  }
+  public void stopMotors() {
+    driveMotor.set(0);
+    angleMotor.set(0);
+  }
+
+  public void setDesiredState(SwerveModuleState state) {
+    if(Math.abs(state.speedMetersPerSecond) < 0.001) {
+      stopMotors();
+    }
+
+    state = SwerveModuleState.optimize(state, getModuleState().angle);
+
+    double driveOutput = speedController.calculate(getVelocity(), state.speedMetersPerSecond);
+    double driveFeedForward = feedforwardSpeedController.calculate(state.speedMetersPerSecond);
+
+    double turnOutput = turnSpeedController.calculate(getModuleAngle(), state.angle.getDegrees());
+    double turnFeedForward = feedforwardTurnController.calculate(turnSpeedController.getSetpoint()/*.velocity */);
+
+    driveMotor.setVoltage(driveOutput + driveFeedForward);
+    angleMotor.setVoltage(turnOutput + turnFeedForward);
+    
   }
 
 

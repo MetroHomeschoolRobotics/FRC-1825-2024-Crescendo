@@ -76,12 +76,14 @@ public class RobotContainer {
         HolonomicDriveController holonomicController = new HolonomicDriveController(new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0), new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0), new ProfiledPIDController(Constants.autoConstants.kpTurnVelocity, 0, 0, null));
 
         SwerveControllerCommand swerveCommand = new SwerveControllerCommand(
-          trajectory, 
-          null, 
-          null, 
-          holonomicController, 
-          null, 
-          null);
+          trajectory,
+          r_drivetrain::getPose,
+          Constants.autoConstants.swerveKinematics,
+          new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0),
+          new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0),
+          new ProfiledPIDController(Constants.autoConstants.kpTurnVelocity, 0, 0, Constants.autoConstants.spinPIDConstraints),
+          null,
+          r_drivetrain);
       
         SendableRegistry.setName(swerveCommand, "Swerve Command");
 
