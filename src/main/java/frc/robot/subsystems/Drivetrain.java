@@ -123,10 +123,10 @@ public class Drivetrain extends SubsystemBase {
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, 3);
 
-        frontLeftMod.setDesiredState(swerveModuleStates[0]);
-        frontRightMod.setDesiredState(swerveModuleStates[1]);
-        backLeftMod.setDesiredState(swerveModuleStates[2]);
-        backRightMod.setDesiredState(swerveModuleStates[3]);
+        frontLeftMod.setDesiredState(swerveModuleStates[1]);
+        frontRightMod.setDesiredState(swerveModuleStates[0]);
+        backLeftMod.setDesiredState(swerveModuleStates[3]);
+        backRightMod.setDesiredState(swerveModuleStates[2]);
 
         // frontLeftMod.setDesiredState(new SwerveModuleState(1, new Rotation2d(0)));
         // frontRightMod.setDesiredState(new SwerveModuleState(1, new Rotation2d(0)));
