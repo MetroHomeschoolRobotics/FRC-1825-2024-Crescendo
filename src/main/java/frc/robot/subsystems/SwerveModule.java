@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkLowLevel;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -14,6 +15,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
 
 public class SwerveModule extends SubsystemBase {
   
@@ -28,7 +31,7 @@ public class SwerveModule extends SubsystemBase {
   // speed controller
   private PIDController speedController = new PIDController(0.001, 0, 0);
   private SimpleMotorFeedforward feedforwardSpeedController = new SimpleMotorFeedforward(1, 3);
-  private PIDController turnSpeedController = new PIDController(0.001, 0, 0);
+  private ProfiledPIDController turnSpeedController = new ProfiledPIDController(0.001, 0, 0, Constants.autoConstants.spinPIDConstraints);
   private SimpleMotorFeedforward feedforwardTurnController = new SimpleMotorFeedforward(1, 0.5);
   
   // offset of the angle encoders & placement on the robot
@@ -71,6 +74,7 @@ public class SwerveModule extends SubsystemBase {
   
   public void periodic() {
     SmartDashboard.putNumber(placement + " Module Angle", getModuleAngle());
+    SmartDashboard.putNumber(placement + " Velocity", getVelocity());
   }
   
 
@@ -151,7 +155,12 @@ public class SwerveModule extends SubsystemBase {
     double driveFeedForward = feedforwardSpeedController.calculate(state.speedMetersPerSecond);
 
     double turnOutput = turnSpeedController.calculate(getModuleAngle(), state.angle.getDegrees());
-    double turnFeedForward = feedforwardTurnController.calculate(turnSpeedController.getSetpoint()/*.velocity */);
+    double turnFeedForward = feedforwardTurnController.calculate(turnSpeedController.getSetpoint().velocity);
+
+    // TODO Look at output vs feedforward
+    SmartDashboard.putNumber(placement + " Speed Input", driveOutput + driveFeedForward);
+    SmartDashboard.putNumber(placement + " Turn Input", turnOutput + turnFeedForward);
+
 
     driveMotor.setVoltage(driveOutput + driveFeedForward);
     angleMotor.setVoltage(turnOutput + turnFeedForward);

@@ -1,11 +1,15 @@
 package frc.robot.subsystems;
 
+import java.lang.invoke.ConstantBootstraps;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -97,6 +101,33 @@ public class Drivetrain extends SubsystemBase {
   /*
    * Drive the robot
    */
+  // for autos
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.autoConstants.maxSpeedMetersPerSecond);
+
+    frontLeftMod.setDesiredState(desiredStates[0]);
+    frontRightMod.setDesiredState(desiredStates[1]);
+    backLeftMod.setDesiredState(desiredStates[2]);
+    backRightMod.setDesiredState(desiredStates[3]);
+  }
+
+  // for controllers
+  public void driveModules(double translateX, double translateY, double rotationX, Boolean fieldOriented, double periodSeconds) {
+    SwerveModuleState[] swerveModuleStates = Constants.autoConstants.swerveKinematics.toSwerveModuleStates(
+      ChassisSpeeds.discretize(
+        fieldOriented ?
+          ChassisSpeeds.fromFieldRelativeSpeeds(translateX, translateY, rotationX, gyro.getRotation2d())
+          : new ChassisSpeeds(translateX, translateY, rotationX),
+        periodSeconds));
+
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, 3);
+
+        frontLeftMod.setDesiredState(swerveModuleStates[0]);
+        frontRightMod.setDesiredState(swerveModuleStates[1]);
+        backLeftMod.setDesiredState(swerveModuleStates[2]);
+        backRightMod.setDesiredState(swerveModuleStates[3]);
+  }
+
 
   public void translateSpin(double speedX, double speedY, double turnX) {
     speedX = -speedX;
@@ -170,7 +201,7 @@ public class Drivetrain extends SubsystemBase {
       M4VectorLengthNorm = M4VectorLength;
     } 
 
-    double maxSpeed = 0.5;
+    double maxSpeed = 1;
 
     // set the module angles and speeds
     frontRightMod.setAngle(M1VectorAngle);

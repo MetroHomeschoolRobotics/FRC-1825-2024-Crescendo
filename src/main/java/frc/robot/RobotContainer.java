@@ -44,7 +44,7 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
-      private final Teleop r_teleop = new Teleop(m_driverController, r_drivetrain);
+      private final Teleop r_teleop = new Teleop(m_driverController, r_drivetrain, new Robot().getPeriod());
       
       public void setDefaultCommands() {
         CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
@@ -75,14 +75,18 @@ public class RobotContainer {
 
         HolonomicDriveController holonomicController = new HolonomicDriveController(new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0), new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0), new ProfiledPIDController(Constants.autoConstants.kpTurnVelocity, 0, 0, null));
 
+        ProfiledPIDController thetaController = new ProfiledPIDController(Constants.autoConstants.kpTurnVelocity, 0, 0, Constants.autoConstants.spinPIDConstraints);
+
+        thetaController.enableContinuousInput(-180, 180);
+
         SwerveControllerCommand swerveCommand = new SwerveControllerCommand(
           trajectory,
           r_drivetrain::getPose,
           Constants.autoConstants.swerveKinematics,
           new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0),
           new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0),
-          new ProfiledPIDController(Constants.autoConstants.kpTurnVelocity, 0, 0, Constants.autoConstants.spinPIDConstraints),
-          null,
+          thetaController,
+          r_drivetrain::setModuleStates,
           r_drivetrain);
       
         SendableRegistry.setName(swerveCommand, "Swerve Command");
