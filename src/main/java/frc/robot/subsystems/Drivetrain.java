@@ -7,6 +7,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -116,8 +117,8 @@ public class Drivetrain extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates = Constants.autoConstants.swerveKinematics.toSwerveModuleStates(
       ChassisSpeeds.discretize(
         fieldOriented ?
-          ChassisSpeeds.fromFieldRelativeSpeeds(translateX, translateY, rotationX, gyro.getRotation2d())
-          : new ChassisSpeeds(translateX, translateY, rotationX),
+          ChassisSpeeds.fromFieldRelativeSpeeds(translateY, translateX, rotationX, gyro.getRotation2d())
+          : new ChassisSpeeds(translateY, translateX, rotationX),
         periodSeconds));
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, 3);
@@ -126,6 +127,11 @@ public class Drivetrain extends SubsystemBase {
         frontRightMod.setDesiredState(swerveModuleStates[1]);
         backLeftMod.setDesiredState(swerveModuleStates[2]);
         backRightMod.setDesiredState(swerveModuleStates[3]);
+
+        // frontLeftMod.setDesiredState(new SwerveModuleState(1, new Rotation2d(0)));
+        // frontRightMod.setDesiredState(new SwerveModuleState(1, new Rotation2d(0)));
+        // backLeftMod.setDesiredState(new SwerveModuleState(1, new Rotation2d(0)));
+        // backRightMod.setDesiredState(new SwerveModuleState(1, new Rotation2d(0)));
   }
 
 

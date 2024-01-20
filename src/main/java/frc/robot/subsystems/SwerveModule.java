@@ -29,10 +29,10 @@ public class SwerveModule extends SubsystemBase {
   private PIDController turnPID = new PIDController(0.005, 0, 0.0001);
 
   // speed controller
-  private PIDController speedController = new PIDController(0.001, 0, 0);
+  private PIDController speedController = new PIDController(0.01, 0, 0);
   private SimpleMotorFeedforward feedforwardSpeedController = new SimpleMotorFeedforward(1, 3);
-  private ProfiledPIDController turnSpeedController = new ProfiledPIDController(0.001, 0, 0, Constants.autoConstants.spinPIDConstraints);
-  private SimpleMotorFeedforward feedforwardTurnController = new SimpleMotorFeedforward(1, 0.5);
+  private ProfiledPIDController turnSpeedController = new ProfiledPIDController(0.1, 0, 0, Constants.autoConstants.spinPIDConstraints);
+  private SimpleMotorFeedforward feedforwardTurnController = new SimpleMotorFeedforward(0.1, 0.05);
   
   // offset of the angle encoders & placement on the robot
   private String placement;
@@ -66,6 +66,8 @@ public class SwerveModule extends SubsystemBase {
     driveMotor.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)/(gearRatio)));
 
     turnPID.enableContinuousInput(-180, 180);
+
+    turnSpeedController.enableContinuousInput(-180,180);
 
     placement = modulePlacement;
 
@@ -150,6 +152,10 @@ public class SwerveModule extends SubsystemBase {
     }
 
     state = SwerveModuleState.optimize(state, getModuleState().angle);
+    
+    state.speedMetersPerSecond *= state.angle.minus(wheelRotation2d()).getCos();
+    
+    SmartDashboard.putNumber(placement + " angleInput", state.angle.getDegrees());
 
     double driveOutput = speedController.calculate(getVelocity(), state.speedMetersPerSecond);
     double driveFeedForward = feedforwardSpeedController.calculate(state.speedMetersPerSecond);
@@ -157,9 +163,8 @@ public class SwerveModule extends SubsystemBase {
     double turnOutput = turnSpeedController.calculate(getModuleAngle(), state.angle.getDegrees());
     double turnFeedForward = feedforwardTurnController.calculate(turnSpeedController.getSetpoint().velocity);
 
-    // TODO Look at output vs feedforward
-    SmartDashboard.putNumber(placement + " Speed Input", driveOutput + driveFeedForward);
-    SmartDashboard.putNumber(placement + " Turn Input", turnOutput + turnFeedForward);
+    SmartDashboard.putNumber(placement + " turn Feed Forward", turnFeedForward);
+    SmartDashboard.putNumber(placement + " turn Input", turnOutput);
 
 
     driveMotor.setVoltage(driveOutput + driveFeedForward);
