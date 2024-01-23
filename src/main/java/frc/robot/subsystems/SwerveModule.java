@@ -10,6 +10,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
@@ -132,6 +134,8 @@ public class SwerveModule extends SubsystemBase {
     return driveMotor.getEncoder().getVelocity();
   }
 
+  
+
   /*
    * Both Motors
    */
@@ -147,12 +151,8 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public void setDesiredState(SwerveModuleState state) {
-    if(Math.abs(state.speedMetersPerSecond) < 0.001) {
-      stopMotors();
-    }
-
     state = SwerveModuleState.optimize(state, getModuleState().angle);
-    
+
     state.speedMetersPerSecond *= state.angle.minus(wheelRotation2d()).getCos();
     
     SmartDashboard.putNumber(placement + " angleInput", state.angle.getDegrees());
@@ -163,15 +163,14 @@ public class SwerveModule extends SubsystemBase {
     double turnOutput = turnSpeedController.calculate(getModuleAngle(), state.angle.getDegrees());
     double turnFeedForward = feedforwardTurnController.calculate(turnSpeedController.getSetpoint().velocity);
 
-    SmartDashboard.putNumber(placement + " turn Feed Forward", turnFeedForward);
-    SmartDashboard.putNumber(placement + " turn Input", turnOutput);
-
-
     driveMotor.setVoltage(driveOutput + driveFeedForward);
     angleMotor.setVoltage(turnOutput + turnFeedForward);
     
   }
 
+  public Translation2d getTranslation() {
+    return new Translation2d(getDistance(), wheelRotation2d());
+  }
 
   // used for destinguishing between modules
   public String getPlacement() {

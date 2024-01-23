@@ -28,7 +28,7 @@ public class Teleop extends Command {
 
   public void execute() {
     //drivetrain.translateSpin(MathUtil.applyDeadband(xboxController.getLeftX(), deadband) , MathUtil.applyDeadband(-xboxController.getLeftY(), deadband), MathUtil.applyDeadband(xboxController.getRightX(), deadband));
-    drivetrain.driveModules(xboxController.getLeftX(), xboxController.getLeftY(), xboxController.getRightX(), false, drivePeriod_);
+    drivetrain.driveModules(MathUtil.applyDeadband(-xboxController.getLeftX(), deadband) , MathUtil.applyDeadband(-xboxController.getLeftY(), deadband), MathUtil.applyDeadband(xboxController.getRightX(), deadband), false, drivePeriod_);
   }
   
   public void end(boolean interrupted) {}
