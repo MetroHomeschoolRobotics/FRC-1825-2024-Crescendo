@@ -10,9 +10,13 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ResetGyro;
+import frc.robot.commands.RunIntake;
+import frc.robot.commands.RunShooter;
 import frc.robot.commands.Teleop;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -38,6 +42,10 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final Drivetrain r_drivetrain = new Drivetrain();
+
+  private final Intake intake = new Intake();
+
+  private final Shooter shooter = new Shooter();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -94,6 +102,8 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(new ResetGyro(r_drivetrain));
+    m_driverController.leftBumper().whileTrue(new RunIntake(intake));
+    m_driverController.rightBumper().whileTrue(new RunShooter(shooter));
   }
 
   /**
