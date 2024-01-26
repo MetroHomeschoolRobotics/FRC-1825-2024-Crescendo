@@ -164,6 +164,7 @@ public class SwerveModule extends SubsystemBase {
     double turnFeedForward = feedforwardTurnController.calculate(turnSpeedController.getSetpoint().velocity);
 
     driveMotor.setVoltage(driveOutput + driveFeedForward);
+    // setAngle(state.angle.getDegrees());
     angleMotor.setVoltage(turnOutput + turnFeedForward);
     
   }

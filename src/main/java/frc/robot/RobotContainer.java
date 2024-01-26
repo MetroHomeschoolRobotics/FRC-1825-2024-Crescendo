@@ -133,7 +133,7 @@ public class RobotContainer {
     // TODO delete this
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));
 
-    _autoChooser.addOption("Test Auto", new AutoGeneration().followPathSwerve("TestAuto"));
+    _autoChooser.addOption("Test Auto", r_drivetrain.followPathCommand("Straight6Meters"));
 
 
     SmartDashboard.putData(_autoChooser);

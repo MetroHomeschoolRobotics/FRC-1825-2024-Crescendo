@@ -83,9 +83,9 @@ public final class Constants {
       new Translation2d(trackHeight/2, trackWidth/2), 
       new Translation2d(-trackHeight/2, -trackWidth/2), 
       new Translation2d(-trackHeight/2, trackWidth/2));
-    public static final TrapezoidProfile.Constraints spinPIDConstraints = new TrapezoidProfile.Constraints((180), 360);
+    public static final TrapezoidProfile.Constraints spinPIDConstraints = new TrapezoidProfile.Constraints(360, 360);
 
-    public static final double maxSpeedMetersPerSecond = 0;
+    public static final double maxSpeedMetersPerSecond = 4.8; // 4.8 m/s
   }
 
   public static final int intakeMotorID = 9;
