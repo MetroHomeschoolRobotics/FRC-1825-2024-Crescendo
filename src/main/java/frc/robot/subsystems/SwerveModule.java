@@ -11,7 +11,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
@@ -64,12 +63,14 @@ public class SwerveModule extends SubsystemBase {
     driveMotor.setSmartCurrentLimit(20, 60);
     angleMotor.setSmartCurrentLimit(20, 60);
 
-    driveMotor.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)/(gearRatio))/60);
+    driveMotor.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)/(gearRatio)));
     driveMotor.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)/(gearRatio))/60);
 
     turnPID.enableContinuousInput(-180, 180);
 
     turnSpeedController.enableContinuousInput(-180,180);
+    
+    resetDistance();
 
     placement = modulePlacement;
 
@@ -133,6 +134,11 @@ public class SwerveModule extends SubsystemBase {
   public double getVelocity() {
     return driveMotor.getEncoder().getVelocity();
   }
+
+  public void resetDistance() {
+    driveMotor.getEncoder().setPosition(0);
+  }
+
 
   
 

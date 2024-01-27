@@ -1,26 +1,20 @@
 package frc.robot.subsystems;
 
-import java.lang.invoke.ConstantBootstraps;
-
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -70,12 +64,17 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
     gyro.reset();
+    resetDistance();
   }
 
 
   public void periodic() {
     SmartDashboard.putNumber("Gyro rotation", getRotation());
     SmartDashboard.putNumber("RadiansPerSecond", gyro.getRate()*(Math.PI/180));
+    SmartDashboard.putNumber("Average Distance", getAvgDist());
+    SmartDashboard.putNumber("Assumed Distance", getModulePositions()[0].distanceMeters);
+
+    SmartDashboard.putData(gyro);
   }
   
   /*
@@ -88,26 +87,45 @@ public class Drivetrain extends SubsystemBase {
   public double getRotation(){
     return gyro.getAngle();
   }
+  public void resetDistance() {
+    frontRightMod.resetDistance();
+    frontLeftMod.resetDistance();
+    backRightMod.resetDistance();
+    backLeftMod.resetDistance();
+  }
 
 
   /*
    * Auto Stuffs
    */
 
-  public Command followPathCommand(String pathName) {
+  public double getAvgDist() {
+    double avgDist = (frontLeftMod.getDistance()+frontRightMod.getDistance()+backLeftMod.getDistance()+backRightMod.getDistance())/4;
+    return avgDist;
+  }
+
+  public Command followPathCommand(String pathName, boolean resetOdometry) {
+
+    
 
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+
+    if(resetOdometry == true) {
+      resetGyro(); // dont know if you need this TODO try without
+      resetDistance();
+      resetOdometry(path.getStartingDifferentialPose());// sets the odometry to the first position on the map (in meters)
+    }
 
     return new FollowPathHolonomic(
             path,
             this::getPose,
             this::getRobotRelativeSpeeds, 
             this::driveRobotRelative, 
-            new HolonomicPathFollowerConfig( 
-                    new PIDConstants(5.0, 0.0, 0.0), 
-                    new PIDConstants(5.0, 0.0, 0.0), 
-                    4.5, 
-                    0.4, 
+            new HolonomicPathFollowerConfig(
+                    new PIDConstants(0.1, 0.0, 0.0), //These are the same constants as in the swerve moddule
+                    new PIDConstants(0.1, 0.0, 0.0), 
+                    Constants.autoConstants.maxSpeedMetersPerSecond, 
+                    0.367, // in meters
                     new ReplanningConfig()),
             () -> {
                 var alliance = DriverStation.getAlliance();
@@ -177,7 +195,7 @@ public class Drivetrain extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates = Constants.autoConstants.swerveKinematics.toSwerveModuleStates(
       ChassisSpeeds.discretize(
         fieldOriented ?
-          ChassisSpeeds.fromFieldRelativeSpeeds(translateY, translateX, rotationX, gyro.getRotation2d())
+          ChassisSpeeds.fromFieldRelativeSpeeds(translateY, translateX, -rotationX, gyro.getRotation2d())
           : new ChassisSpeeds(translateY, translateX, rotationX),
         periodSeconds));
 
@@ -187,15 +205,10 @@ public class Drivetrain extends SubsystemBase {
         frontRightMod.setDesiredState(swerveModuleStates[0]);
         backLeftMod.setDesiredState(swerveModuleStates[3]);
         backRightMod.setDesiredState(swerveModuleStates[2]);
-
-        // frontLeftMod.setDesiredState(new SwerveModuleState(1, new Rotation2d(0)));
-        // frontRightMod.setDesiredState(new SwerveModuleState(1, new Rotation2d(0)));
-        // backLeftMod.setDesiredState(new SwerveModuleState(1, new Rotation2d(0)));
-        // backRightMod.setDesiredState(new SwerveModuleState(1, new Rotation2d(0)));
   }
 
 
-  public void translateSpin(double speedX, double speedY, double turnX) {
+  public void translateSpin(double speedX, double speedY, double turnX, double maxSpeed) {
     speedX = -speedX;
 
 
@@ -267,7 +280,7 @@ public class Drivetrain extends SubsystemBase {
       M4VectorLengthNorm = M4VectorLength;
     } 
 
-    double maxSpeed = 1;
+    
 
     // set the module angles and speeds
     frontRightMod.setAngle(M1VectorAngle);
@@ -275,10 +288,10 @@ public class Drivetrain extends SubsystemBase {
     backRightMod.setAngle(M3VectorAngle);
     backLeftMod.setAngle(M4VectorAngle);
 
-    frontRightMod.setSpeed(accelLimiter.calculate(MathUtil.clamp(M1VectorLengthNorm, -maxSpeed, maxSpeed)));
-    frontLeftMod.setSpeed(accelLimiter.calculate(MathUtil.clamp(M2VectorLengthNorm, -maxSpeed, maxSpeed)));
-    backRightMod.setSpeed(accelLimiter.calculate(MathUtil.clamp(M3VectorLengthNorm, -maxSpeed, maxSpeed)));
-    backLeftMod.setSpeed(accelLimiter.calculate(MathUtil.clamp(M4VectorLengthNorm, -maxSpeed, maxSpeed)));
+    frontRightMod.setSpeed(accelLimiter.calculate(M1VectorLengthNorm * maxSpeed));
+    frontLeftMod.setSpeed(accelLimiter.calculate(M2VectorLengthNorm*maxSpeed));
+    backRightMod.setSpeed(accelLimiter.calculate(M3VectorLengthNorm*maxSpeed));
+    backLeftMod.setSpeed(accelLimiter.calculate(M4VectorLengthNorm*maxSpeed));
 
     //TODO complete and use This:
     // Create a list of the turn vectors
