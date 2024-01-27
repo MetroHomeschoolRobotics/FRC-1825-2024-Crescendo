@@ -62,7 +62,7 @@ public class Drivetrain extends SubsystemBase {
   
   private AHRS gyro = new AHRS();
 
-  private SlewRateLimiter accelLimiter = new SlewRateLimiter(.95);
+  private SlewRateLimiter accelLimiter = new SlewRateLimiter(.99);
 
   private SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.autoConstants.swerveKinematics, gyro.getRotation2d(), getModulePositions());
 
@@ -75,6 +75,7 @@ public class Drivetrain extends SubsystemBase {
 
   public void periodic() {
     SmartDashboard.putNumber("Gyro rotation", getRotation());
+    SmartDashboard.putNumber("RadiansPerSecond", gyro.getRate()*(Math.PI/180));
   }
   
   /*
@@ -167,6 +168,12 @@ public class Drivetrain extends SubsystemBase {
 
   // for controllers
   public void driveModules(double translateX, double translateY, double rotationX, Boolean fieldOriented, double periodSeconds) {
+
+    translateX = Constants.autoConstants.maxSpeedMetersPerSecond*translateX;
+    translateY = Constants.autoConstants.maxSpeedMetersPerSecond*translateY;
+    rotationX = Constants.autoConstants.maxSpeedRadiansPerSecond*rotationX;
+
+
     SwerveModuleState[] swerveModuleStates = Constants.autoConstants.swerveKinematics.toSwerveModuleStates(
       ChassisSpeeds.discretize(
         fieldOriented ?
