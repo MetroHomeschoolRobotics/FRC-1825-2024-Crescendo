@@ -111,6 +111,10 @@ public class SwerveModule extends SubsystemBase {
     angleMotor.set(anglePID);
   }
   
+  public double getAngleDifference() {
+    return turnPID.getPositionError();
+  }
+
   public Boolean angleTurnFinished() {
     return turnPID.atSetpoint();
   }
@@ -127,7 +131,11 @@ public class SwerveModule extends SubsystemBase {
   }
   
   public void setSpeed(double speed) {
+    // this slowes the drive motor by how far the angle is from it's setpoint
+    //speed = Math.abs(speed * Math.cos(getAngleDifference()));
+
     SmartDashboard.putNumber(placement + " Speed", speed);
+
     driveMotor.set(speed);
   }
   

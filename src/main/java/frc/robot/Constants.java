@@ -85,7 +85,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints spinPIDConstraints = new TrapezoidProfile.Constraints(360, 360);
 
     public static final double maxSpeedMetersPerSecond = 4.9; // 4.8 m/s
-    public static final double maxSpeedRadiansPerSecond = 1.66;
+    public static final double maxSpeedRadiansPerSecond = 3.66;
   }
 
   public static final int intakeMotorID = 9;

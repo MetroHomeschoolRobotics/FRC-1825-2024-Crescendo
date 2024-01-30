@@ -33,7 +33,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
-  private final Teleop r_teleop = new Teleop(m_driverController, r_drivetrain, new Robot().getPeriod(), 1);
+  private final Teleop r_teleop = new Teleop(m_driverController, r_drivetrain, new Robot().getPeriod());
       
   public SendableChooser<Command> _autoChooser = new SendableChooser<>();
 
@@ -83,8 +83,11 @@ public class RobotContainer {
     
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));
 
-    _autoChooser.addOption("Test Auto", r_drivetrain.followPathCommand("Straight6Meters", true));
+    _autoChooser.addOption("Straight2Meters", r_drivetrain.followPathCommand("Straight6Meters", true));
 
+    _autoChooser.addOption("Straight3Meters", r_drivetrain.followPathCommand("Straight3Meters", true));
+
+    _autoChooser.addOption("CurveTest", r_drivetrain.followPathCommand("CurveTest", true));
 
     SmartDashboard.putData(_autoChooser);
   }

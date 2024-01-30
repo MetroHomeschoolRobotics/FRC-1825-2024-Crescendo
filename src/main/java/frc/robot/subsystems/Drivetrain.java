@@ -122,7 +122,7 @@ public class Drivetrain extends SubsystemBase {
             this::getRobotRelativeSpeeds, 
             this::driveRobotRelative, 
             new HolonomicPathFollowerConfig(
-                    new PIDConstants(0.1, 0.0, 0.0), //These are the same constants as in the swerve moddule
+                    new PIDConstants(0.5, 0.0, 0.0),
                     new PIDConstants(0.1, 0.0, 0.0), 
                     Constants.autoConstants.maxSpeedMetersPerSecond, 
                     0.367, // in meters
@@ -138,7 +138,8 @@ public class Drivetrain extends SubsystemBase {
             this);
     }
 
-  public SwerveDriveKinematics swerveKinematics() {
+  
+    public SwerveDriveKinematics swerveKinematics() {
     return new SwerveDriveKinematics(frontLeftMod.getTranslation(), frontRightMod.getTranslation(), backLeftMod.getTranslation(), backRightMod.getTranslation());
   }
 
@@ -208,9 +209,11 @@ public class Drivetrain extends SubsystemBase {
   }
 
 
-  public void translateSpin(double speedX, double speedY, double turnX, double maxSpeed) {
-    speedX = -speedX;
+  public void translateSpin(double speedX, double speedY, double turnX, Boolean boost) {
+    speedX = speedX;
+    turnX = -turnX;
 
+    double maxSpeed = 0.8;
 
     // Get the translate angle and add the gyro angle to it
     double translateAngle = Math.atan2(speedY, speedX) * (180/Math.PI) - gyro.getAngle();
@@ -280,6 +283,12 @@ public class Drivetrain extends SubsystemBase {
       M4VectorLengthNorm = M4VectorLength;
     } 
 
+    if(boost == true) {
+      maxSpeed = 1;
+    } else {
+      maxSpeed = 0.7;
+    }
+
     
 
     // set the module angles and speeds
@@ -288,10 +297,15 @@ public class Drivetrain extends SubsystemBase {
     backRightMod.setAngle(M3VectorAngle);
     backLeftMod.setAngle(M4VectorAngle);
 
-    frontRightMod.setSpeed(accelLimiter.calculate(M1VectorLengthNorm * maxSpeed));
-    frontLeftMod.setSpeed(accelLimiter.calculate(M2VectorLengthNorm*maxSpeed));
-    backRightMod.setSpeed(accelLimiter.calculate(M3VectorLengthNorm*maxSpeed));
-    backLeftMod.setSpeed(accelLimiter.calculate(M4VectorLengthNorm*maxSpeed));
+    frontRightMod.setSpeed(M1VectorLengthNorm * maxSpeed);
+    frontLeftMod.setSpeed(M2VectorLengthNorm * maxSpeed);
+    backRightMod.setSpeed(M3VectorLengthNorm * maxSpeed);
+    backLeftMod.setSpeed(M4VectorLengthNorm * maxSpeed);
+
+    // frontRightMod.setSpeed(accelLimiter.calculate(M1VectorLengthNorm * maxSpeed));
+    // frontLeftMod.setSpeed(accelLimiter.calculate(M2VectorLengthNorm*maxSpeed));
+    // backRightMod.setSpeed(accelLimiter.calculate(M3VectorLengthNorm*maxSpeed));
+    // backLeftMod.setSpeed(accelLimiter.calculate(M4VectorLengthNorm*maxSpeed));
 
     //TODO complete and use This:
     // Create a list of the turn vectors
