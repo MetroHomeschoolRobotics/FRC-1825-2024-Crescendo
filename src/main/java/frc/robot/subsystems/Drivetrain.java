@@ -26,7 +26,7 @@ public class Drivetrain extends SubsystemBase {
 
 
   // this gets each swerve module so I won't have to get each motor and encoder individually
-  private SwerveModule frontRightMod = new SwerveModule(
+  public SwerveModule frontRightMod = new SwerveModule(
       "Front Right", 
       swerveConstants.swerveModuleFR.angleEncoderID, swerveConstants.swerveModuleFR.angleMotorID, 
       swerveConstants.swerveModuleFR.driveMotorID, 
@@ -111,6 +111,11 @@ public class Drivetrain extends SubsystemBase {
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
     if(resetOdometry == true) {
+      // frontRightMod.setAngle(0);
+      // backRightMod.setAngle(0);
+      // frontLeftMod.setAngle(0);
+      // backLeftMod.setAngle(0);
+
       resetGyro(); // dont know if you need this TODO try without
       resetDistance();
       resetOdometry(path.getStartingDifferentialPose());// sets the odometry to the first position on the map (in meters)
@@ -122,7 +127,7 @@ public class Drivetrain extends SubsystemBase {
             this::getRobotRelativeSpeeds, 
             this::driveRobotRelative, 
             new HolonomicPathFollowerConfig(
-                    new PIDConstants(0.5, 0.0, 0.0),
+                    new PIDConstants(0.1, 0.0, 0.0),
                     new PIDConstants(0.1, 0.0, 0.0), 
                     Constants.autoConstants.maxSpeedMetersPerSecond, 
                     0.367, // in meters

@@ -82,7 +82,7 @@ public final class Constants {
       new Translation2d(trackHeight/2, trackWidth/2), 
       new Translation2d(-trackHeight/2, -trackWidth/2), 
       new Translation2d(-trackHeight/2, trackWidth/2));
-    public static final TrapezoidProfile.Constraints spinPIDConstraints = new TrapezoidProfile.Constraints(360, 360);
+    public static final TrapezoidProfile.Constraints spinPIDConstraints = new TrapezoidProfile.Constraints(720, 720);
 
     public static final double maxSpeedMetersPerSecond = 4.9; // 4.8 m/s
     public static final double maxSpeedRadiansPerSecond = 3.66;

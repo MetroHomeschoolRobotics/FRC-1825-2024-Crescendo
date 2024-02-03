@@ -23,7 +23,7 @@ public class SwerveModule extends SubsystemBase {
   
   // encoders and motors
   private CANcoder angleEncoder;
-  private CANSparkMax angleMotor;
+  public CANSparkMax angleMotor;
   private CANSparkMax driveMotor;
   
   // turn pid
@@ -33,7 +33,7 @@ public class SwerveModule extends SubsystemBase {
   private PIDController speedController = new PIDController(0.01, 0, 0);
   private SimpleMotorFeedforward feedforwardSpeedController = new SimpleMotorFeedforward(0, 2.35, 0.39);
   private ProfiledPIDController turnSpeedController = new ProfiledPIDController(0.1, 0, 0, Constants.autoConstants.spinPIDConstraints);
-  private SimpleMotorFeedforward feedforwardTurnController = new SimpleMotorFeedforward(0.1, 0.05);
+  private SimpleMotorFeedforward feedforwardTurnController = new SimpleMotorFeedforward(0.4, 0.007);
   
   // offset of the angle encoders & placement on the robot
   private String placement;
@@ -78,7 +78,7 @@ public class SwerveModule extends SubsystemBase {
   }
   
   public void periodic() {
-    SmartDashboard.putNumber(placement + " Module Angle", getModuleAngle());
+    SmartDashboard.putNumber(placement + " Module Angle", Math.round(getModuleAngle()) );
     SmartDashboard.putNumber(placement + " Velocity", getVelocity());
   }
   
@@ -175,12 +175,12 @@ public class SwerveModule extends SubsystemBase {
     double driveOutput = -speedController.calculate(getVelocity(), state.speedMetersPerSecond);
     double driveFeedForward = feedforwardSpeedController.calculate(state.speedMetersPerSecond);
 
-    SmartDashboard.putNumber(placement + " PID controller", driveOutput);
-    SmartDashboard.putNumber(placement + " Feed Forward", driveFeedForward);
-
     double turnOutput = turnSpeedController.calculate(getModuleAngle(), state.angle.getDegrees());
     double turnFeedForward = feedforwardTurnController.calculate(turnSpeedController.getSetpoint().velocity);
-
+    
+    SmartDashboard.putNumber(placement + " PID controller", turnOutput);
+    SmartDashboard.putNumber(placement + " Feed Forward", turnFeedForward);
+    
     driveMotor.setVoltage(driveOutput + driveFeedForward);
     // setAngle(state.angle.getDegrees());
     angleMotor.setVoltage(turnOutput + turnFeedForward);
