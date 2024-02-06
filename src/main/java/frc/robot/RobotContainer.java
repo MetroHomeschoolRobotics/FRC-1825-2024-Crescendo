@@ -6,10 +6,13 @@ package frc.robot;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import org.ejml.simple.SimpleMatrix;
+
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ResetGyro;
+import frc.robot.commands.RumbleTimer;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
 import frc.robot.commands.Teleop;
@@ -50,40 +53,24 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+  private final RumbleTimer rumbleTimer = new RumbleTimer(m_driverController);
   
-      private final Teleop r_teleop = new Teleop(m_driverController, r_drivetrain);
+  private final Teleop r_teleop = new Teleop(m_driverController, r_drivetrain);
       
-      public void setDefaultCommands() {
-        CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
-      }
+  public void setDefaultCommands() {
+    CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
+    CommandScheduler.getInstance().setDefaultCommand(null, rumbleTimer);
+  }
       
-      public void init() {
-        setDefaultCommands();
-      }
-      
-      public RobotContainer() {
-        init();
-        configureBindings();
-      }
-
-      public Command loadPathPlannerToHolonomicCommand(String filename) {
-        filename = "pathplanner/generatedJSON/" + filename + ".wpilib.json";
-
-        Trajectory trajectory;
-
-        try {
-          Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filename);
-          trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-        } catch(IOException exception) {
-          DriverStation.reportError("Unable to open trajectory: "+ filename, exception.getStackTrace());
-          System.out.println("Unable to read trajectory: " + filename);
-          return new InstantCommand();
-        }
-
-        HolonomicDriveController holonomicController = new HolonomicDriveController(new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0), new PIDController(Constants.autoConstants.kpDriveVelocity, 0, 0), new ProfiledPIDController(Constants.autoConstants.kpTurnVelocity, 0, 0, null));
-
-        SwerveControllerCommand swerveCommand = new SwerveControllerCommand(trajectory, null, null, holonomicController, null, null)
-      }
+  public void init() {
+    setDefaultCommands();
+  }
+  
+  public RobotContainer() {
+    init();
+    configureBindings();
+  }
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
