@@ -63,7 +63,6 @@ public class Drivetrain extends SubsystemBase {
   
 
   public Drivetrain() {
-    gyro.reset();
     resetDistance();
   }
 
@@ -72,7 +71,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Gyro rotation", getRotation());
     SmartDashboard.putNumber("RadiansPerSecond", gyro.getRate()*(Math.PI/180));
     SmartDashboard.putNumber("Average Distance", getAvgDist());
-    SmartDashboard.putNumber("Assumed Distance", getModulePositions()[0].distanceMeters);
+    SmartDashboard.putNumber("Assumed Distance", odometry.getPoseMeters().getX());
 
     SmartDashboard.putData(gyro);
   }
@@ -111,15 +110,11 @@ public class Drivetrain extends SubsystemBase {
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
     if(resetOdometry == true) {
-      // frontRightMod.setAngle(0);
-      // backRightMod.setAngle(0);
-      // frontLeftMod.setAngle(0);
-      // backLeftMod.setAngle(0);
-
       resetGyro(); // dont know if you need this TODO try without
       resetDistance();
       resetOdometry(path.getStartingDifferentialPose());// sets the odometry to the first position on the map (in meters)
     }
+    //path.getStartingDifferentialPose().getRotation().getDegrees();
 
     return new FollowPathHolonomic(
             path,
@@ -127,7 +122,7 @@ public class Drivetrain extends SubsystemBase {
             this::getRobotRelativeSpeeds, 
             this::driveRobotRelative, 
             new HolonomicPathFollowerConfig(
-                    new PIDConstants(0.1, 0.0, 0.0),
+                    new PIDConstants(0.5, 0.0, 0.0),
                     new PIDConstants(0.1, 0.0, 0.0), 
                     Constants.autoConstants.maxSpeedMetersPerSecond, 
                     0.367, // in meters
@@ -203,7 +198,7 @@ public class Drivetrain extends SubsystemBase {
         fieldOriented ?
           ChassisSpeeds.fromFieldRelativeSpeeds(translateY, translateX, -rotationX, gyro.getRotation2d())
           : new ChassisSpeeds(translateY, translateX, rotationX),
-        periodSeconds));
+        0.02));
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.autoConstants.maxSpeedMetersPerSecond);
 
@@ -213,7 +208,7 @@ public class Drivetrain extends SubsystemBase {
         backRightMod.setDesiredState(swerveModuleStates[2]);
   }
 
-
+  // manually chugged equasion
   public void translateSpin(double speedX, double speedY, double turnX, Boolean boost) {
     speedX = speedX;
     turnX = -turnX;

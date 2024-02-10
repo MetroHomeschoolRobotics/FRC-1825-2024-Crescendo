@@ -30,6 +30,7 @@ public class Teleop extends Command {
   
   public void initialize() {
     drivetrain.resetGyro();
+    drivetrain.resetDistance();
   }
 
   
