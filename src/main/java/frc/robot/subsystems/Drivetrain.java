@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -56,7 +57,7 @@ public class Drivetrain extends SubsystemBase {
   
   private AHRS gyro = new AHRS();
 
-  private SlewRateLimiter accelLimiter = new SlewRateLimiter(.99);
+  // TODO delete or use this: private SlewRateLimiter accelLimiter = new SlewRateLimiter(.99);
 
   private SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.autoConstants.swerveKinematics, gyro.getRotation2d(), getModulePositions());
 
@@ -64,10 +65,36 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
     resetDistance();
+
+    // Auto Builder MUST BE AT BOTTOM TODO test this
+    AutoBuilder.configureHolonomic(
+                    this::getPose,
+                    this::resetOdometry, 
+                    this::getRobotRelativeSpeeds, 
+                    this::driveRobotRelative, 
+                    new HolonomicPathFollowerConfig(
+                        new PIDConstants(0.5, 0.0, 0.0),
+                        new PIDConstants(0.1, 0.0, 0.0), 
+                        Constants.autoConstants.maxSpeedMetersPerSecond, 
+                        0.367, // in meters
+                        new ReplanningConfig()),
+                        () -> {
+                          var alliance = DriverStation.getAlliance();
+
+                          if (alliance.isPresent()) {
+                              return alliance.get() == DriverStation.Alliance.Red;
+                          }
+                            return false;
+                          }, 
+                          this);
   }
 
 
   public void periodic() {
+    // update the odometry TODO test this
+    odometry.update(Rotation2d.fromDegrees(gyro.getAngle()), getModulePositions());
+
+
     SmartDashboard.putNumber("Gyro rotation", getRotation());
     SmartDashboard.putNumber("RadiansPerSecond", gyro.getRate()*(Math.PI/180));
     SmartDashboard.putNumber("Average Distance", getAvgDist());
@@ -86,6 +113,18 @@ public class Drivetrain extends SubsystemBase {
   public double getRotation(){
     return gyro.getAngle();
   }
+
+
+  /*
+   * Read from Drive Encoders
+   */
+
+  // Generally, this will be more accurate for straight lines...
+  public double getAvgDist() {
+    double avgDist = (frontLeftMod.getDistance()+frontRightMod.getDistance()+backLeftMod.getDistance()+backRightMod.getDistance())/4;
+    return avgDist;
+  }
+
   public void resetDistance() {
     frontRightMod.resetDistance();
     frontLeftMod.resetDistance();
@@ -98,84 +137,72 @@ public class Drivetrain extends SubsystemBase {
    * Auto Stuffs
    */
 
-  public double getAvgDist() {
-    double avgDist = (frontLeftMod.getDistance()+frontRightMod.getDistance()+backLeftMod.getDistance()+backRightMod.getDistance())/4;
-    return avgDist;
+  // reset the odometry to the current pose on the field
+  public void resetOdometry(Pose2d position) {
+    odometry.resetPosition(new Rotation2d(getRotation()), getModulePositions(), position);
   }
-
-  public Command followPathCommand(String pathName, boolean resetOdometry) {
-
-    
-
-    PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
-
-    if(resetOdometry == true) {
-      resetGyro(); // dont know if you need this TODO try without
-      resetDistance();
-      resetOdometry(path.getStartingDifferentialPose());// sets the odometry to the first position on the map (in meters)
-    }
-    //path.getStartingDifferentialPose().getRotation().getDegrees();
-
-    return new FollowPathHolonomic(
-            path,
-            this::getPose,
-            this::getRobotRelativeSpeeds, 
-            this::driveRobotRelative, 
-            new HolonomicPathFollowerConfig(
-                    new PIDConstants(0.5, 0.0, 0.0),
-                    new PIDConstants(0.1, 0.0, 0.0), 
-                    Constants.autoConstants.maxSpeedMetersPerSecond, 
-                    0.367, // in meters
-                    new ReplanningConfig()),
-            () -> {
-                var alliance = DriverStation.getAlliance();
-
-                if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;
-                }
-                  return false;
-                },
-            this);
-    }
-
-  
-    public SwerveDriveKinematics swerveKinematics() {
-    return new SwerveDriveKinematics(frontLeftMod.getTranslation(), frontRightMod.getTranslation(), backLeftMod.getTranslation(), backRightMod.getTranslation());
-  }
-
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return swerveKinematics().toChassisSpeeds(getModuleStates());
   }
-
-  
   public SwerveModuleState[] getModuleStates() {
     SwerveModuleState[] states = {frontLeftMod.getModuleState(), frontRightMod.getModuleState(), backLeftMod.getModuleState(), backRightMod.getModuleState()};
     return states;
   }
-  
   public SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] modulePositions = {frontLeftMod.getModulePosition(), frontRightMod.getModulePosition(), backLeftMod.getModulePosition(), backRightMod.getModulePosition()};
     return modulePositions;
   }
-  
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
-
-  public void resetOdometry(Pose2d position) {
-    odometry.resetPosition(new Rotation2d(getRotation()), getModulePositions(), position);
+  public SwerveDriveKinematics swerveKinematics() { 
+    return new SwerveDriveKinematics(frontLeftMod.getTranslation(), frontRightMod.getTranslation(), backLeftMod.getTranslation(), backRightMod.getTranslation());
   }
+
+  // Generates a path command
+  public Command followPathCommand(String pathName, boolean resetOdometry) {
+
+    PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+
+    // TODO test which works ☺☺☻☻
+    return AutoBuilder.followPath(path);
+
+
+    // if(resetOdometry == true) {
+    //   resetGyro(); // dont know if you need this TODO try without
+    //   resetDistance();
+    //   resetOdometry(path.getStartingDifferentialPose());// sets the odometry to the first position on the map (in meters)
+    // }
+    // //path.getStartingDifferentialPose().getRotation().getDegrees();
+
+    // return new FollowPathHolonomic(
+    //         path,
+    //         this::getPose,
+    //         this::getRobotRelativeSpeeds, 
+    //         this::driveRobotRelative, 
+    //         new HolonomicPathFollowerConfig(
+    //                 new PIDConstants(0.5, 0.0, 0.0),
+    //                 new PIDConstants(0.1, 0.0, 0.0), 
+    //                 Constants.autoConstants.maxSpeedMetersPerSecond, 
+    //                 0.367, // in meters
+    //                 new ReplanningConfig()),
+    //         () -> {
+    //             var alliance = DriverStation.getAlliance();
+
+    //             if (alliance.isPresent()) {
+    //                 return alliance.get() == DriverStation.Alliance.Red;
+    //             }
+    //               return false;
+    //             },
+    //         this);
+    }
 
   /*
    * Drive the robot
    */
-  // for autos
-  public void driveRobotRelative(ChassisSpeeds speeds) {
-    SwerveModuleState[] swerveModuleStates = swerveKinematics().toSwerveModuleStates(speeds);
-    
-    setModuleStates(swerveModuleStates);
-  }
 
+  /*  for autos  */
+  // this does the calculations for swerve auto
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.autoConstants.maxSpeedMetersPerSecond);
 
@@ -184,8 +211,16 @@ public class Drivetrain extends SubsystemBase {
     backLeftMod.setDesiredState(desiredStates[2]);
     backRightMod.setDesiredState(desiredStates[3]);
   }
+  // this actually drives the robot
+  public void driveRobotRelative(ChassisSpeeds speeds) {
+    SwerveModuleState[] swerveModuleStates = swerveKinematics().toSwerveModuleStates(speeds);
+    
+    setModuleStates(swerveModuleStates);
+  }
+  
 
-  // for controllers
+  /* for controllers */ 
+  // 
   public void driveModules(double translateX, double translateY, double rotationX, Boolean fieldOriented, double periodSeconds) {
 
     translateX = Constants.autoConstants.maxSpeedMetersPerSecond*translateX;
@@ -210,7 +245,6 @@ public class Drivetrain extends SubsystemBase {
 
   // manually chugged equasion
   public void translateSpin(double speedX, double speedY, double turnX, Boolean boost) {
-    speedX = speedX;
     turnX = -turnX;
 
     double maxSpeed = 0.8;

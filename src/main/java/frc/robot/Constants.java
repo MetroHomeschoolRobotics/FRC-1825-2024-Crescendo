@@ -70,20 +70,20 @@ public final class Constants {
   }
   
   public static final class autoConstants {
-    public static final double kpDriveVelocity = 0;
-    public static final double kpTurnVelocity = 0;
-
     // front vs back
     public static final double trackWidth = Units.inchesToMeters(20+(7/16));
     // left vs right
     public static final double trackHeight = Units.inchesToMeters(20+(7/16));
+    // add it all into the kinematics
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
       new Translation2d(trackHeight/2, -trackWidth/2),
       new Translation2d(trackHeight/2, trackWidth/2), 
       new Translation2d(-trackHeight/2, -trackWidth/2), 
       new Translation2d(-trackHeight/2, trackWidth/2));
+    // The spin constraints of the wheels
     public static final TrapezoidProfile.Constraints spinPIDConstraints = new TrapezoidProfile.Constraints(720, 720);
 
+    // max stuffs
     public static final double maxSpeedMetersPerSecond = 4.9; // 4.8 m/s
     public static final double maxSpeedRadiansPerSecond = 3.66;
   }

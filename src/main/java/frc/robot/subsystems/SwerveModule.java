@@ -26,15 +26,16 @@ public class SwerveModule extends SubsystemBase {
   public CANSparkMax angleMotor;
   private CANSparkMax driveMotor;
   
-  // turn pid
+  // turn pid USED FOR BRUTE FORCED
   private PIDController turnPID = new PIDController(0.005, 0, 0.0001);
 
   // speed controller
   private double ku = 0.13; // contant oscillation kp
   private double tu = 2.5/7; // time contant for oscillation
-  private PIDController speedController = new PIDController(0.01, 0, 0);// , ()
-  private SimpleMotorFeedforward feedforwardSpeedController = new SimpleMotorFeedforward(0, 2.35, 0.39);//
-  private ProfiledPIDController turnSpeedController = new ProfiledPIDController(ku*0.2, 0.4*ku/tu, 0.06666666*ku*tu, Constants.autoConstants.spinPIDConstraints); //0.1 p
+
+  private PIDController speedController = new PIDController(0.01, 0, 0);
+  private SimpleMotorFeedforward feedforwardSpeedController = new SimpleMotorFeedforward(0, 2.35, 0.39);
+  private ProfiledPIDController turnSpeedController = new ProfiledPIDController(ku*0.2, 0.4*ku/tu, 0.06666666*ku*tu, Constants.autoConstants.spinPIDConstraints);
   private SimpleMotorFeedforward feedforwardTurnController = new SimpleMotorFeedforward(0.4, 0.007);
   
   // offset of the angle encoders & placement on the robot
@@ -51,8 +52,8 @@ public class SwerveModule extends SubsystemBase {
     int driveMotorID,
     boolean angleMotorReversed, boolean driveMotorReversed,
     double _angleOffset) {
+    
     angleEncoder = new CANcoder(angleEncoderID);
-
     angleMotor = new CANSparkMax(angleMotorID, CANSparkLowLevel.MotorType.kBrushless);
     driveMotor = new CANSparkMax(driveMotorID, CANSparkLowLevel.MotorType.kBrushless);
 
@@ -67,7 +68,7 @@ public class SwerveModule extends SubsystemBase {
 
     driveMotor.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)*2/(gearRatio))); 
     driveMotor.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)/(gearRatio))/60);
-
+    // FOR BRUTE FORCED
     turnPID.enableContinuousInput(-180, 180);
 
     turnSpeedController.enableContinuousInput(-180,180);
@@ -89,10 +90,12 @@ public class SwerveModule extends SubsystemBase {
   public double getModuleAngle() {
     return (angleEncoder.getAbsolutePosition().getValueAsDouble()*(360/1))+angleOffset; // in degrees
   }
-  
-  public void setAngle(double theta) {
+  public Rotation2d wheelRotation2d() {
+    return new Rotation2d(getModuleAngle()*(Math.PI/180));
+  }
 
-    SmartDashboard.putNumber(placement + " Angle", theta);
+  /* for brute forced equasion */
+  public void setAngle(double theta) {
 
     // reverses the wheels instead of spinning 180°
     double actualAngleDist = getModuleAngle()-theta;
@@ -105,8 +108,6 @@ public class SwerveModule extends SubsystemBase {
     }
 
     double anglePID = MathUtil.clamp(turnPID.calculate(getModuleAngle(), theta), -1, 1);
-
-    SmartDashboard.putNumber(placement + " PID", anglePID);
     
     angleMotor.set(anglePID);
   }
@@ -119,26 +120,15 @@ public class SwerveModule extends SubsystemBase {
     return turnPID.atSetpoint();
   }
 
-  public Rotation2d wheelRotation2d() {
-    return new Rotation2d(getModuleAngle()*(Math.PI/180));
-  }
+  
   
   /*
    * Drive Motor
    */
+
   public double getDistance() {
     return driveMotor.getEncoder().getPosition();
   }
-  
-  public void setSpeed(double speed) {
-    // this slowes the drive motor by how far the angle is from it's setpoint
-    //speed = Math.abs(speed * Math.cos(getAngleDifference()));
-
-    SmartDashboard.putNumber(placement + " Speed", speed);
-
-    driveMotor.set(speed);
-  }
-  
   public double getVelocity() {
     return driveMotor.getEncoder().getVelocity();
   }
@@ -147,23 +137,40 @@ public class SwerveModule extends SubsystemBase {
     driveMotor.getEncoder().setPosition(0);
   }
 
+  public void setSpeed(double speed) {
+    // this slowes the drive motor by how far the angle is from it's setpoint
+    //speed = Math.abs(speed * Math.cos(getAngleDifference()));
 
-  
+    SmartDashboard.putNumber(placement + " Speed", speed);
+
+    driveMotor.set(speed);
+  }
 
   /*
    * Both Motors
    */
+
   public SwerveModuleState getModuleState() {
     return new SwerveModuleState(getVelocity(), wheelRotation2d());
   }
   public SwerveModulePosition getModulePosition() {
     return new SwerveModulePosition(getDistance(), wheelRotation2d());
   }
+  public Translation2d getTranslation() {
+    return new Translation2d(getDistance(), wheelRotation2d());
+  }
+
   public void stopMotors() {
     driveMotor.set(0);
     angleMotor.set(0);
   }
 
+  // used for destinguishing between modules
+  public String getPlacement() {
+    return placement;
+  }
+  
+  // Drive the Motors
   public void setDesiredState(SwerveModuleState state) {
     state = SwerveModuleState.optimize(state, getModuleState().angle);
 
@@ -178,20 +185,7 @@ public class SwerveModule extends SubsystemBase {
     double turnOutput = turnSpeedController.calculate(getModuleAngle(), state.angle.getDegrees());
     double turnFeedForward = feedforwardTurnController.calculate(turnSpeedController.getSetpoint().velocity);
     
-    SmartDashboard.putNumber(placement + " PID controller", turnOutput);
-    SmartDashboard.putNumber(placement + " Feed Forward", turnFeedForward);
-    SmartDashboard.putNumber(placement+" driveVoltage", driveOutput + driveFeedForward);
-    
     driveMotor.setVoltage(driveOutput + driveFeedForward);
     angleMotor.setVoltage(turnOutput + turnFeedForward);
-  }
-
-  public Translation2d getTranslation() {
-    return new Translation2d(getDistance(), wheelRotation2d());
-  }
-
-  // used for destinguishing between modules
-  public String getPlacement() {
-    return placement;
   }
 }
