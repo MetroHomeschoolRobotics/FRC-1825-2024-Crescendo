@@ -52,7 +52,7 @@ public class SwerveModule extends SubsystemBase {
     int driveMotorID,
     boolean angleMotorReversed, boolean driveMotorReversed,
     double _angleOffset) {
-    
+
     angleEncoder = new CANcoder(angleEncoderID);
     angleMotor = new CANSparkMax(angleMotorID, CANSparkLowLevel.MotorType.kBrushless);
     driveMotor = new CANSparkMax(driveMotorID, CANSparkLowLevel.MotorType.kBrushless);
@@ -63,6 +63,7 @@ public class SwerveModule extends SubsystemBase {
     driveMotor.setIdleMode(IdleMode.kBrake);
     angleMotor.setIdleMode(IdleMode.kBrake);
 
+
     driveMotor.setSmartCurrentLimit(20, 60);
     angleMotor.setSmartCurrentLimit(20, 60);
 
@@ -72,13 +73,13 @@ public class SwerveModule extends SubsystemBase {
     turnPID.enableContinuousInput(-180, 180);
 
     turnSpeedController.enableContinuousInput(-180,180);
-    
     placement = modulePlacement;
 
     angleOffset = _angleOffset;
   }
   
   public void periodic() {
+
     SmartDashboard.putNumber(placement + " Module Angle", Math.round(getModuleAngle()) );
     SmartDashboard.putNumber(placement + " Velocity", getVelocity());
   }

@@ -1,13 +1,18 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -27,7 +32,7 @@ public class Drivetrain extends SubsystemBase {
 
 
   // this gets each swerve module so I won't have to get each motor and encoder individually
-  public SwerveModule frontRightMod = new SwerveModule(
+  private SwerveModule frontRightMod = new SwerveModule(
       "Front Right", 
       swerveConstants.swerveModuleFR.angleEncoderID, swerveConstants.swerveModuleFR.angleMotorID, 
       swerveConstants.swerveModuleFR.driveMotorID, 
@@ -58,7 +63,6 @@ public class Drivetrain extends SubsystemBase {
   private AHRS gyro = new AHRS();
 
   // TODO delete or use this: private SlewRateLimiter accelLimiter = new SlewRateLimiter(.99);
-
   private SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.autoConstants.swerveKinematics, gyro.getRotation2d(), getModulePositions());
 
   
@@ -322,8 +326,6 @@ public class Drivetrain extends SubsystemBase {
     } else {
       maxSpeed = 0.7;
     }
-
-    
 
     // set the module angles and speeds
     frontRightMod.setAngle(M1VectorAngle);
