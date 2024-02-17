@@ -37,28 +37,28 @@ public class Drivetrain extends SubsystemBase {
       swerveConstants.swerveModuleFR.angleEncoderID, swerveConstants.swerveModuleFR.angleMotorID, 
       swerveConstants.swerveModuleFR.driveMotorID, 
       swerveConstants.swerveModuleFR.angleMotorReversed, swerveConstants.swerveModuleFR.driveMotorReversed,
-      -221.39);
+      swerveConstants.swerveModuleFR.angleOffset);
   
   private SwerveModule frontLeftMod = new SwerveModule(
       "Front Left", 
       swerveConstants.swerveModuleFL.angleEncoderID, swerveConstants.swerveModuleFL.angleMotorID, 
       swerveConstants.swerveModuleFL.driveMotorID,
       swerveConstants.swerveModuleFL.angleMotorReversed, swerveConstants.swerveModuleFL.driveMotorReversed,
-    -148.06);
+    swerveConstants.swerveModuleFL.angleOffset);
   
   private SwerveModule backRightMod = new SwerveModule(
       "Back Right", 
       swerveConstants.swerveModuleBR.angleEncoderID, swerveConstants.swerveModuleBR.angleMotorID, 
       swerveConstants.swerveModuleBR.driveMotorID,
       swerveConstants.swerveModuleBR.angleMotorReversed, swerveConstants.swerveModuleBR.driveMotorReversed,
-      -91.58);
+      swerveConstants.swerveModuleBR.angleOffset);
   
   private SwerveModule backLeftMod = new SwerveModule(
       "Back Left", 
       swerveConstants.swerveModuleBL.angleEncoderID, swerveConstants.swerveModuleBL.angleMotorID, 
       swerveConstants.swerveModuleBL.driveMotorID,
       swerveConstants.swerveModuleBL.angleMotorReversed, swerveConstants.swerveModuleBL.driveMotorReversed,
-      -160.22);
+      swerveConstants.swerveModuleBL.angleOffset);
   
   private AHRS gyro = new AHRS();
 
@@ -169,36 +169,36 @@ public class Drivetrain extends SubsystemBase {
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
     // TODO test which works ☺☺☻☻
-    return AutoBuilder.followPath(path);
+    //return AutoBuilder.followPath(path);
 
 
-    // if(resetOdometry == true) {
-    //   resetGyro(); // dont know if you need this TODO try without
-    //   resetDistance();
-    //   resetOdometry(path.getStartingDifferentialPose());// sets the odometry to the first position on the map (in meters)
-    // }
-    // //path.getStartingDifferentialPose().getRotation().getDegrees();
+    if(resetOdometry == true) {
+      resetGyro(); // dont know if you need this TODO try without
+      resetDistance();
+      resetOdometry(path.getStartingDifferentialPose());// sets the odometry to the first position on the map (in meters)
+    }
+    //path.getStartingDifferentialPose().getRotation().getDegrees();
 
-    // return new FollowPathHolonomic(
-    //         path,
-    //         this::getPose,
-    //         this::getRobotRelativeSpeeds, 
-    //         this::driveRobotRelative, 
-    //         new HolonomicPathFollowerConfig(
-    //                 new PIDConstants(0.5, 0.0, 0.0),
-    //                 new PIDConstants(0.1, 0.0, 0.0), 
-    //                 Constants.autoConstants.maxSpeedMetersPerSecond, 
-    //                 0.367, // in meters
-    //                 new ReplanningConfig()),
-    //         () -> {
-    //             var alliance = DriverStation.getAlliance();
+    return new FollowPathHolonomic(
+            path,
+            this::getPose,
+            this::getRobotRelativeSpeeds, 
+            this::driveRobotRelative, 
+            new HolonomicPathFollowerConfig(
+                    new PIDConstants(0.5, 0.0, 0.0),
+                    new PIDConstants(0.1, 0.0, 0.0), 
+                    Constants.autoConstants.maxSpeedMetersPerSecond, 
+                    0.367, // in meters
+                    new ReplanningConfig()),
+            () -> {
+                var alliance = DriverStation.getAlliance();
 
-    //             if (alliance.isPresent()) {
-    //                 return alliance.get() == DriverStation.Alliance.Red;
-    //             }
-    //               return false;
-    //             },
-    //         this);
+                if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                }
+                  return false;
+                },
+            this);
     }
 
   /*
