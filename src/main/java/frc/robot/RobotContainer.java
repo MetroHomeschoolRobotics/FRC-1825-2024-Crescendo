@@ -33,6 +33,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ResetGyro;
+import frc.robot.commands.Teleop;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -47,7 +59,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final Drivetrain r_drivetrain = new Drivetrain();
-
+  
   private final Intake intake = new Intake();
 
   private final Shooter shooter = new Shooter();
@@ -55,18 +67,17 @@ public class RobotContainer {
   private final Elevator elevator = new Elevator();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
-  private final CommandXboxController m_manipulatorController =
-      new CommandXboxController(OperatorConstants.kManipulatorControllerPort);
-
+  private final CommandXboxController m_manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPort);
+  
+  private final Teleop r_teleop = new Teleop(m_driverController, r_drivetrain, new Robot().getPeriod());
+  
   private final RumbleTimer rumbleTimer = new RumbleTimer(m_driverController);
-  
-  private final Teleop r_teleop = new Teleop(m_driverController, r_drivetrain);
-
   private final RunElevator runElevator = new RunElevator(elevator, m_manipulatorController);
-  
+  public SendableChooser<Command> _autoChooser = new SendableChooser<>();
+
+      
   public void setDefaultCommands() {
     CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
     CommandScheduler.getInstance().setDefaultCommand(null, rumbleTimer);
@@ -76,10 +87,11 @@ public class RobotContainer {
   public void init() {
     setDefaultCommands();
   }
-  
+
   public RobotContainer() {
     init();
     configureBindings();
+    getAutoChooserOptions();
   }
 
   /**
@@ -109,8 +121,21 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+ 
+  public void getAutoChooserOptions() {
+    
+    _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));
+
+    _autoChooser.addOption("Straight2Meters", r_drivetrain.followPathCommand("Straight6Meters", true));
+
+    _autoChooser.addOption("Straight3Meters", r_drivetrain.followPathCommand("Straight3Meters", true));
+
+    _autoChooser.addOption("CurveTest", r_drivetrain.followPathCommand("CurveTest", true));
+
+    SmartDashboard.putData(_autoChooser);
+  }
+
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return _autoChooser.getSelected();
   }
 }
