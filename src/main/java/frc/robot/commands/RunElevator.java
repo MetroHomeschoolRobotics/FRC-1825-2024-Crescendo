@@ -5,20 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.Elevator;
 
-public class RunIntake extends Command {
+public class RunElevator extends Command {
 
-  private Intake intake;
-  private Boolean reversed;
+  private Elevator elevator;
 
-  /** Creates a new RunIntake. */
-  public RunIntake(Intake _intake, Boolean _reversed) {
-    addRequirements(_intake);
-    
-    intake = _intake;
-    reversed = _reversed;
+  private CommandXboxController xboxcontroller;
+  /** Creates a new RunElevator. */
+  public RunElevator(Elevator _elevator, CommandXboxController _xboxController) {
+    addRequirements(_elevator);
 
+    elevator = _elevator;
+    xboxcontroller = _xboxController;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -29,17 +29,12 @@ public class RunIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(reversed){
-      intake.setSpeed(-1);
-    }else{
-      intake.setSpeed(1);
-    }
+    elevator.setSpeed(xboxcontroller.getRightY());
   }
+
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    intake.setSpeed(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

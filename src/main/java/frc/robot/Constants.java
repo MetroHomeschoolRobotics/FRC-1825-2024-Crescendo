@@ -17,6 +17,7 @@ import edu.wpi.first.math.trajectory.ExponentialProfile.Constraints;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kManipulatorControllerPort = 1;
   }
   
   public static final class swerveConstants {
@@ -74,4 +75,6 @@ public final class Constants {
   public static final int intakeMotorID = 9;
 
   public static final int shooterMotorID = 10;
+
+  public static final int elevatorMotorID = 11;
 }

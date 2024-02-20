@@ -13,10 +13,12 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.RumbleTimer;
+import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
 import frc.robot.commands.Teleop;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -50,19 +52,27 @@ public class RobotContainer {
 
   private final Shooter shooter = new Shooter();
 
+  private final Elevator elevator = new Elevator();
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  
+  private final CommandXboxController m_manipulatorController =
+      new CommandXboxController(OperatorConstants.kManipulatorControllerPort);
 
   private final RumbleTimer rumbleTimer = new RumbleTimer(m_driverController);
   
   private final Teleop r_teleop = new Teleop(m_driverController, r_drivetrain);
-      
+
+  private final RunElevator runElevator = new RunElevator(elevator, m_manipulatorController);
+  
   public void setDefaultCommands() {
     CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
     CommandScheduler.getInstance().setDefaultCommand(null, rumbleTimer);
+    CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
   }
-      
+
   public void init() {
     setDefaultCommands();
   }
@@ -89,8 +99,9 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(new ResetGyro(r_drivetrain));
-    m_driverController.leftBumper().whileTrue(new RunIntake(intake));
-    m_driverController.rightBumper().whileTrue(new RunShooter(shooter));
+    m_driverController.leftBumper().whileTrue(new RunIntake(intake, false));
+    m_driverController.rightBumper().whileTrue(new RunIntake(intake, true));
+    m_driverController.x().whileTrue(new RunShooter(shooter));
   }
 
   /**
