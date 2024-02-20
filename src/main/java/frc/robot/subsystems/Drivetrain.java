@@ -169,36 +169,36 @@ public class Drivetrain extends SubsystemBase {
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
     // TODO test which works ☺☺☻☻
-    //return AutoBuilder.followPath(path);
+    return AutoBuilder.followPath(path);
 
 
-    if(resetOdometry == true) {
-      resetGyro(); // dont know if you need this TODO try without
-      resetDistance();
-      resetOdometry(path.getStartingDifferentialPose());// sets the odometry to the first position on the map (in meters)
-    }
-    //path.getStartingDifferentialPose().getRotation().getDegrees();
+    // if(resetOdometry == true) {
+    //   resetGyro(); // dont know if you need this TODO try without
+    //   resetDistance();
+    //   resetOdometry(path.getStartingDifferentialPose());// sets the odometry to the first position on the map (in meters)
+    // }
+    // //path.getStartingDifferentialPose().getRotation().getDegrees();
 
-    return new FollowPathHolonomic(
-            path,
-            this::getPose,
-            this::getRobotRelativeSpeeds, 
-            this::driveRobotRelative, 
-            new HolonomicPathFollowerConfig(
-                    new PIDConstants(0.5, 0.0, 0.0),
-                    new PIDConstants(0.1, 0.0, 0.0), 
-                    Constants.autoConstants.maxSpeedMetersPerSecond, 
-                    0.367, // in meters
-                    new ReplanningConfig()),
-            () -> {
-                var alliance = DriverStation.getAlliance();
+    // return new FollowPathHolonomic(
+    //         path,
+    //         this::getPose,
+    //         this::getRobotRelativeSpeeds, 
+    //         this::driveRobotRelative, 
+    //         new HolonomicPathFollowerConfig(
+    //                 new PIDConstants(0.5, 0.0, 0.0),
+    //                 new PIDConstants(0.1, 0.0, 0.0), 
+    //                 Constants.autoConstants.maxSpeedMetersPerSecond, 
+    //                 0.367, // in meters
+    //                 new ReplanningConfig()),
+    //         () -> {
+    //             var alliance = DriverStation.getAlliance();
 
-                if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;
-                }
-                  return false;
-                },
-            this);
+    //             if (alliance.isPresent()) {
+    //                 return alliance.get() == DriverStation.Alliance.Red;
+    //             }
+    //               return false;
+    //             },
+    //         this);
     }
 
   /*
