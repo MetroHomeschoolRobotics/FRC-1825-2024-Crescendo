@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,28 +35,36 @@ public class Drivetrain extends SubsystemBase {
       swerveConstants.swerveModuleFR.angleEncoderID, swerveConstants.swerveModuleFR.angleMotorID, 
       swerveConstants.swerveModuleFR.driveMotorID, 
       swerveConstants.swerveModuleFR.angleMotorReversed, swerveConstants.swerveModuleFR.driveMotorReversed,
-      swerveConstants.swerveModuleFR.angleOffset);
+      swerveConstants.swerveModuleFR.angleOffset,
+      0.39, 0.009,
+      0.03, 10/18);
   
   private SwerveModule frontLeftMod = new SwerveModule(
       "Front Left", 
       swerveConstants.swerveModuleFL.angleEncoderID, swerveConstants.swerveModuleFL.angleMotorID, 
       swerveConstants.swerveModuleFL.driveMotorID,
       swerveConstants.swerveModuleFL.angleMotorReversed, swerveConstants.swerveModuleFL.driveMotorReversed,
-    swerveConstants.swerveModuleFL.angleOffset);
+      swerveConstants.swerveModuleFL.angleOffset,
+      0.39, 0.009,
+      0.03, 11/4);
   
   private SwerveModule backRightMod = new SwerveModule(
       "Back Right", 
       swerveConstants.swerveModuleBR.angleEncoderID, swerveConstants.swerveModuleBR.angleMotorID, 
       swerveConstants.swerveModuleBR.driveMotorID,
       swerveConstants.swerveModuleBR.angleMotorReversed, swerveConstants.swerveModuleBR.driveMotorReversed,
-      swerveConstants.swerveModuleBR.angleOffset);
+      swerveConstants.swerveModuleBR.angleOffset,
+      0.39, 0.009,
+      0.03, 11/4);
   
   private SwerveModule backLeftMod = new SwerveModule(
       "Back Left", 
       swerveConstants.swerveModuleBL.angleEncoderID, swerveConstants.swerveModuleBL.angleMotorID, 
       swerveConstants.swerveModuleBL.driveMotorID,
       swerveConstants.swerveModuleBL.angleMotorReversed, swerveConstants.swerveModuleBL.driveMotorReversed,
-      swerveConstants.swerveModuleBL.angleOffset);
+      swerveConstants.swerveModuleBL.angleOffset,
+      0.39, 0.009,
+      0.03, 11/4);
   
   private AHRS gyro = new AHRS();
 
@@ -77,7 +83,7 @@ public class Drivetrain extends SubsystemBase {
                     this::getRobotRelativeSpeeds, 
                     this::driveRobotRelative, 
                     new HolonomicPathFollowerConfig(
-                        new PIDConstants(0.5, 0.0, 0.0),
+                        new PIDConstants(3, 0.0, 0.0),
                         new PIDConstants(0.1, 0.0, 0.0), 
                         Constants.autoConstants.maxSpeedMetersPerSecond, 
                         0.367, // in meters
@@ -95,7 +101,7 @@ public class Drivetrain extends SubsystemBase {
 
 
   public void periodic() {
-    // update the odometry TODO test this
+    // update the odometry
     odometry.update(Rotation2d.fromDegrees(gyro.getAngle()), getModulePositions());
 
 
@@ -146,7 +152,8 @@ public class Drivetrain extends SubsystemBase {
     odometry.resetPosition(new Rotation2d(getRotation()), getModulePositions(), position);
   }
   public ChassisSpeeds getRobotRelativeSpeeds() {
-    return swerveKinematics().toChassisSpeeds(getModuleStates());
+    return  Constants.autoConstants.swerveKinematics.toChassisSpeeds(getModuleStates());
+    //swerveKinematics().toChassisSpeeds(getModuleStates()); TODO test this
   }
   public SwerveModuleState[] getModuleStates() {
     SwerveModuleState[] states = {frontLeftMod.getModuleState(), frontRightMod.getModuleState(), backLeftMod.getModuleState(), backRightMod.getModuleState()};
@@ -220,6 +227,12 @@ public class Drivetrain extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates = swerveKinematics().toSwerveModuleStates(speeds);
     
     setModuleStates(swerveModuleStates);
+  }
+  public void spinModuleVolts() {
+    frontRightMod.rotateModuleVolts();
+    frontLeftMod.rotateModuleVolts();
+    backRightMod.rotateModuleVolts();
+    backLeftMod.rotateModuleVolts();
   }
   
 

@@ -105,7 +105,6 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController.b().whileTrue(new ResetGyro(r_drivetrain));
     m_driverController.leftBumper().whileTrue(new RunIntake(intake));
-    m_driverController.rightBumper().whileTrue(new RunShooter(shooter));
 
   }
 
