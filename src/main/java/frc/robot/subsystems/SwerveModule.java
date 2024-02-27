@@ -79,7 +79,7 @@ public class SwerveModule extends SubsystemBase {
     
     // Set up the PID and Feedforward
     speedController = new PIDController(0.01, 0, 0);
-    feedforwardSpeedController = new SimpleMotorFeedforward(0, 2.35, 0.39); //TKu*0.2, 0.4*TKu/TTu, 0.06666666*TKu*TTu
+    feedforwardSpeedController = new SimpleMotorFeedforward(0, 2.35, 0.41); //TKu*0.2, 0.4*TKu/TTu, 0.06666666*TKu*TTu
 // TKu, 0, 0
     turnSpeedController = new ProfiledPIDController(TKu, 0, 0, Constants.autoConstants.spinPIDConstraints);
     feedforwardTurnController = new SimpleMotorFeedforward(TKs, TKv);

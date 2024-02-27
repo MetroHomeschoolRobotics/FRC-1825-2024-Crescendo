@@ -1,12 +1,16 @@
 package frc.robot.subsystems;
 
+import java.lang.reflect.Field;
+
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -37,7 +41,7 @@ public class Drivetrain extends SubsystemBase {
       swerveConstants.swerveModuleFR.angleMotorReversed, swerveConstants.swerveModuleFR.driveMotorReversed,
       swerveConstants.swerveModuleFR.angleOffset,
       0.39, 0.009,
-      0.03, 10/18);
+      0.04, 10/18);
   
   private SwerveModule frontLeftMod = new SwerveModule(
       "Front Left", 
@@ -46,7 +50,7 @@ public class Drivetrain extends SubsystemBase {
       swerveConstants.swerveModuleFL.angleMotorReversed, swerveConstants.swerveModuleFL.driveMotorReversed,
       swerveConstants.swerveModuleFL.angleOffset,
       0.39, 0.009,
-      0.03, 11/4);
+      0.04, 11/4);
   
   private SwerveModule backRightMod = new SwerveModule(
       "Back Right", 
@@ -55,7 +59,7 @@ public class Drivetrain extends SubsystemBase {
       swerveConstants.swerveModuleBR.angleMotorReversed, swerveConstants.swerveModuleBR.driveMotorReversed,
       swerveConstants.swerveModuleBR.angleOffset,
       0.39, 0.009,
-      0.03, 11/4);
+      0.04, 11/4);
   
   private SwerveModule backLeftMod = new SwerveModule(
       "Back Left", 
@@ -64,9 +68,11 @@ public class Drivetrain extends SubsystemBase {
       swerveConstants.swerveModuleBL.angleMotorReversed, swerveConstants.swerveModuleBL.driveMotorReversed,
       swerveConstants.swerveModuleBL.angleOffset,
       0.39, 0.009,
-      0.03, 11/4);
+      0.04, 11/4);
   
   private AHRS gyro = new AHRS();
+
+  private Field2d field = new Field2d();
 
   // TODO delete or use this: private SlewRateLimiter accelLimiter = new SlewRateLimiter(.99);
   private SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.autoConstants.swerveKinematics, gyro.getRotation2d(), getModulePositions());
@@ -83,7 +89,7 @@ public class Drivetrain extends SubsystemBase {
                     this::getRobotRelativeSpeeds, 
                     this::driveRobotRelative, 
                     new HolonomicPathFollowerConfig(
-                        new PIDConstants(3, 0.0, 0.0),
+                        new PIDConstants(5, 0.0, 0.0),
                         new PIDConstants(0.1, 0.0, 0.0), 
                         Constants.autoConstants.maxSpeedMetersPerSecond, 
                         0.367, // in meters
@@ -110,7 +116,12 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Average Distance", getAvgDist());
     SmartDashboard.putNumber("Assumed Distance", odometry.getPoseMeters().getX());
 
+
+
     SmartDashboard.putData(gyro);
+    SmartDashboard.putData("field", field);
+
+    field.setRobotPose(odometry.getPoseMeters());
   }
   
   /*
@@ -173,10 +184,12 @@ public class Drivetrain extends SubsystemBase {
   // Generates a path command
   public Command followPathCommand(String pathName, boolean resetOdometry) {
 
-    PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+    resetGyro();
 
     // TODO test which works ☺☺☻☻
-    return AutoBuilder.followPath(path);
+    return new PathPlannerAuto(pathName);
+    // PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+    // return AutoBuilder.followPath(path);
 
 
     // if(resetOdometry == true) {

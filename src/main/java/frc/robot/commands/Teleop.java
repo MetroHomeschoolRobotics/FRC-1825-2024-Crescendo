@@ -12,7 +12,7 @@ public class Teleop extends Command {
   
   private Drivetrain drivetrain;
 
-  private double deadband = 0.03;
+  private double deadband = 0.05;
   private double drivePeriod_;
   private Boolean boost = false;
 
