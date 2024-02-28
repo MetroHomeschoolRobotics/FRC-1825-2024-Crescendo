@@ -48,11 +48,11 @@ public final class Constants {
       public static final Boolean driveMotorReversed = false;
     }
     public static final class swerveModuleBR {
-      public static final int angleMotorID = 8;
+      public static final int angleMotorID = 7;
       
       public static final int angleEncoderID = 4;
       
-      public static final int driveMotorID = 7;
+      public static final int driveMotorID = 8;
       
       public static final Boolean angleMotorReversed = false;
       
@@ -90,8 +90,8 @@ public final class Constants {
     public static final double maxSpeedRadiansPerSecond = 3.66;
   }
 
-  public static final int intakeMotorID = 9;
-  public static final int shooterMotorID = 10;
-
-  public static final int elevatorMotorID = 11;
+  public static final int intakeMotorID = 10;
+  public static final int elevatorMotorID1 = 11;
+  public static final int elevatorMotorID2 = 12;
+  public static final int shooterMotorID = 13;
 }

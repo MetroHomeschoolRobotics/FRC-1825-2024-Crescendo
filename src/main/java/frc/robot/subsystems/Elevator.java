@@ -12,12 +12,12 @@ import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
 
-  private CANSparkMax elevatorMotor1 = new CANSparkMax(Constants.elevatorMotorID, CANSparkLowLevel.MotorType.kBrushless);
-  private CANSparkMax elevatorMotor2 = new CANSparkMax(Constants.elevatorMotorID, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax elevatorMotor1 = new CANSparkMax(Constants.elevatorMotorID1, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax elevatorMotor2 = new CANSparkMax(Constants.elevatorMotorID2, CANSparkLowLevel.MotorType.kBrushless);
 
   /** Creates a new Elevator. */
   public Elevator() {
-    elevatorMotor2.setInverted(true);
+    elevatorMotor1.setInverted(true);
   }
 
   public void setSpeed(double speed) {
