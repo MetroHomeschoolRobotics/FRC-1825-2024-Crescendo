@@ -40,8 +40,8 @@ public class Drivetrain extends SubsystemBase {
       swerveConstants.swerveModuleFR.driveMotorID, 
       swerveConstants.swerveModuleFR.angleMotorReversed, swerveConstants.swerveModuleFR.driveMotorReversed,
       swerveConstants.swerveModuleFR.angleOffset,
-      0.39, 0.009,
-      0.04, 10/18);
+      0.38, 0.009,
+      0.1483, 6);
   
   private SwerveModule frontLeftMod = new SwerveModule(
       "Front Left", 
@@ -49,8 +49,8 @@ public class Drivetrain extends SubsystemBase {
       swerveConstants.swerveModuleFL.driveMotorID,
       swerveConstants.swerveModuleFL.angleMotorReversed, swerveConstants.swerveModuleFL.driveMotorReversed,
       swerveConstants.swerveModuleFL.angleOffset,
-      0.39, 0.009,
-      0.04, 11/4);
+      0.38, 0.009,
+      0.1483, 6);
   
   private SwerveModule backRightMod = new SwerveModule(
       "Back Right", 
@@ -58,8 +58,8 @@ public class Drivetrain extends SubsystemBase {
       swerveConstants.swerveModuleBR.driveMotorID,
       swerveConstants.swerveModuleBR.angleMotorReversed, swerveConstants.swerveModuleBR.driveMotorReversed,
       swerveConstants.swerveModuleBR.angleOffset,
-      0.39, 0.009,
-      0.04, 11/4);
+      0.38, 0.009,
+      0.1483, 6);
   
   private SwerveModule backLeftMod = new SwerveModule(
       "Back Left", 
@@ -67,8 +67,8 @@ public class Drivetrain extends SubsystemBase {
       swerveConstants.swerveModuleBL.driveMotorID,
       swerveConstants.swerveModuleBL.angleMotorReversed, swerveConstants.swerveModuleBL.driveMotorReversed,
       swerveConstants.swerveModuleBL.angleOffset,
-      0.39, 0.009,
-      0.04, 11/4);
+      0.38, 0.009,
+      0.1483, 6);
   
   private AHRS gyro = new AHRS();
 
@@ -89,8 +89,8 @@ public class Drivetrain extends SubsystemBase {
                     this::getRobotRelativeSpeeds, 
                     this::driveRobotRelative, 
                     new HolonomicPathFollowerConfig(
-                        new PIDConstants(5, 0.0, 0.0),
-                        new PIDConstants(0.1, 0.0, 0.0), 
+                        new PIDConstants(4, 0.0, 0.0),
+                        new PIDConstants(2, 0.0, 0.0), 
                         Constants.autoConstants.maxSpeedMetersPerSecond, 
                         0.367, // in meters
                         new ReplanningConfig()),
@@ -107,8 +107,8 @@ public class Drivetrain extends SubsystemBase {
 
 
   public void periodic() {
-    // update the odometry
-    odometry.update(Rotation2d.fromDegrees(gyro.getAngle()), getModulePositions());
+    // update the odometry                  
+    odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), getModulePositions());
 
 
     SmartDashboard.putNumber("Gyro rotation", getRotation());
@@ -263,7 +263,7 @@ public class Drivetrain extends SubsystemBase {
         fieldOriented ?
           ChassisSpeeds.fromFieldRelativeSpeeds(translateY, translateX, -rotationX, gyro.getRotation2d())
           : new ChassisSpeeds(translateY, translateX, rotationX),
-        0.02));
+        1));
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.autoConstants.maxSpeedMetersPerSecond);
 

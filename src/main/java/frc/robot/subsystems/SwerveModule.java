@@ -79,9 +79,9 @@ public class SwerveModule extends SubsystemBase {
     
     // Set up the PID and Feedforward
     speedController = new PIDController(0.01, 0, 0);
-    feedforwardSpeedController = new SimpleMotorFeedforward(0, 2.35, 0.41); //TKu*0.2, 0.4*TKu/TTu, 0.06666666*TKu*TTu
+    feedforwardSpeedController = new SimpleMotorFeedforward(0, 2.35, 0.47); //TKu*0.2, 0.4*TKu/TTu, 0.06666666*TKu*TTu
 // TKu, 0, 0
-    turnSpeedController = new ProfiledPIDController(TKu, 0, 0, Constants.autoConstants.spinPIDConstraints);
+    turnSpeedController = new ProfiledPIDController(TKu*0.5, 0, 0, Constants.autoConstants.spinPIDConstraints);
     feedforwardTurnController = new SimpleMotorFeedforward(TKs, TKv);
 
     // FOR BRUTE FORCED
@@ -111,7 +111,7 @@ public class SwerveModule extends SubsystemBase {
     return new Rotation2d(getModuleAngle()*(Math.PI/180));
   }
   public void rotateModuleVolts(){
-    angleMotor.setVoltage(0.39);
+    angleMotor.setVoltage(0.38);
   }
 
   /* for brute forced equasion */
@@ -206,7 +206,9 @@ public class SwerveModule extends SubsystemBase {
     double turnOutput = turnSpeedController.calculate(getModuleAngle(), state.angle.getDegrees());
     double turnFeedForward = feedforwardTurnController.calculate(turnSpeedController.getSetpoint().velocity);
     
+    SmartDashboard.putNumber(placement+"driveVoltage", driveFeedForward+driveOutput);
+
     driveMotor.setVoltage(driveOutput + driveFeedForward);
-    angleMotor.setVoltage(turnOutput + turnFeedForward);// 
+    angleMotor.setVoltage(turnOutput+ turnFeedForward);// 
   }
 }

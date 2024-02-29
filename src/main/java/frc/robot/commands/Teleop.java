@@ -38,7 +38,7 @@ public class Teleop extends Command {
     rotation = Math.pow(MathUtil.applyDeadband(xboxController.getRightX(), deadband), 3);
     boost = xboxController.a().getAsBoolean() == true;
     
-    //drivetrain.spinModuleVolts();
+    // drivetrain.spinModuleVolts();
     // drivetrain.translateSpin(xSpeed , ySpeed, rotation, boost);
     drivetrain.driveModules(xSpeed , ySpeed, rotation, true, drivePeriod_);
     // drivetrain.frontRightMod.angleMotor.setVoltage(12*xboxController.getLeftY());

@@ -122,6 +122,8 @@ public class RobotContainer {
 
     _autoChooser.addOption("Straight3Meters", r_drivetrain.followPathCommand("Straight3Meters", true));
 
+    _autoChooser.addOption("Straight10Meters", r_drivetrain.followPathCommand("Straight10Meters", false));
+
     _autoChooser.addOption("CurveTest", r_drivetrain.followPathCommand("CurveTest", true));
 
     SmartDashboard.putData(_autoChooser);
