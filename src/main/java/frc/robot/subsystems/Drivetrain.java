@@ -82,7 +82,7 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     resetDistance();
 
-    // Auto Builder MUST BE AT BOTTOM TODO test this
+    // Auto Builder MUST BE AT BOTTOM
     AutoBuilder.configureHolonomic(
                     this::getPose,
                     this::resetOdometry, 
@@ -237,10 +237,12 @@ public class Drivetrain extends SubsystemBase {
   }
   // this actually drives the robot
   public void driveRobotRelative(ChassisSpeeds speeds) {
-    SwerveModuleState[] swerveModuleStates = swerveKinematics().toSwerveModuleStates(speeds);
+    // SwerveModuleState[] swerveModuleStates = swerveKinematics().toSwerveModuleStates(speeds);
+    SwerveModuleState[] swerveModuleStates = Constants.autoConstants.swerveKinematics.toSwerveModuleStates(speeds);
     
     setModuleStates(swerveModuleStates);
   }
+  
   public void spinModuleVolts() {
     frontRightMod.rotateModuleVolts();
     frontLeftMod.rotateModuleVolts();
