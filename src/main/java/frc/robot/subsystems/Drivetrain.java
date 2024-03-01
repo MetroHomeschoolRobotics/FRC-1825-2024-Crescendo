@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import java.lang.reflect.Field;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -18,20 +20,30 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.swerveConstants;
+import frc.robot.subsystems.Swerve.SwerveEstimator;
+import frc.robot.subsystems.Swerve.SwerveKinematics;
 
 public class Drivetrain extends SubsystemBase {
 
+    private SwerveModule[] modules;
+    private SwerveKinematics kinematics;
+    private SwerveEstimator estimator;
+
+    private SwerveModulePosition[] prevPositions;
+    private Rotation2d prevGyroAngle;
 
   // this gets each swerve module so I won't have to get each motor and encoder individually
   private SwerveModule frontRightMod = new SwerveModule(
@@ -122,6 +134,25 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putData("field", field);
 
     field.setRobotPose(odometry.getPoseMeters());
+
+        // Update estimator
+        // Do refresh here, so we get the most up-to-date data
+      SwerveModulePosition[] positions = getModulePositions();
+      Rotation2d gyroAngle = gyro.getRotation2d();
+      if (prevPositions != null) {
+          Twist2d twist = kinematics.getTwistDelta(prevPositions, positions);
+          Logger.recordOutput("Drive/Estimated Twist", twist);
+
+          // We trust the gyro more than the kinematics estimate
+          if (RobotBase.isReal() && gyro.isConnected()) {
+              twist.dtheta = gyroAngle.getRadians() - prevGyroAngle.getRadians();
+          }
+
+          estimator.update(twist);
+      }
+      prevPositions = positions;
+      prevGyroAngle = gyroAngle;
+
   }
   
   /*
