@@ -12,10 +12,14 @@ import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
 
-  private CANSparkMax shooterMotor = new CANSparkMax(Constants.shooterMotorID, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax shooterMotor1 = new CANSparkMax(Constants.shooterMotorID1, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax shooterMotor2 = new CANSparkMax(Constants.shooterMotorID2, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax indexerMotor = new CANSparkMax(Constants.indexerMotorID, CANSparkLowLevel.MotorType.kBrushless);
 
   /** Creates a new Shooter. */
-  public Shooter() {}
+  public Shooter() {
+    indexerMotor.setInverted(true);
+  }
 
   @Override
   public void periodic() {
@@ -23,14 +27,19 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
-    shooterMotor.set(speed);
+    shooterMotor1.set(speed);
+    shooterMotor2.set(speed);
+  }
+
+  public void setIndexerSpeed(double speed) {
+    indexerMotor.set(speed);
   }
 
   public double getDistance() {
-    return shooterMotor.getEncoder().getPosition();
+    return shooterMotor1.getEncoder().getPosition();
   }
 
   public double getSpeed() {
-    return shooterMotor.getEncoder().getVelocity();
+    return shooterMotor1.getEncoder().getVelocity();
   }
 }

@@ -93,5 +93,9 @@ public final class Constants {
   public static final int intakeMotorID = 10;
   public static final int elevatorMotorID1 = 11;
   public static final int elevatorMotorID2 = 12;
-  public static final int shooterMotorID = 13;
+  public static final int indexerMotorID = 13;
+  public static final int shooterMotorID1 = 14;
+  public static final int shooterMotorID2 = 15;
+  public static final int wristMotorID = 16;
+
 }

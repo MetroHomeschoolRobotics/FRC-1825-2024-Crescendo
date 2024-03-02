@@ -13,12 +13,11 @@ public class RunShooter extends Command {
 
   /** Creates a new RunShooter. */
   public RunShooter(Shooter _shooter) {
-    addRequirements(_shooter); 
+    addRequirements(_shooter);
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = _shooter;
   }
 
-  
 
   // Called when the command is initially scheduled.
   @Override
@@ -27,12 +26,16 @@ public class RunShooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setSpeed(0.9);
+    shooter.setSpeed(1);
+    shooter.setIndexerSpeed(0.3);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    shooter.setSpeed(0);
+    shooter.setIndexerSpeed(0);
+  }
 
   // Returns true when the command should end.
   @Override

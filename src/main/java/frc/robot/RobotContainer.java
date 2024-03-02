@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import java.beans.IndexedPropertyChangeEvent;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -16,12 +17,14 @@ import frc.robot.commands.RumbleTimer;
 import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
+import frc.robot.commands.RunWrist;
 import frc.robot.commands.Teleop;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Wrist;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -66,6 +69,8 @@ public class RobotContainer {
 
   private final Elevator elevator = new Elevator();
 
+  private final Wrist wrist = new Wrist();
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
@@ -75,6 +80,7 @@ public class RobotContainer {
   
   private final RumbleTimer rumbleTimer = new RumbleTimer(m_driverController);
   private final RunElevator runElevator = new RunElevator(elevator, m_manipulatorController);
+  private final RunWrist runWrist = new RunWrist(wrist, m_manipulatorController);
   public SendableChooser<Command> _autoChooser = new SendableChooser<>();
 
       
@@ -82,6 +88,7 @@ public class RobotContainer {
     CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
     CommandScheduler.getInstance().setDefaultCommand(null, rumbleTimer);
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
+    CommandScheduler.getInstance().setDefaultCommand(wrist, runWrist);
   }
 
   public void init() {
@@ -111,9 +118,9 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(new ResetGyro(r_drivetrain));
-    m_driverController.leftBumper().whileTrue(new RunIntake(intake, false));
-    m_driverController.rightBumper().whileTrue(new RunIntake(intake, true));
-    m_driverController.x().whileTrue(new RunShooter(shooter));
+    m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter));
+    m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter));
+    m_manipulatorController.x().whileTrue(new RunShooter(shooter));
   }
 
   /**
