@@ -22,11 +22,13 @@ public class Intake extends SubsystemBase {
   
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Beam Break Triggered", !beamBreak.get());
+    SmartDashboard.putBoolean("Note In Intake", !beamBreak.get());
     // This method will be called once per scheduler run
   }
-  
-  
+
+  public Boolean noteInIntake() {
+    return !beamBreak.get();
+  }  
 
   public void setSpeed(double speed) {
     intakeMotor.set(speed);
