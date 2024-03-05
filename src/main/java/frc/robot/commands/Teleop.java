@@ -14,7 +14,7 @@ public class Teleop extends Command {
   private Drivetrain drivetrain;
 
   //TODO add slew rate limiters
-  private SlewRateLimiter accelerationLimiter = new SlewRateLimiter(0.9);
+  private SlewRateLimiter xAccelerationLimiter = new SlewRateLimiter(0.9);
 
   private double deadband = 0.05;
   private double drivePeriod_;
@@ -37,8 +37,8 @@ public class Teleop extends Command {
   }
 
   public void execute() {
-    xSpeed = accelerationLimiter.calculate(Math.pow(MathUtil.applyDeadband(-xboxController.getLeftX(), deadband), 3));
-    ySpeed = accelerationLimiter.calculate(Math.pow(MathUtil.applyDeadband(-xboxController.getLeftY(), deadband), 3));
+    xSpeed = Math.pow(MathUtil.applyDeadband(-xboxController.getLeftX(), deadband), 3);
+    ySpeed = Math.pow(MathUtil.applyDeadband(-xboxController.getLeftY(), deadband), 3);
     rotation = Math.pow(MathUtil.applyDeadband(xboxController.getRightX(), deadband), 3);
     boost = xboxController.a().getAsBoolean() == true;
     
