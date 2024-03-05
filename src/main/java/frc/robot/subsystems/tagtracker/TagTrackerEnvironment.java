@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.DoubleArrayTopic;
-import org.littletonrobotics.junction.Logger;
+//import org.littletonrobotics.junction.Logger;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public final class TagTrackerEnvironment {
 
     public void update() {
         io.updateInputs(inputs);
-        Logger.processInputs("TagTracker/Environment", inputs);
+        //Logger.processInputs("TagTracker/Environment", inputs);
 
         if (!inputs.dataChanged)
             return;

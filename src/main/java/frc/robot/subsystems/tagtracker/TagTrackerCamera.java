@@ -4,7 +4,7 @@ import frc.robot.subsystems.tagtracker.io.NTCameraIO;
 import frc.robot.subsystems.tagtracker.io.TagTrackerCameraIO;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.networktables.NetworkTable;
-import org.littletonrobotics.junction.Logger;
+//import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,8 +104,8 @@ public final class TagTrackerCamera {
     }
 
     public List<EstimateInput> getEstimates() {
-        io.updateInputs(inputs);
-        Logger.processInputs("TagTracker/Camera/" + name, inputs);
+       // io.updateInputs(inputs);
+       // Logger.processInputs("TagTracker/Camera/" + name, inputs);
 
         List<EstimateInput> estimates = new ArrayList<>();
 

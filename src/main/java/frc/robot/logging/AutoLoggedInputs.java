@@ -1,13 +1,14 @@
 package frc.robot.logging;
 
-import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
+//import org.littletonrobotics.junction.LogTable;
+//import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AutoLoggedInputs implements LoggableInputs {
+public abstract class AutoLoggedInputs ///implements LoggableInputs 
+{
     private enum LogType {
         Raw,
         Boolean,
@@ -94,112 +95,112 @@ public abstract class AutoLoggedInputs implements LoggableInputs {
         return longs;
     }
     
-    @Override
-    public void toLog(LogTable table) {
-        for (LogEntry entry : entries) {
-            String name = entry.field.getName();
-            Object val;
-            try {
-                val = entry.field.get(this);
-            } catch (ReflectiveOperationException e) {
-                System.err.println("Failed to log " + entry.field);
-                e.printStackTrace();
-                return;
-            }
+    // @Override
+    // public void toLog(LogTable table) {
+    //     for (LogEntry entry : entries) {
+    //         String name = entry.field.getName();
+    //         Object val;
+    //         try {
+    //             val = entry.field.get(this);
+    //         } catch (ReflectiveOperationException e) {
+    //             System.err.println("Failed to log " + entry.field);
+    //             e.printStackTrace();
+    //             return;
+    //         }
             
-            switch (entry.type) {
-                case Raw:
-                    table.put(name, (byte[]) val);
-                    break;
-                case Boolean:
-                    table.put(name, (boolean) val);
-                    break;
-                case Integer:
-                    table.put(name, (int) val);
-                    break;
-                case Long:
-                    table.put(name, (long) val);
-                    break;
-                case Float:
-                    table.put(name, (float) val);
-                    break;
-                case Double:
-                    table.put(name, (double) val);
-                    break;
-                case String:
-                    table.put(name, (String) val);
-                    break;
-                case BooleanArray:
-                    table.put(name, (boolean[]) val);
-                    break;
-                case IntegerArray:
-                    table.put(name, toLongs((int[]) val));
-                    break;
-                case LongArray:
-                    table.put(name, (long[]) val);
-                    break;
-                case DoubleArray:
-                    table.put(name, (double[]) val);
-                    break;
-                case StringArray:
-                    table.put(name, (String[]) val);
-                    break;
-                case FloatArray:
-                    table.put(name, (float[]) val);
-                    break;
-            }
-        }
-    }
+    //         switch (entry.type) {
+    //             case Raw:
+    //                 table.put(name, (byte[]) val);
+    //                 break;
+    //             case Boolean:
+    //                 table.put(name, (boolean) val);
+    //                 break;
+    //             case Integer:
+    //                 table.put(name, (int) val);
+    //                 break;
+    //             case Long:
+    //                 table.put(name, (long) val);
+    //                 break;
+    //             case Float:
+    //                 table.put(name, (float) val);
+    //                 break;
+    //             case Double:
+    //                 table.put(name, (double) val);
+    //                 break;
+    //             case String:
+    //                 table.put(name, (String) val);
+    //                 break;
+    //             case BooleanArray:
+    //                 table.put(name, (boolean[]) val);
+    //                 break;
+    //             case IntegerArray:
+    //                 table.put(name, toLongs((int[]) val));
+    //                 break;
+    //             case LongArray:
+    //                 table.put(name, (long[]) val);
+    //                 break;
+    //             case DoubleArray:
+    //                 table.put(name, (double[]) val);
+    //                 break;
+    //             case StringArray:
+    //                 table.put(name, (String[]) val);
+    //                 break;
+    //             case FloatArray:
+    //                 table.put(name, (float[]) val);
+    //                 break;
+    //         }
+    //     }
+    // }
 
-    @Override
-    public void fromLog(LogTable table) {
-        for (LogEntry entry : entries) {
-            String name = entry.field.getName();
-            Object val, def = entry.defVal;
-            switch (entry.type) {
-                case Raw:
-                    val = table.get(name, (byte[]) def);
-                    break;
-                case Boolean:
-                    val = table.get(name, (Boolean) def);
-                    break;
-                case Integer:
-                    val = (int) table.get(name, (Integer) def);
-                    break;
-                case Long:
-                    val = table.get(name, (Long) def);
-                    break;
-                case Double:
-                    val = table.get(name, (Double) def);
-                    break;
-                case String:
-                    val = table.get(name, (String) def);
-                    break;
-                case BooleanArray:
-                    val = table.get(name, (boolean[]) def);
-                    break;
-                case IntegerArray:
-                    val = toInts(table.get(name, toLongs((int[]) def)));
-                    break;
-                case LongArray:
-                    val = table.get(name, (long[]) def);
-                    break;
-                case DoubleArray:
-                    val = table.get(name, (double[]) def);
-                    break;
-                case StringArray:
-                    val = table.get(name, (String[]) def);
-                    break;
-                default:
-                    return;
-            }
+    // @Override
+    // public void fromLog(LogTable table) {
+    //     for (LogEntry entry : entries) {
+    //         String name = entry.field.getName();
+    //         Object val, def = entry.defVal;
+    //         switch (entry.type) {
+    //             case Raw:
+    //                 val = table.get(name, (byte[]) def);
+    //                 break;
+    //             case Boolean:
+    //                 val = table.get(name, (Boolean) def);
+    //                 break;
+    //             case Integer:
+    //                 val = (int) table.get(name, (Integer) def);
+    //                 break;
+    //             case Long:
+    //                 val = table.get(name, (Long) def);
+    //                 break;
+    //             case Double:
+    //                 val = table.get(name, (Double) def);
+    //                 break;
+    //             case String:
+    //                 val = table.get(name, (String) def);
+    //                 break;
+    //             case BooleanArray:
+    //                 val = table.get(name, (boolean[]) def);
+    //                 break;
+    //             case IntegerArray:
+    //                 val = toInts(table.get(name, toLongs((int[]) def)));
+    //                 break;
+    //             case LongArray:
+    //                 val = table.get(name, (long[]) def);
+    //                 break;
+    //             case DoubleArray:
+    //                 val = table.get(name, (double[]) def);
+    //                 break;
+    //             case StringArray:
+    //                 val = table.get(name, (String[]) def);
+    //                 break;
+    //             default:
+    //                 return;
+    //         }
 
-            try {
-                entry.field.set(this, val);
-            } catch (ReflectiveOperationException e) {
-                System.err.println("Failed to set field " + entry.field);
-                e.printStackTrace();
-            }
-        }
-    }
+    //         try {
+    //             entry.field.set(this, val);
+    //         } catch (ReflectiveOperationException e) {
+    //             System.err.println("Failed to set field " + entry.field);
+    //             e.printStackTrace();
+    //         }
+    //     }
+    // }
 }

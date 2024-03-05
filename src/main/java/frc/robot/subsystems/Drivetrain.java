@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
+//import org.littletonrobotics.junction.Logger;
 
 import java.lang.reflect.Field;
 
@@ -94,7 +94,8 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
     resetDistance();
-
+    
+    //this.kinematics = new SwerveKinematics(,Constants.autoConstants.maxSpeedMetersPerSecond);
     // Auto Builder MUST BE AT BOTTOM
     AutoBuilder.configureHolonomic(
         this::getPose,
@@ -133,23 +134,23 @@ public class Drivetrain extends SubsystemBase {
 
     field.setRobotPose(odometry.getPoseMeters());
 
-    // Update estimator
-    // Do refresh here, so we get the most up-to-date data
-    SwerveModulePosition[] positions = getModulePositions();
-    Rotation2d gyroAngle = gyro.getRotation2d();
-    if (prevPositions != null) {
-      Twist2d twist = kinematics.getTwistDelta(prevPositions, positions);
-      Logger.recordOutput("Drive/Estimated Twist", twist);
+    // // Update estimator
+    // // Do refresh here, so we get the most up-to-date data
+    // SwerveModulePosition[] positions = getModulePositions();
+    // Rotation2d gyroAngle = gyro.getRotation2d();
+    // if (prevPositions != null) {
+    //   Twist2d twist = kinematics.getTwistDelta(prevPositions, positions);
+    //  // Logger.recordOutput("Drive/Estimated Twist", twist);
 
-      // We trust the gyro more than the kinematics estimate
-      if (RobotBase.isReal() && gyro.isConnected()) {
-        twist.dtheta = gyroAngle.getRadians() - prevGyroAngle.getRadians();
-      }
+    //   // We trust the gyro more than the kinematics estimate
+    //   if (RobotBase.isReal() && gyro.isConnected()) {
+    //     twist.dtheta = gyroAngle.getRadians() - prevGyroAngle.getRadians();
+    //   }
 
-      estimator.update(twist);
-    }
-    prevPositions = positions;
-    prevGyroAngle = gyroAngle;
+    //   estimator.update(twist);
+    // }
+    // prevPositions = positions;
+    // prevGyroAngle = gyroAngle;
 
     SmartDashboard.putData("Field", field);
   }
