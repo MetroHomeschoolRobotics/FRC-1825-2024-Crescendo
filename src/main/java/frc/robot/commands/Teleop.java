@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.nio.channels.spi.SelectorProvider;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -14,7 +16,8 @@ public class Teleop extends Command {
   private Drivetrain drivetrain;
 
   //TODO add slew rate limiters
-  private SlewRateLimiter xAccelerationLimiter = new SlewRateLimiter(0.9);
+  private SlewRateLimiter xAccelLimiter = new SlewRateLimiter(0.99);
+  private SlewRateLimiter yAccelLimiter = new SlewRateLimiter(0.99);
 
   private double deadband = 0.05;
   private double drivePeriod_;
@@ -33,26 +36,26 @@ public class Teleop extends Command {
   
   public void initialize() {
     drivetrain.resetGyro();
-    drivetrain.resetDistance();
+    // drivetrain.resetDistance();
   }
 
   public void execute() {
-    xSpeed = Math.pow(MathUtil.applyDeadband(-xboxController.getLeftX(), deadband), 3);
-    ySpeed = Math.pow(MathUtil.applyDeadband(-xboxController.getLeftY(), deadband), 3);
+    xSpeed = Math.pow(MathUtil.applyDeadband(xAccelLimiter.calculate(-xboxController.getLeftX()), deadband), 3);
+    ySpeed = Math.pow(MathUtil.applyDeadband(yAccelLimiter.calculate(-xboxController.getLeftY()), deadband), 3);
     rotation = Math.pow(MathUtil.applyDeadband(xboxController.getRightX(), deadband), 3);
     boost = xboxController.a().getAsBoolean() == true;
     
     // drivetrain.spinModuleVolts();
     // drivetrain.translateSpin(xSpeed , ySpeed, rotation, boost);
-    drivetrain.driveModules(xSpeed , ySpeed, rotation, true, drivePeriod_);
+    // drivetrain.driveModules(xSpeed , ySpeed, rotation, true, drivePeriod_);
     // drivetrain.frontRightMod.angleMotor.setVoltage(12*xboxController.getLeftY());
-    // SmartDashboard.putNumber("Voltage", 12*xboxController.getLeftY());
+    drivetrain.drive(() -> ySpeed, () -> xSpeed, () -> rotation);
     
-    if (DriverStation.getMatchTime() >=5 && DriverStation.getMatchTime() <= 7) { // Was 130 sec. (1 min. and 10 sec.)
-      xboxController.getHID().setRumble(RumbleType.kBothRumble, 1);
-    } else {
-      xboxController.getHID().setRumble(RumbleType.kBothRumble, 0);
-    }
+    // if (DriverStation.getMatchTime() >=5 && DriverStation.getMatchTime() <= 7) { // Was 130 sec. (1 min. and 10 sec.)
+    //   xboxController.getHID().setRumble(RumbleType.kBothRumble, 1);
+    // } else {
+    //   xboxController.getHID().setRumble(RumbleType.kBothRumble, 0);
+    // }
   }
   
   public void end(boolean interrupted) {}

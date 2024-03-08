@@ -1,8 +1,17 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.CANcoderConfigurator;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.MotorFeedbackSensor;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel;
 
 import edu.wpi.first.math.MathUtil;
@@ -14,6 +23,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -25,7 +35,10 @@ public class SwerveModule extends SubsystemBase {
   private CANcoder angleEncoder;
   private CANSparkMax angleMotor;
   private CANSparkMax driveMotor;
-  
+
+  //PID stuffs
+  private SparkPIDController spinController;
+  private SparkPIDController driveController;
   // turn pid USED FOR BRUTE FORCED
   private PIDController turnPID = new PIDController(0.005, 0, 0.0001);
 
@@ -64,19 +77,65 @@ public class SwerveModule extends SubsystemBase {
     angleMotor = new CANSparkMax(angleMotorID, CANSparkLowLevel.MotorType.kBrushless);
     driveMotor = new CANSparkMax(driveMotorID, CANSparkLowLevel.MotorType.kBrushless);
 
-    driveMotor.setInverted(driveMotorReversed);
+    // TODO for YAGSL
+    driveMotor.restoreFactoryDefaults();
+    angleMotor.restoreFactoryDefaults();
+    angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
+
+    
+    // PID Stuffs TODO also for YAGSL
+    spinController = angleMotor.getPIDController();
+    driveController = driveMotor.getPIDController();
+
+    // Angle motor and encoder
+    CANcoderConfigurator cfg = angleEncoder.getConfigurator();
+    cfg.apply(new CANcoderConfiguration());
+    MagnetSensorConfigs magnetSensorConfig = new MagnetSensorConfigs();
+    cfg.refresh(magnetSensorConfig);
+    cfg.apply(
+            magnetSensorConfig.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
+            .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
+
+    spinController.setFeedbackDevice(angleMotor.getEncoder());
     angleMotor.setInverted(angleMotorReversed);
-
-    driveMotor.setIdleMode(IdleMode.kBrake);
     angleMotor.setIdleMode(IdleMode.kBrake);
-
-
-    driveMotor.setSmartCurrentLimit(20, 60);
     angleMotor.setSmartCurrentLimit(20, 60);
 
+    angleMotor.getEncoder().setPositionConversionFactor(2*Math.PI);
+    angleMotor.getEncoder().setVelocityConversionFactor(2*Math.PI*60);
+
+    spinController.setPositionPIDWrappingEnabled(true);
+    spinController.setPositionPIDWrappingMinInput(0);
+    spinController.setPositionPIDWrappingMaxInput(90);
+
+    spinController.setP(TKu*0.5);
+    spinController.setI(0);
+    spinController.setD(0);
+    spinController.setFF(TKv);
+
+    // Drive motor and encoder
+    driveMotor.setInverted(driveMotorReversed);
+    driveController.setFeedbackDevice(driveMotor.getEncoder());
+
+    driveMotor.setIdleMode(IdleMode.kBrake);
+    driveMotor.setSmartCurrentLimit(20, 60);
+    
     driveMotor.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)*2/(gearRatio))); 
     driveMotor.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)/(gearRatio))/60);
     
+    driveController.setP(0.01);
+    driveController.setI(0);
+    driveController.setD(0);
+    driveController.setFF(2.35);
+
+    driveMotor.burnFlash();
+    angleMotor.burnFlash();
+
+    driveMotor.getEncoder().setPosition(0);
+    angleMotor.getEncoder().setPosition(angleEncoder.getAbsolutePosition().refresh().getValue()*360);
+
+
+
     // Set up the PID and Feedforward
     speedController = new PIDController(0.01, 0, 0);
     feedforwardSpeedController = new SimpleMotorFeedforward(0, 2.35, 0.47); //TKu*0.2, 0.4*TKu/TTu, 0.06666666*TKu*TTu
@@ -108,7 +167,8 @@ public class SwerveModule extends SubsystemBase {
     return (angleEncoder.getAbsolutePosition().getValueAsDouble()*(360/1))+angleOffset; // in degrees
   }
   public Rotation2d wheelRotation2d() {
-    return new Rotation2d(getModuleAngle()*(Math.PI/180));
+    // return new Rotation2d(getModuleAngle()*(Math.PI/180)); TODO test this
+    return Rotation2d.fromDegrees(angleMotor.getEncoder().getPosition());
   }
   public void rotateModuleVolts(){
     angleMotor.setVoltage(0.38);
@@ -210,5 +270,10 @@ public class SwerveModule extends SubsystemBase {
 
     driveMotor.setVoltage(driveOutput + driveFeedForward);
     angleMotor.setVoltage(turnOutput+ turnFeedForward);// 
+  }
+
+  public void setState(SwerveModuleState state) {
+    spinController.setReference(state.angle.getDegrees(), ControlType.kPosition);
+    driveController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
   }
 }

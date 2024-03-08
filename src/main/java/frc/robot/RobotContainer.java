@@ -74,7 +74,6 @@ public class RobotContainer {
   
   public void setDefaultCommands() {
     CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
-    CommandScheduler.getInstance().setDefaultCommand(null, rumbleTimer);
   }
       
   public void init() {
@@ -118,13 +117,13 @@ public class RobotContainer {
     
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));
 
-    _autoChooser.addOption("Straight2Meters", r_drivetrain.followPathCommand("Straight6Meters", true));
+    // _autoChooser.addOption("Straight2Meters", r_drivetrain.followPathCommand("Straight6Meters", true));
 
-    _autoChooser.addOption("Straight3Meters", r_drivetrain.followPathCommand("Straight3Meters", true));
+    // _autoChooser.addOption("Straight3Meters", r_drivetrain.followPathCommand("Straight3Meters", true));
 
-    _autoChooser.addOption("Straight10Meters", r_drivetrain.followPathCommand("Straight10Meters", false));
+    // _autoChooser.addOption("Straight10Meters", r_drivetrain.followPathCommand("Straight10Meters", false));
 
-    _autoChooser.addOption("CurveTest", r_drivetrain.followPathCommand("CurveTest", true));
+    // _autoChooser.addOption("CurveTest", r_drivetrain.followPathCommand("CurveTest", true));
 
     SmartDashboard.putData(_autoChooser);
   }
