@@ -33,6 +33,7 @@ public class RunIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+<<<<<<< HEAD
     if(reversed){
       intake.setSpeed(-1);
     }else{
@@ -41,12 +42,18 @@ public class RunIntake extends Command {
         indexer.setIndexerSpeed(0.3);
       }
     }
+=======
+    intake.setSpeed(1);
+>>>>>>> 7a5b822db7ba12d6d46892076e5c2684cf5d3e53
   }
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     intake.setSpeed(0);
+<<<<<<< HEAD
     indexer.setIndexerSpeed(0);
+=======
+>>>>>>> 7a5b822db7ba12d6d46892076e5c2684cf5d3e53
   }
 
   // Returns true when the command should end.

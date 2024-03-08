@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,7 +13,10 @@ public class Teleop extends Command {
   
   private Drivetrain drivetrain;
 
-  private double deadband = 0.03;
+  //TODO add slew rate limiters
+  private SlewRateLimiter xAccelerationLimiter = new SlewRateLimiter(0.9);
+
+  private double deadband = 0.05;
   private double drivePeriod_;
   private Boolean boost = false;
 
@@ -38,6 +42,7 @@ public class Teleop extends Command {
     rotation = Math.pow(MathUtil.applyDeadband(xboxController.getRightX(), deadband), 3);
     boost = xboxController.a().getAsBoolean() == true;
     
+    // drivetrain.spinModuleVolts();
     // drivetrain.translateSpin(xSpeed , ySpeed, rotation, boost);
     drivetrain.driveModules(xSpeed , ySpeed, rotation, true, drivePeriod_);
     // drivetrain.frontRightMod.angleMotor.setVoltage(12*xboxController.getLeftY());

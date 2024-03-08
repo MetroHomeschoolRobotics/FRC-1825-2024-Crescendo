@@ -25,7 +25,7 @@ public final class Constants {
   }
   
   public static final class swerveConstants {
-    public static final class swerveModuleFR {
+    public static final class swerveModuleBR {
       public static final int angleMotorID = 6;
       
       public static final int angleEncoderID = 3;
@@ -35,8 +35,10 @@ public final class Constants {
       public static final Boolean angleMotorReversed = false;
       
       public static final Boolean driveMotorReversed = false;
+
+      public static final double angleOffset = -311.39; // all angle offsets are in degrees
     }
-    public static final class swerveModuleFL {
+    public static final class swerveModuleFR {
       public static final int angleMotorID = 4;
       
       public static final int angleEncoderID = 2;
@@ -46,8 +48,14 @@ public final class Constants {
       public static final Boolean angleMotorReversed = false;
       
       public static final Boolean driveMotorReversed = false;
+
+      public static final double angleOffset = -238.06;
     }
+<<<<<<< HEAD
     public static final class swerveModuleBR {
+=======
+    public static final class swerveModuleBL {
+>>>>>>> 7a5b822db7ba12d6d46892076e5c2684cf5d3e53
       public static final int angleMotorID = 7;
       
       public static final int angleEncoderID = 4;
@@ -57,8 +65,10 @@ public final class Constants {
       public static final Boolean angleMotorReversed = false;
       
       public static final Boolean driveMotorReversed = false;
+
+      public static final double angleOffset = -181.58;
     }
-    public static final class swerveModuleBL {
+    public static final class swerveModuleFL {
       public static final int angleMotorID = 2;
       
       public static final int angleEncoderID = 1;
@@ -68,6 +78,8 @@ public final class Constants {
       public static final Boolean angleMotorReversed = false;
       
       public static final Boolean driveMotorReversed = false;
+
+      public static final double angleOffset = -250.22;
     }
   }
   
@@ -91,6 +103,7 @@ public final class Constants {
   }
 
   public static final int intakeMotorID = 10;
+<<<<<<< HEAD
   public static final int elevatorMotorID1 = 11;
   public static final int elevatorMotorID2 = 12;
   public static final int indexerMotorID = 13;
@@ -98,4 +111,7 @@ public final class Constants {
   public static final int shooterMotorID2 = 15;
   public static final int wristMotorID = 16;
 
+=======
+  public static final int shooterMotorID = 11;
+>>>>>>> 7a5b822db7ba12d6d46892076e5c2684cf5d3e53
 }

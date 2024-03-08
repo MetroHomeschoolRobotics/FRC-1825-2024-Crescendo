@@ -23,20 +23,21 @@ public class SwerveModule extends SubsystemBase {
   
   // encoders and motors
   private CANcoder angleEncoder;
-  public CANSparkMax angleMotor;
+  private CANSparkMax angleMotor;
   private CANSparkMax driveMotor;
   
   // turn pid USED FOR BRUTE FORCED
   private PIDController turnPID = new PIDController(0.005, 0, 0.0001);
 
   // speed controller
-  private double ku = 0.13; // contant oscillation kp
-  private double tu = 2.5/7; // time contant for oscillation
+  private double ku = 0.1; // contant oscillation kp
+  private double tu = 4/11; // time contant for oscillation
 
-  private PIDController speedController = new PIDController(0.01, 0, 0);
-  private SimpleMotorFeedforward feedforwardSpeedController = new SimpleMotorFeedforward(0, 2.35, 0.39);
-  private ProfiledPIDController turnSpeedController = new ProfiledPIDController(ku*0.2, 0.4*ku/tu, 0.06666666*ku*tu, Constants.autoConstants.spinPIDConstraints);
-  private SimpleMotorFeedforward feedforwardTurnController = new SimpleMotorFeedforward(0.4, 0.007);
+  private PIDController speedController;
+  private SimpleMotorFeedforward feedforwardSpeedController;
+
+  private ProfiledPIDController turnSpeedController;
+  private SimpleMotorFeedforward feedforwardTurnController;
   
   // offset of the angle encoders & placement on the robot
   private String placement;
@@ -51,8 +52,14 @@ public class SwerveModule extends SubsystemBase {
     int angleEncoderID, int angleMotorID, 
     int driveMotorID,
     boolean angleMotorReversed, boolean driveMotorReversed,
-    double _angleOffset) {
+    double _angleOffset,
+    double TKs, double TKv,
+    double TKu, double TTu) {
 
+    // double DKs, double DKv,
+    // double DKu, double DTu
+    
+    // Set up the motors and encoders
     angleEncoder = new CANcoder(angleEncoderID);
     angleMotor = new CANSparkMax(angleMotorID, CANSparkLowLevel.MotorType.kBrushless);
     driveMotor = new CANSparkMax(driveMotorID, CANSparkLowLevel.MotorType.kBrushless);
@@ -69,6 +76,14 @@ public class SwerveModule extends SubsystemBase {
 
     driveMotor.getEncoder().setPositionConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)*2/(gearRatio))); 
     driveMotor.getEncoder().setVelocityConversionFactor((Units.inchesToMeters(wheelRadiusInches*2*Math.PI)/(gearRatio))/60);
+    
+    // Set up the PID and Feedforward
+    speedController = new PIDController(0.01, 0, 0);
+    feedforwardSpeedController = new SimpleMotorFeedforward(0, 2.35, 0.47); //TKu*0.2, 0.4*TKu/TTu, 0.06666666*TKu*TTu
+// TKu, 0, 0
+    turnSpeedController = new ProfiledPIDController(TKu*0.5, 0, 0, Constants.autoConstants.spinPIDConstraints);
+    feedforwardTurnController = new SimpleMotorFeedforward(TKs, TKv);
+
     // FOR BRUTE FORCED
     turnPID.enableContinuousInput(-180, 180);
 
@@ -80,6 +95,7 @@ public class SwerveModule extends SubsystemBase {
   
   public void periodic() {
 
+    
     SmartDashboard.putNumber(placement + " Module Angle", Math.round(getModuleAngle()) );
     SmartDashboard.putNumber(placement + " Velocity", getVelocity());
   }
@@ -93,6 +109,9 @@ public class SwerveModule extends SubsystemBase {
   }
   public Rotation2d wheelRotation2d() {
     return new Rotation2d(getModuleAngle()*(Math.PI/180));
+  }
+  public void rotateModuleVolts(){
+    angleMotor.setVoltage(0.38);
   }
 
   /* for brute forced equasion */
@@ -160,6 +179,7 @@ public class SwerveModule extends SubsystemBase {
   public Translation2d getTranslation() {
     return new Translation2d(getDistance(), wheelRotation2d());
   }
+  
 
   public void stopMotors() {
     driveMotor.set(0);
@@ -186,7 +206,9 @@ public class SwerveModule extends SubsystemBase {
     double turnOutput = turnSpeedController.calculate(getModuleAngle(), state.angle.getDegrees());
     double turnFeedForward = feedforwardTurnController.calculate(turnSpeedController.getSetpoint().velocity);
     
+    SmartDashboard.putNumber(placement+"driveVoltage", driveFeedForward+driveOutput);
+
     driveMotor.setVoltage(driveOutput + driveFeedForward);
-    angleMotor.setVoltage(turnOutput + turnFeedForward);
+    angleMotor.setVoltage(turnOutput+ turnFeedForward);// 
   }
 }

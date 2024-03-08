@@ -118,9 +118,14 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(new ResetGyro(r_drivetrain));
+<<<<<<< HEAD
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter));
     m_manipulatorController.x().whileTrue(new RunShooter(shooter));
+=======
+    m_driverController.leftBumper().whileTrue(new RunIntake(intake));
+
+>>>>>>> 7a5b822db7ba12d6d46892076e5c2684cf5d3e53
   }
 
   /**
@@ -136,6 +141,8 @@ public class RobotContainer {
     _autoChooser.addOption("Straight2Meters", r_drivetrain.followPathCommand("Straight6Meters", true));
 
     _autoChooser.addOption("Straight3Meters", r_drivetrain.followPathCommand("Straight3Meters", true));
+
+    _autoChooser.addOption("Straight10Meters", r_drivetrain.followPathCommand("Straight10Meters", false));
 
     _autoChooser.addOption("CurveTest", r_drivetrain.followPathCommand("CurveTest", true));
 
