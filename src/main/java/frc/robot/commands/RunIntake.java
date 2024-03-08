@@ -36,8 +36,10 @@ public class RunIntake extends Command {
     if(reversed){
       intake.setSpeed(-1);
     }else{
-      intake.setSpeed(1);
-      indexer.setIndexerSpeed(0.3);
+      if (!indexer.noteInShooter()) {
+        intake.setSpeed(1);
+        indexer.setIndexerSpeed(0.3);
+      }
     }
   }
   // Called once the command ends or is interrupted.

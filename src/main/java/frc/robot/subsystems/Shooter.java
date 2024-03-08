@@ -7,22 +7,36 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-
+  private static final Pose2d blueSpeakerPose = new Pose2d(0, 5.5475, new Rotation2d(0));
   private CANSparkMax shooterMotor1 = new CANSparkMax(Constants.shooterMotorID1, CANSparkLowLevel.MotorType.kBrushless);
   private CANSparkMax shooterMotor2 = new CANSparkMax(Constants.shooterMotorID2, CANSparkLowLevel.MotorType.kBrushless);
   private CANSparkMax indexerMotor = new CANSparkMax(Constants.indexerMotorID, CANSparkLowLevel.MotorType.kBrushless);
+  private DigitalInput beamBrake = new DigitalInput(2);
+  private final Drivetrain drivetrain;
 
   /** Creates a new Shooter. */
-  public Shooter() {
+  public Shooter(Drivetrain _drivetrain) {
     indexerMotor.setInverted(true);
+    drivetrain = _drivetrain;
+  }
+
+  public Translation2d getSpeakerPosition() {
+    return drivetrain.getFieldInfo().flipPoseForAlliance(blueSpeakerPose).getTranslation();
   }
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("Beam Break Triggered Shooter", !beamBrake.get());
+    double SpeakerDistance = getSpeakerPosition().getDistance(Drivetrain.getEstimatedPose().getTranslation());
     // This method will be called once per scheduler run
   }
 
@@ -35,11 +49,18 @@ public class Shooter extends SubsystemBase {
     indexerMotor.set(speed);
   }
 
+  public Boolean noteInShooter() {
+    return !beamBrake.get();
+  }
+
   public double getDistance() {
     return shooterMotor1.getEncoder().getPosition();
   }
 
-  public double getSpeed() {
+  public double getSpeedShooter1() {
     return shooterMotor1.getEncoder().getVelocity();
+  }
+  public double getSpeedShooter2() {
+    return shooterMotor2.getEncoder().getVelocity();
   }
 }

@@ -27,7 +27,9 @@ public class RunShooter extends Command {
   @Override
   public void execute() {
     shooter.setSpeed(1);
-    shooter.setIndexerSpeed(0.3);
+    if (shooter.getSpeedShooter1() >= 5200 && shooter.getSpeedShooter2() >= 5200) {
+      shooter.setIndexerSpeed(0.3);
+    }
   }
 
   // Called once the command ends or is interrupted.
