@@ -20,6 +20,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -33,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.swerveConstants;
+import frc.robot.lib.field.FieldInfo;
 import frc.robot.subsystems.Swerve.SwerveEstimator;
 import frc.robot.subsystems.Swerve.SwerveKinematics;
 
@@ -95,7 +97,8 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     resetDistance();
     
-    //this.kinematics = new SwerveKinematics(,Constants.autoConstants.maxSpeedMetersPerSecond);
+    this.kinematics = new SwerveKinematics(geTranslation2ds(),Constants.autoConstants.maxSpeedMetersPerSecond);
+    this.estimator = new SwerveEstimator(FieldInfo.CRESCENDO_2024);
     // Auto Builder MUST BE AT BOTTOM
     AutoBuilder.configureHolonomic(
         this::getPose,
@@ -130,27 +133,26 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putData("Field", field);
 
     SmartDashboard.putData(gyro);
-    SmartDashboard.putData("field", field);
 
     field.setRobotPose(odometry.getPoseMeters());
 
-    // // Update estimator
-    // // Do refresh here, so we get the most up-to-date data
-    // SwerveModulePosition[] positions = getModulePositions();
-    // Rotation2d gyroAngle = gyro.getRotation2d();
-    // if (prevPositions != null) {
-    //   Twist2d twist = kinematics.getTwistDelta(prevPositions, positions);
-    //  // Logger.recordOutput("Drive/Estimated Twist", twist);
+    // Update estimator
+    // Do refresh here, so we get the most up-to-date data
+    SwerveModulePosition[] positions = getModulePositions();
+    Rotation2d gyroAngle = gyro.getRotation2d();
+    if (prevPositions != null) {
+      Twist2d twist = kinematics.getTwistDelta(prevPositions, positions);
+     // Logger.recordOutput("Drive/Estimated Twist", twist);
 
-    //   // We trust the gyro more than the kinematics estimate
-    //   if (RobotBase.isReal() && gyro.isConnected()) {
-    //     twist.dtheta = gyroAngle.getRadians() - prevGyroAngle.getRadians();
-    //   }
+      // We trust the gyro more than the kinematics estimate
+      if (RobotBase.isReal() && gyro.isConnected()) {
+        twist.dtheta = gyroAngle.getRadians() - prevGyroAngle.getRadians();
+      }
 
-    //   estimator.update(twist);
-    // }
-    // prevPositions = positions;
-    // prevGyroAngle = gyroAngle;
+      estimator.update(twist);
+    }
+    prevPositions = positions;
+    prevGyroAngle = gyroAngle;
 
     SmartDashboard.putData("Field", field);
   }
@@ -219,6 +221,11 @@ public class Drivetrain extends SubsystemBase {
         backLeftMod.getTranslation(), backRightMod.getTranslation());
   }
 
+  public Translation2d[] geTranslation2ds() {
+    Translation2d[] translation2ds = {frontLeftMod.getTranslation(), frontRightMod.getTranslation(),
+        backLeftMod.getTranslation(), backRightMod.getTranslation()};
+    return translation2ds;
+  }
   // Generates a path command
   public Command followPathCommand(String pathName, boolean resetOdometry) {
 
