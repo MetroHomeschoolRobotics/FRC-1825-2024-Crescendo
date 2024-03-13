@@ -7,20 +7,28 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   
   private CANSparkMax intakeMotor = new CANSparkMax(Constants.intakeMotorID, CANSparkLowLevel.MotorType.kBrushless);
+  private DigitalInput beamBreak = new DigitalInput(0);
 
   /** Creates a new Intake. */
   public Intake() {}
   
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("Note In Intake", !beamBreak.get());
     // This method will be called once per scheduler run
   }
+
+  public Boolean noteInIntake() {
+    return !beamBreak.get();
+  }  
 
   public void setSpeed(double speed) {
     intakeMotor.set(speed);

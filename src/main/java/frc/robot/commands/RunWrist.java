@@ -4,19 +4,24 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.Wrist;
 
-public class ResetGyro extends Command {
+public class RunWrist extends Command {
+  private Wrist wrist;
+  private CommandXboxController xboxcontroller;
+  DutyCycleEncoder rotationEncoder = new DutyCycleEncoder(0);
 
-  private Drivetrain drivetrain;
-
-  /** Creates a new ResetGyro. */
-  public ResetGyro(Drivetrain _drivetrain) {
-    addRequirements(_drivetrain);
-
-    drivetrain = _drivetrain;
+  /** Creates a new RunWrist. */
+  public RunWrist(Wrist _wrist, CommandXboxController _xboxController) {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(_wrist);
+
+    wrist = _wrist;
+    xboxcontroller = _xboxController;
   }
 
   // Called when the command is initially scheduled.
@@ -26,7 +31,7 @@ public class ResetGyro extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.resetGyro();
+    wrist.setSpeed(MathUtil.applyDeadband(xboxcontroller.getLeftY(),0.03));
   }
 
   // Called once the command ends or is interrupted.
