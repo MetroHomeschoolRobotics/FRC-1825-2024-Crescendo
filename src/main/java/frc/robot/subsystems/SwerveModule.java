@@ -38,6 +38,8 @@ public class SwerveModule extends SubsystemBase {
 
   private ProfiledPIDController turnSpeedController;
   private SimpleMotorFeedforward feedforwardTurnController;
+
+  private Rotation2d previousAngle;
   
   // offset of the angle encoders & placement on the robot
   private String placement;
@@ -91,6 +93,8 @@ public class SwerveModule extends SubsystemBase {
     placement = modulePlacement;
 
     angleOffset = _angleOffset;
+
+    previousAngle = getModuleState().angle;
   }
   
   public void periodic() {
@@ -196,6 +200,8 @@ public class SwerveModule extends SubsystemBase {
     state = SwerveModuleState.optimize(state, getModuleState().angle);
 
     state.speedMetersPerSecond *= state.angle.minus(wheelRotation2d()).getCos();
+
+    Rotation2d angle = (Math.abs(state.speedMetersPerSecond) <= (Constants.autoConstants.maxSpeedMetersPerSecond*0.01)) ? previousAngle : state.angle;
     
     SmartDashboard.putNumber(placement + " angleInput", state.angle.getDegrees());
     SmartDashboard.putNumber(placement + " Velocity Setpoint", state.speedMetersPerSecond);
@@ -203,12 +209,16 @@ public class SwerveModule extends SubsystemBase {
     double driveOutput = -speedController.calculate(getVelocity(), state.speedMetersPerSecond);
     double driveFeedForward = feedforwardSpeedController.calculate(state.speedMetersPerSecond);
 
-    double turnOutput = turnSpeedController.calculate(getModuleAngle(), state.angle.getDegrees());
+
+
+    double turnOutput = turnSpeedController.calculate(getModuleAngle(), angle.getDegrees());
     double turnFeedForward = feedforwardTurnController.calculate(turnSpeedController.getSetpoint().velocity);
     
     SmartDashboard.putNumber(placement+"driveVoltage", driveFeedForward+driveOutput);
+    //TODO test this
+    driveMotor.set(state.speedMetersPerSecond/Constants.autoConstants.maxSpeedMetersPerSecond);// driveOutput + driveFeedForward
+    angleMotor.setVoltage(turnOutput + turnFeedForward);// 
 
-    driveMotor.setVoltage(driveOutput + driveFeedForward);
-    angleMotor.setVoltage(turnOutput+ turnFeedForward);// 
+    previousAngle = angle;
   }
 }

@@ -296,12 +296,14 @@ public class Drivetrain extends SubsystemBase {
     translateY = Constants.autoConstants.maxSpeedMetersPerSecond * translateY;
     rotationX = Constants.autoConstants.maxSpeedRadiansPerSecond * rotationX;
 
+    SmartDashboard.putNumber("Period", periodSeconds);
+
     SwerveModuleState[] swerveModuleStates = Constants.autoConstants.swerveKinematics.toSwerveModuleStates(
         ChassisSpeeds.discretize(
             fieldOriented
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(translateY, translateX, -rotationX, gyro.getRotation2d())
                 : new ChassisSpeeds(translateY, translateX, rotationX),
-            1));
+            periodSeconds));
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.autoConstants.maxSpeedMetersPerSecond);
 
