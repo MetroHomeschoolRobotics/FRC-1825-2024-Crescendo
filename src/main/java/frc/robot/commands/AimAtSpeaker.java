@@ -6,33 +6,42 @@ package frc.robot.commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 
-import edu.wpi.first.math.MathUtil;
+import frc.robot.utils.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
+import frc.robot.config.NTData;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.aim.AimCalculator;
 
-public class GoToSpeaker extends Command {
-  private final Drivetrain drivetrain;
-  private final Shooter shooter;
-  private final DutyCycleEncoder encoder;
+public class AimAtSpeaker extends Command {
+  private Drivetrain drivetrain;
+  private Shooter shooter;
+  private DutyCycleEncoder encoder;
+  private double errorRad;
+  private PIDController pid = new PIDController(.001, 0, 0);
+  private double drivePeriod;
 
   /** Creates a new GoToSpeaker. */
-  public GoToSpeaker(Drivetrain _drivetrain, Shooter _shooter) {
-    addRequirements(drivetrain, shooter);
+  public AimAtSpeaker(Drivetrain _drivetrain, Shooter _shooter, double _drivePeriod) {
+    addRequirements(_drivetrain);
+    addRequirements(_shooter);
     drivetrain = _drivetrain;
     shooter = _shooter;
+    drivePeriod = _drivePeriod;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    encoder.reset();
+    pid.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,6 +57,7 @@ public class GoToSpeaker extends Command {
         Rotation2d angleToTarget = target.minus(robotPos).getAngle();
 
         AimCalculator.Aim aim = shooter.getTargetAim();
+
         double horizFlywheelVelocity = aim.flywheelVelocity() * Math.cos(aim.pivotAngle());
         double horizNoteVelocity = horizFlywheelVelocity
                 / NTData.SHOOTER_MOVING_FLYWHEEL_VELOCITY.get()
@@ -65,7 +75,7 @@ public class GoToSpeaker extends Command {
         errorRad = pid.getPositionError();
         output = MathUtil.clamp(output, -max, max);
 
-        drivetrain.turn(new Drivetrain.TurnRequest(Drivetrain.AIM_PRIORITY, new Rotation2d(output)));
+        drivetrain.driveModules(0, 0, output, true, drivePeriod);
     }
 
     public boolean isInTolerance(double tolRotations) {

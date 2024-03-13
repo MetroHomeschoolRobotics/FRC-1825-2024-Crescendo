@@ -51,11 +51,7 @@ public final class Constants {
 
       public static final double angleOffset = -238.06;
     }
-<<<<<<< HEAD
-    public static final class swerveModuleBR {
-=======
     public static final class swerveModuleBL {
->>>>>>> 7a5b822db7ba12d6d46892076e5c2684cf5d3e53
       public static final int angleMotorID = 7;
       
       public static final int angleEncoderID = 4;
@@ -103,15 +99,10 @@ public final class Constants {
   }
 
   public static final int intakeMotorID = 10;
-<<<<<<< HEAD
   public static final int elevatorMotorID1 = 11;
   public static final int elevatorMotorID2 = 12;
   public static final int indexerMotorID = 13;
   public static final int shooterMotorID1 = 14;
   public static final int shooterMotorID2 = 15;
   public static final int wristMotorID = 16;
-
-=======
-  public static final int shooterMotorID = 11;
->>>>>>> 7a5b822db7ba12d6d46892076e5c2684cf5d3e53
 }

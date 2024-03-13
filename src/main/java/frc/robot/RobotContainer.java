@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import org.ejml.simple.SimpleMatrix;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AimAtAmp;
+import frc.robot.commands.AimAtSpeaker;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ResetGyro;
@@ -65,7 +67,7 @@ public class RobotContainer {
   
   private final Intake intake = new Intake();
 
-  private final Shooter shooter = new Shooter();
+  private final Shooter shooter = new Shooter(r_drivetrain);
 
   private final Elevator elevator = new Elevator();
 
@@ -80,13 +82,12 @@ public class RobotContainer {
   
   private final RumbleTimer rumbleTimer = new RumbleTimer(m_driverController);
   private final RunElevator runElevator = new RunElevator(elevator, m_manipulatorController);
-  private final RunWrist runWrist = new RunWrist(wrist, m_manipulatorController);
+  private final RunWrist runWrist = new RunWrist(wrist, intake, m_manipulatorController);
   public SendableChooser<Command> _autoChooser = new SendableChooser<>();
 
       
   public void setDefaultCommands() {
     CommandScheduler.getInstance().setDefaultCommand(r_drivetrain, r_teleop);
-    CommandScheduler.getInstance().setDefaultCommand(null, rumbleTimer);
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
     CommandScheduler.getInstance().setDefaultCommand(wrist, runWrist);
   }
@@ -99,6 +100,7 @@ public class RobotContainer {
     init();
     configureBindings();
     getAutoChooserOptions();
+    
   }
 
   /**
@@ -118,14 +120,12 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(new ResetGyro(r_drivetrain));
-<<<<<<< HEAD
-    m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter));
-    m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter));
+    m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+    m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.x().whileTrue(new RunShooter(shooter));
-=======
-    m_driverController.leftBumper().whileTrue(new RunIntake(intake));
+    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter));
+    m_manipulatorController.y().whileTrue(new AimAtSpeaker(r_drivetrain, shooter, new Robot().getPeriod()));
 
->>>>>>> 7a5b822db7ba12d6d46892076e5c2684cf5d3e53
   }
 
   /**

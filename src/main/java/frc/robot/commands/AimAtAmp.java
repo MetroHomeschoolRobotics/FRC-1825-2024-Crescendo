@@ -4,39 +4,52 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Wrist;
 
-public class RunShooter extends Command {
+public class AimAtAmp extends Command {
 
+  private Wrist wrist;
+  private PIDController anglePID = new PIDController(0.01, 0, 0);
   private Shooter shooter;
 
-  /** Creates a new RunShooter. */
-  public RunShooter(Shooter _shooter) {
+  /** Creates a new AimAtAmp. */
+  public AimAtAmp(Wrist _wrist, Shooter _shooter) {
+    addRequirements(_wrist);
     addRequirements(_shooter);
-    // Use addRequirements() here to declare subsystem dependencies.
-    shooter = _shooter;
-  }
 
+    wrist = _wrist;
+    shooter = _shooter;
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    anglePID.enableContinuousInput(-180, 180);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setSpeed(1);
-    SmartDashboard.putNumber("shooter Speed", shooter.getSpeedShooter1());
-    if (shooter.getSpeedShooter1() >= 4500 && shooter.getSpeedShooter2() >= 4500) {
+    double speed = -anglePID.calculate(wrist.getAbsoluteAngle(), 34);
+    double shooterSpeed = 0.5;
+    
+    if (shooter.getSpeedShooter1() >= 2000 && shooter.getSpeedShooter2() >= 2000) {
       shooter.setIndexerSpeed(0.3);
     }
+    shooter.setSpeed(shooterSpeed);
+
+    wrist.setSpeed(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    wrist.setSpeed(0);
     shooter.setSpeed(0);
     shooter.setIndexerSpeed(0);
   }
@@ -44,6 +57,6 @@ public class RunShooter extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return anglePID.atSetpoint();
   }
 }
