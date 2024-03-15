@@ -8,19 +8,22 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
 
 public class RunWrist extends Command {
   private Wrist wrist;
+  private Intake intake;
   private CommandXboxController xboxcontroller;
-  DutyCycleEncoder rotationEncoder = new DutyCycleEncoder(0);
 
   /** Creates a new RunWrist. */
-  public RunWrist(Wrist _wrist, CommandXboxController _xboxController) {
+  public RunWrist(Wrist _wrist, Intake _intake, CommandXboxController _xboxController) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_wrist);
+    addRequirements(_intake);
 
     wrist = _wrist;
+    intake = _intake;
     xboxcontroller = _xboxController;
   }
 
@@ -31,7 +34,9 @@ public class RunWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    wrist.setSpeed(MathUtil.applyDeadband(xboxcontroller.getLeftY(),0.03));
+    if (!intake.noteInIntake()) {
+       wrist.setSpeed(MathUtil.applyDeadband(xboxcontroller.getLeftY(),0.03));
+    }
   }
 
   // Called once the command ends or is interrupted.
