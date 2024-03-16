@@ -170,7 +170,7 @@ public class RobotContainer
   }
 
   public void getAutoChooserOptions() {
-    NamedCommands.registerCommand("ShootAtBase", new RunShooter(shooter));
+    NamedCommands.registerCommand("ShootAtBase", new RunShooter(shooter, wrist));
     NamedCommands.registerCommand("IntakeNote", new IntakeBackwards(intake, drivebase, wrist, shooter));
     NamedCommands.registerCommand("ShootToAngle", new ShootToAngle(shooter, wrist));
 
