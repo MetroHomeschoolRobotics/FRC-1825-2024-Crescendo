@@ -113,6 +113,10 @@ public class RobotContainer
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
   }
 
+  private void setAutonomousCommand(){
+
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
