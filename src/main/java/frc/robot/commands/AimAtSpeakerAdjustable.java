@@ -6,23 +6,29 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 
-public class AimAtAmp extends Command {
+public class AimAtSpeakerAdjustable extends Command {
 
   private Wrist wrist;
   private PIDController anglePID = new PIDController(0.005, 0, 0);
   private Shooter shooter;
+  private double wristAngle;
+  private double shooterSpeed;
 
   /** Creates a new AimAtAmp. */
-  public AimAtAmp(Wrist _wrist, Shooter _shooter) {
+  public AimAtSpeakerAdjustable(Wrist _wrist, Shooter _shooter) {
     addRequirements(_wrist);
     addRequirements(_shooter);
 
     wrist = _wrist;
     shooter = _shooter;
+    wristAngle = SmartDashboard.getNumber("SetWriteAngle", 0);
+    shooterSpeed = SmartDashboard.getNumber("SetShooterSpeed", 2000);
+
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -35,12 +41,14 @@ public class AimAtAmp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = -anglePID.calculate(wrist.getAbsoluteAngle(), 35);
-    double shooterSpeed = 0.5;
-    if (shooter.getSpeedShooter1() >= 2000 && shooter.getSpeedShooter2() >= 2000) {
+    double speed = anglePID.calculate(wrist.getAbsoluteAngle(), wristAngle);
+    
+    
+    if (shooter.getSpeedShooter1() >= shooterSpeed && shooter.getSpeedShooter2() >= shooterSpeed) {
       shooter.setIndexerSpeed(0.3);
     }
-    shooter.setSpeed(shooterSpeed);
+    shooter.setSpeed(1);
+
     wrist.setSpeed(speed);
   }
 

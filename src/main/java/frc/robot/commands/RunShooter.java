@@ -6,17 +6,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Wrist;
 
 public class RunShooter extends Command {
 
   private Shooter shooter;
   private double timer;
+  private Wrist wrist;
 
   /** Creates a new RunShooter. */
-  public RunShooter(Shooter _shooter) {
+  public RunShooter(Shooter _shooter, Wrist _wrist) {
     addRequirements(_shooter);
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = _shooter;
+    wrist = _wrist;
   }
 
 

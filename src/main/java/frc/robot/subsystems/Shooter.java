@@ -48,8 +48,11 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Note In Shooter", !beamBrake.get());
-    double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
+    double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getEstimatedPose().getTranslation());
     AimCalculator.Aim aim = aimCalculator.calculateAim(SpeakerDistance);
+    SmartDashboard.putNumber("Distance to Speaker April Tag", SpeakerDistance);
+    double SpeakerNonEstimatedDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
+    SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
     targetAim = aim;
     // This method will be called once per scheduler run
   }

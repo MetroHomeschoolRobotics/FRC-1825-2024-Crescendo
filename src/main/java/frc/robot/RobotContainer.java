@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtAmp;
+import frc.robot.commands.AimAtSpeakerAdjustable;
 import frc.robot.commands.GoToSpeaker;
 import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
@@ -69,6 +71,7 @@ public class RobotContainer
 
   public SendableChooser<Command> _autoChooser = new SendableChooser<>();
   public SendableChooser<Command> _driveController = new SendableChooser<>();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -120,6 +123,8 @@ public class RobotContainer
     getAutoChooserOptions();
     drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     FieldView.publish();
+    SmartDashboard.putNumber("SetWriteAngle", 0);
+    SmartDashboard.putNumber("SetShooterSpeed", 2000);
   }
 
   /**
@@ -138,8 +143,9 @@ public class RobotContainer
     driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
-    m_manipulatorController.x().whileTrue(new RunShooter(shooter));
+    m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
     m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter));
+    m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
     CommandScheduler.getInstance().setDefaultCommand(wrist, runWrist);
