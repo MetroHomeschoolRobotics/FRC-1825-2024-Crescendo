@@ -26,6 +26,7 @@ import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
 import frc.robot.commands.RunWrist;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
+import frc.robot.logging.FieldView;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -114,6 +115,7 @@ public class RobotContainer
 
     getAutoChooserOptions();
     drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    FieldView.publish();
   }
 
   /**
