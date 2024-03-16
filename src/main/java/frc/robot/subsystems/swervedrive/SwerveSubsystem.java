@@ -20,7 +20,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -52,7 +51,7 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
-  public        double      maximumSpeed = Units.feetToMeters(16.6);
+  public double maximumSpeed = Units.feetToMeters(16.6);
 
   //private SwerveKinematics kinematics;
   private SwerveEstimator estimator;
@@ -209,10 +208,10 @@ public class SwerveSubsystem extends SubsystemBase
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX,
                               DoubleSupplier headingY)
   {
-    // swerveDrive.setHeadingCorrection(true); // Normally you would want heading correction for this kind of control.
+    swerveDrive.setHeadingCorrection(true); // Normally you would want heading correction for this kind of control.
     return run(() -> {
-      double xInput = Math.pow(translationX.getAsDouble(), 3); // Smooth controll out
-      double yInput = Math.pow(translationY.getAsDouble(), 3); // Smooth controll out
+      double xInput = Math.pow(translationX.getAsDouble(), 3); // Smooth control out
+      double yInput = Math.pow(translationY.getAsDouble(), 3); // Smooth control out
       // Make the robot move
       driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(xInput, yInput,
                                                                       headingX.getAsDouble(),
@@ -351,6 +350,10 @@ public class SwerveSubsystem extends SubsystemBase
     }
     prevPositions = positions;
     prevGyroAngle = gyroAngle;
+
+    swerveDrive.updateOdometry();
+    
+
   }
 
   @Override
