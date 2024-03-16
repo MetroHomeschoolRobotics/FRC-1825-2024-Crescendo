@@ -32,12 +32,12 @@ public class RunShooter extends Command {
     if(shooter.noteInShooter()) {
       shooter.setSpeed(1);
 
-      if (shooter.getSpeedShooter1() >= 4500 && shooter.getSpeedShooter2() >= 4500 || timer >= 2) {
+      if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 || timer >= 2) {
         shooter.setIndexerSpeed(0.3);
       }
     }
 
-    timer += 0.25;
+    timer += 0.04;
   }
 
   // Called once the command ends or is interrupted.
@@ -50,6 +50,6 @@ public class RunShooter extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return !shooter.noteInShooter();
   }
 }

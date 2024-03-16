@@ -25,6 +25,8 @@ import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
 import frc.robot.commands.RunWrist;
+import frc.robot.commands.swervedrive.auto.IntakeBackwards;
+import frc.robot.commands.swervedrive.auto.ShootToAngle;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.logging.FieldView;
 import frc.robot.subsystems.Elevator;
@@ -33,6 +35,8 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+
+import com.pathplanner.lib.auto.NamedCommands;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -160,7 +164,10 @@ public class RobotContainer
   }
 
   public void getAutoChooserOptions() {
-    
+    NamedCommands.registerCommand("ShootAtBase", new RunShooter(shooter));
+    NamedCommands.registerCommand("IntakeNote", new IntakeBackwards(intake, drivebase, wrist, shooter));
+    NamedCommands.registerCommand("ShootToAngle", new ShootToAngle(shooter, wrist));
+
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));
 
     _autoChooser.addOption("Straight3Meters", drivebase.getAutonomousCommand("Straight3Meters"));
