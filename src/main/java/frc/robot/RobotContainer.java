@@ -132,8 +132,8 @@ public class RobotContainer
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     
     driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
-    m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
-    m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+    m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+    m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.x().whileTrue(new RunShooter(shooter));
     m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter));
     m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
@@ -142,9 +142,6 @@ public class RobotContainer
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
   }
 
-  private void setAutonomousCommand(){
-
-  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -166,7 +163,9 @@ public class RobotContainer
     
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));
 
-    _autoChooser.addOption("Straight2Meters", drivebase.getAutonomousCommand("Straight3Meters"));
+    _autoChooser.addOption("Straight3Meters", drivebase.getAutonomousCommand("Straight3Meters"));
+    _autoChooser.addOption("CurveTest", drivebase.getAutonomousCommand("CurvingTest"));
+
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -176,7 +175,8 @@ public class RobotContainer
     _driveController.addOption(("FieldOrientedAnglularVelocity"), drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX()));
+        () -> -driverXbox.getRightX()));
+
 
     SmartDashboard.putData(_autoChooser);
     SmartDashboard.putData(_driveController);

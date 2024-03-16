@@ -10,6 +10,7 @@ import frc.robot.subsystems.Shooter;
 public class RunShooter extends Command {
 
   private Shooter shooter;
+  private double timer;
 
   /** Creates a new RunShooter. */
   public RunShooter(Shooter _shooter) {
@@ -21,15 +22,22 @@ public class RunShooter extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    timer = 0;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setSpeed(1);
-    if (shooter.getSpeedShooter1() >= 5200 && shooter.getSpeedShooter2() >= 5200) {
-      shooter.setIndexerSpeed(0.3);
+    if(shooter.noteInShooter()) {
+      shooter.setSpeed(1);
+
+      if (shooter.getSpeedShooter1() >= 4500 && shooter.getSpeedShooter2() >= 4500 || timer >= 2) {
+        shooter.setIndexerSpeed(0.3);
+      }
     }
+
+    timer += 0.25;
   }
 
   // Called once the command ends or is interrupted.
