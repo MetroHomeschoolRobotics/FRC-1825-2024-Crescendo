@@ -37,7 +37,7 @@ public class GoToSpeaker extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Pose2d robotPose = drivetrain.getPose();
+    Pose2d robotPose = drivetrain.getEstimatedPose();
         ChassisSpeeds robotSpeeds = drivetrain.getRobotVelocity();
 
         Translation2d robotPos = robotPose.getTranslation();

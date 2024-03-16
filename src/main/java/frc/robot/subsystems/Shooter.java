@@ -14,9 +14,10 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.lib.field.FieldInfo;
 import frc.robot.subsystems.aim.AimCalculator;
+import frc.robot.subsystems.aim.TableAimCalculator;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.lib.field.FieldInfo;
 
 public class Shooter extends SubsystemBase {
   private static final Pose2d blueSpeakerPose = new Pose2d(0, 5.5475, new Rotation2d(0));
@@ -24,24 +25,32 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax shooterMotor2 = new CANSparkMax(Constants.shooterMotorID2, CANSparkLowLevel.MotorType.kBrushless);
   private CANSparkMax indexerMotor = new CANSparkMax(Constants.indexerMotorID, CANSparkLowLevel.MotorType.kBrushless);
   private DigitalInput beamBrake = new DigitalInput(2);
-  private final SwerveSubsystem drivetrain;
-
-  private AimCalculator.Aim targetAim; 
+  private SwerveSubsystem drivetrain;
+  private AimCalculator.Aim targetAim; // Target aim is null if not currently aiming
+  private AimCalculator aimCalculator;
+  private final AimCalculator tableAimCalculator;
 
   /** Creates a new Shooter. */
   public Shooter(SwerveSubsystem _drivetrain) {
     indexerMotor.setInverted(true);
     drivetrain = _drivetrain;
+
+    tableAimCalculator = new TableAimCalculator();
+    aimCalculator = tableAimCalculator;
+    
   }
 
   public Translation2d getSpeakerPosition() {
-    return FieldInfo.CRESCENDO_2024.flipPoseForAlliance(blueSpeakerPose).getTranslation();
+    FieldInfo fieldInfo = FieldInfo.CRESCENDO_2024;
+    return fieldInfo.flipPoseForAlliance(blueSpeakerPose).getTranslation();
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Beam Break Triggered Shooter", !beamBrake.get());
-    double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getEstimatedPose().getTranslation());
+    SmartDashboard.putBoolean("Note In Shooter", !beamBrake.get());
+    double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
+    AimCalculator.Aim aim = aimCalculator.calculateAim(SpeakerDistance);
+    targetAim = aim;
     // This method will be called once per scheduler run
   }
 
@@ -69,6 +78,6 @@ public class Shooter extends SubsystemBase {
     return shooterMotor2.getEncoder().getVelocity();
   }
   public AimCalculator.Aim getTargetAim() {
-        return targetAim;
+    return targetAim;
   }
 }
