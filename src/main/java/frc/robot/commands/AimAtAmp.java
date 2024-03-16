@@ -37,12 +37,10 @@ public class AimAtAmp extends Command {
   public void execute() {
     double speed = -anglePID.calculate(wrist.getAbsoluteAngle(), 35);
     double shooterSpeed = 0.5;
-    
     if (shooter.getSpeedShooter1() >= 2000 && shooter.getSpeedShooter2() >= 2000) {
       shooter.setIndexerSpeed(0.3);
     }
     shooter.setSpeed(shooterSpeed);
-
     wrist.setSpeed(speed);
   }
 

@@ -32,7 +32,7 @@ public class RunShooter extends Command {
     if(shooter.noteInShooter()) {
       shooter.setSpeed(1);
 
-      if (shooter.getSpeedShooter1() >= 4500 && shooter.getSpeedShooter2() >= 4500 || timer >= 2) {
+      if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 || timer >= 50) {
         shooter.setIndexerSpeed(0.3);
       }
     }
