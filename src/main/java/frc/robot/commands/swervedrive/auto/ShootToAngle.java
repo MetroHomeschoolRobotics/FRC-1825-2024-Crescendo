@@ -35,7 +35,7 @@ public class ShootToAngle extends Command {
   @Override
   public void execute() {
     //if(shooter.noteInShooter()) {
-      double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), 32);
+      double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), 21);
 
       wrist.setSpeed(setpoint);
       shooter.setSpeed(1);
@@ -50,7 +50,11 @@ public class ShootToAngle extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    shooter.setSpeed(0);
+    wrist.setSpeed(0);
+    shooter.setIndexerSpeed(0);
+  }
 
   // Returns true when the command should end.
   @Override
