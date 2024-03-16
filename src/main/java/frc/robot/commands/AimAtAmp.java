@@ -13,7 +13,7 @@ import frc.robot.subsystems.Wrist;
 public class AimAtAmp extends Command {
 
   private Wrist wrist;
-  private PIDController anglePID = new PIDController(0.01, 0, 0);
+  private PIDController anglePID = new PIDController(0.001, 0, 0);
   private Shooter shooter;
 
   /** Creates a new AimAtAmp. */
@@ -35,7 +35,7 @@ public class AimAtAmp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = -anglePID.calculate(wrist.getAbsoluteAngle(), 120);
+    double speed = -anglePID.calculate(wrist.getAbsoluteAngle(), 35);
     double shooterSpeed = 0.5;
     
     if (shooter.getSpeedShooter1() >= 2000 && shooter.getSpeedShooter2() >= 2000) {
