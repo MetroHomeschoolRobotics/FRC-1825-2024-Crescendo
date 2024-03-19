@@ -172,12 +172,16 @@ public class RobotContainer
   public void getAutoChooserOptions() {
     NamedCommands.registerCommand("ShootAtBase", new RunShooter(shooter, wrist));
     NamedCommands.registerCommand("IntakeNote", new IntakeBackwards(intake, drivebase, wrist, shooter));
-    NamedCommands.registerCommand("ShootToAngle", new ShootToAngle(shooter, wrist));
+    NamedCommands.registerCommand("IntakeNote2", new RunIntake(intake, false, shooter, wrist));
+    NamedCommands.registerCommand("ShootToAngle1", new ShootToAngle(shooter, wrist, 16));
+    NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21));
 
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));
 
     _autoChooser.addOption("Straight3Meters", drivebase.getAutonomousCommand("Straight3Meters"));
-    _autoChooser.addOption("CurveTest", drivebase.getAutonomousCommand("CurvingTest"));
+    _autoChooser.addOption("AutoTest1", drivebase.getAutonomousCommand("CurvingTest"));
+    _autoChooser.addOption("AutoTest2", drivebase.getAutonomousCommand("CurvingTest2"));
+    _autoChooser.addOption("LongTest", drivebase.getAutonomousCommand("LongTest"));
 
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(

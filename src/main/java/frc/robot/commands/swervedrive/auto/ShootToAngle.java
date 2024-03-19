@@ -14,14 +14,16 @@ public class ShootToAngle extends Command {
   private Shooter shooter;
   private Wrist wrist;
   private double timer;
+  private double angle;
   private PIDController anglePID = new PIDController(0.005, 0, 0);
 
   /** Creates a new ShootToAngle. */
-  public ShootToAngle(Shooter _shooter, Wrist _wrist) {
+  public ShootToAngle(Shooter _shooter, Wrist _wrist, double _angle) {
     addRequirements(_shooter, _wrist);
     
     shooter = _shooter;
     wrist = _wrist;
+    angle = _angle;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -35,7 +37,7 @@ public class ShootToAngle extends Command {
   @Override
   public void execute() {
     //if(shooter.noteInShooter()) {
-      double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), 21);
+      double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), angle);
 
       wrist.setSpeed(setpoint);
       shooter.setSpeed(1);

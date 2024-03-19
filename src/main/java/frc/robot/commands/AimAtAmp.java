@@ -35,7 +35,7 @@ public class AimAtAmp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = -anglePID.calculate(wrist.getAbsoluteAngle(), 35);
+    double speed = anglePID.calculate(wrist.getAbsoluteAngle(), -35);
     double shooterSpeed = 0.5;
     if (shooter.getSpeedShooter1() >= 2000 && shooter.getSpeedShooter2() >= 2000) {
       shooter.setIndexerSpeed(0.3);

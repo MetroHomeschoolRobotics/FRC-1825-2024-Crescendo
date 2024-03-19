@@ -32,7 +32,19 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootToAngle"
+            "name": "ShootToAngle2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PickUpSecondNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeNote"
           }
         }
       ]
