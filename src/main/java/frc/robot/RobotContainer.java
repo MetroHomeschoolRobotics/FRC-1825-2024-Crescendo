@@ -182,6 +182,7 @@ public class RobotContainer
     _autoChooser.addOption("AutoTest1", drivebase.getAutonomousCommand("CurvingTest"));
     _autoChooser.addOption("AutoTest2", drivebase.getAutonomousCommand("CurvingTest2"));
     _autoChooser.addOption("LongTest", drivebase.getAutonomousCommand("LongTest"));
+    _autoChooser.addOption("2.5 NoteAuto", drivebase.getAutonomousCommand("PickUpNote 2, 4"));
 
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(

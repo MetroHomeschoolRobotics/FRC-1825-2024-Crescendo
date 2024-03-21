@@ -15,7 +15,9 @@ public class ShootToAngle extends Command {
   private Wrist wrist;
   private double timer;
   private double angle;
-  private PIDController anglePID = new PIDController(0.005, 0, 0);
+  private double kp = 0.005;
+  private PIDController anglePID = new PIDController(kp, 0, 0);
+  private PIDController anglePID2 = new PIDController(kp, 0, 0);
 
   /** Creates a new ShootToAngle. */
   public ShootToAngle(Shooter _shooter, Wrist _wrist, double _angle) {
@@ -40,12 +42,19 @@ public class ShootToAngle extends Command {
       double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), angle);
 
       wrist.setSpeed(setpoint);
-      shooter.setSpeed(1);
+      // shooter.setSpeed(1);
+      shooter.setSpeed(0.1);
 
-      if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint() || timer >= 2) {
+      // if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint() || timer >= 2) {
+      if (shooter.getSpeedShooter1() >= 200 && shooter.getSpeedShooter2() >= 200 && anglePID.atSetpoint() || timer >= 2) {
         shooter.setIndexerSpeed(0.3);
       }
     //}
+      double setpoint2 = anglePID2.calculate(wrist.getAbsoluteAngle(), 60);
+      if (!shooter.noteInShooter()) {
+        
+        wrist.setSpeed(setpoint2);
+      }
 
     timer += 0.04;
   }
@@ -61,6 +70,6 @@ public class ShootToAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer > 3 || !shooter.noteInShooter();
+    return anglePID2.atSetpoint();
   }
 }
