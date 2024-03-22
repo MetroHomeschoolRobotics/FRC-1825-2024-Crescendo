@@ -58,7 +58,7 @@ public class RunIntake extends Command {
   }
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
+  public void end(boolean interrupted) { 
     intake.setSpeed(0);
     indexer.setIndexerSpeed(0);
   }
@@ -66,6 +66,9 @@ public class RunIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return indexer.noteInShooter();
+    if (!reversed)
+      return indexer.noteInShooter();
+    else 
+      return false;
   }
 }
