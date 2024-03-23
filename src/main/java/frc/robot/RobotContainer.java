@@ -143,8 +143,9 @@ public class RobotContainer
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    
+    driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
     driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
+    
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
     m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
@@ -152,12 +153,14 @@ public class RobotContainer
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
-    m_manipulatorController.y().whileTrue(new ShootToAngle(shooter, wrist, -2.5954*Math.pow(shooter.getSpeakerDistance(), 3) + 27.224*Math.pow(shooter.getSpeakerDistance(), 2) - 97.353*shooter.getSpeakerDistance() + 147.07));
+    m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
     
     m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
+    
+    
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
     CommandScheduler.getInstance().setDefaultCommand(wrist, runWrist);
-    driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
+    
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
   }
 

@@ -30,8 +30,8 @@ public class SetRobotPoseToSpeaker extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.setPose(FieldInfo.CRESCENDO_2024.flipPoseForAlliance(new Pose2d(1.2446, 5.512, new Rotation2d(Math.PI))));
-    drive.resetOdometry(FieldInfo.CRESCENDO_2024.flipPoseForAlliance(new Pose2d(1.2446, 5.512, new Rotation2d(Math.PI))));
+    drive.setPose(FieldInfo.CRESCENDO_2024.flipPoseForAlliance(new Pose2d(1.2446, 5.512, new Rotation2d(Math.PI+Math.PI))));
+    drive.resetOdometry(FieldInfo.CRESCENDO_2024.flipPoseForAlliance(new Pose2d(1.2446, 5.512, new Rotation2d(Math.PI+Math.PI))));
   }
 
   // Called once the command ends or is interrupted.

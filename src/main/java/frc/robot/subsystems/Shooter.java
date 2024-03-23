@@ -55,7 +55,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Distance to Speaker April Tag", SpeakerDistance);
     SpeakerNonEstimatedDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
     SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
-    SmartDashboard.putNumber("Speaker angle", -2.5954*Math.pow(getSpeakerDistance(), 3) + 27.224*Math.pow(getSpeakerDistance(), 2) - 97.353*getSpeakerDistance() + 147.07);
+    SmartDashboard.putNumber("Speaker angle", getAngleToSpeaker());
     targetAim = aim;
     // This method will be called once per scheduler run
   }
@@ -88,5 +88,8 @@ public class Shooter extends SubsystemBase {
   }
   public double getSpeakerDistance() {
     return SpeakerNonEstimatedDistance;
+  }
+  public double getAngleToSpeaker(){
+    return -2.5954*Math.pow(getSpeakerDistance(), 3) + 27.224*Math.pow(getSpeakerDistance(), 2) - 97.353*getSpeakerDistance() + 147.07;
   }
 }
