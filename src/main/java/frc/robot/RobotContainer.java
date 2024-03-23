@@ -27,6 +27,7 @@ import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
 import frc.robot.commands.RunWrist;
+import frc.robot.commands.SetRobotPoseToSpeaker;
 import frc.robot.commands.swervedrive.auto.IntakeBackwards;
 import frc.robot.commands.swervedrive.auto.ShootToAngle;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
@@ -150,6 +151,7 @@ public class RobotContainer
     m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
     CommandScheduler.getInstance().setDefaultCommand(wrist, runWrist);
+    driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
   }
 
@@ -168,9 +170,6 @@ public class RobotContainer
   public void setMotorBrake(boolean brake)
   {
     drivebase.setMotorBrake(brake);
-  }
-  public void resetPose() {
-    drivebase.resetPose(drivebase.getPose());
   }
 
   public void getAutoChooserOptions() {
