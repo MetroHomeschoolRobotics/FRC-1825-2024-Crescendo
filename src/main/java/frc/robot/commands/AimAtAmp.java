@@ -18,6 +18,7 @@ public class AimAtAmp extends Command {
   private PIDController anglePID = new PIDController(0.02, 0, 0);
   private Shooter shooter;
   private Elevator elevator;
+  private double timer;
 
   /** Creates a new AimAtAmp. */
   public AimAtAmp(Wrist _wrist, Shooter _shooter, Elevator _elevator) {
@@ -35,6 +36,7 @@ public class AimAtAmp extends Command {
   @Override
   public void initialize() {
     anglePID.enableContinuousInput(-180, 180);
+    timer = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,13 +45,15 @@ public class AimAtAmp extends Command {
     double speed = anglePID.calculate(wrist.getAbsoluteAngle(), -35);
 
     double shooterSpeed = 0.2;
-    if (anglePID.atSetpoint()) {
+    if (anglePID.atSetpoint() || timer > 2) {
       shooter.setIndexerSpeed(0.3);
     }else {
       elevator.setSpeed(-0.15);
     }
     shooter.setSpeed(shooterSpeed);
     wrist.setSpeed(speed);
+
+    timer += 0.04;
   }
 
   // Called once the command ends or is interrupted.

@@ -32,6 +32,7 @@ import frc.robot.commands.RunWrist;
 import frc.robot.commands.ShootToSpeaker;
 import frc.robot.commands.SetRobotPoseToSpeaker;
 import frc.robot.commands.swervedrive.auto.IntakeBackwards;
+import frc.robot.commands.swervedrive.auto.SetWristToAngle;
 import frc.robot.commands.swervedrive.auto.ShootToAngle;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.logging.FieldView;
@@ -153,7 +154,7 @@ public class RobotContainer
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
-    m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
+    m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
     
     m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
     
@@ -185,6 +186,7 @@ public class RobotContainer
     NamedCommands.registerCommand("ShootAtBase", new RunShooter(shooter, wrist));
     NamedCommands.registerCommand("IntakeNote", new IntakeBackwards(intake, drivebase, wrist, shooter));
     NamedCommands.registerCommand("IntakeNote2", new RunIntake(intake, false, shooter, wrist));
+    NamedCommands.registerCommand("ShootToSpeaker", new ShootToSpeaker(shooter, wrist, drivebase).andThen(new SetWristToAngle(wrist, 60)));
     NamedCommands.registerCommand("ShootToAngle1", new ShootToAngle(shooter, wrist, 16));
     NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21));
     NamedCommands.registerCommand("ShootToAngle4", new ShootToAngle(shooter, wrist, 25));
@@ -196,6 +198,7 @@ public class RobotContainer
     _autoChooser.addOption("AutoTest2", drivebase.getAutonomousCommand("CurvingTest2"));
     _autoChooser.addOption("LongTest", drivebase.getAutonomousCommand("LongTest"));
     _autoChooser.addOption("2.5 NoteAuto", drivebase.getAutonomousCommand("PickUpNote 2, 4"));
+    _autoChooser.addOption("4 Note Auto", drivebase.getAutonomousCommand("PickUpNote 2, 1, 4"));
 
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(

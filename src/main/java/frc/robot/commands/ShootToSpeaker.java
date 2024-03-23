@@ -7,23 +7,26 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class ShootToSpeaker extends Command {
   private Shooter shooter;
   private Wrist wrist;
+  private SwerveSubsystem drivetrain;
+
   private double timer;
 
   private double kp = 0.02;
   private PIDController anglePID = new PIDController(kp, 0, 0);
-  private PIDController anglePID2 = new PIDController(0.005, 0, 0);
-
   /** Creates a new ShootToSpeaker. */
-  public ShootToSpeaker(Shooter _shooter, Wrist _wrist) {
-    addRequirements(_shooter, _wrist);
+  public ShootToSpeaker(Shooter _shooter, Wrist _wrist, SwerveSubsystem swerveSubsystem) {
+    addRequirements(_shooter, _wrist, swerveSubsystem);
     wrist = _wrist;
     shooter = _shooter;
+    drivetrain = swerveSubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -37,6 +40,8 @@ public class ShootToSpeaker extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    drivetrain.drive(new ChassisSpeeds());
+    
     double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), MathUtil.clamp(shooter.getAngleToSpeaker(), -60, 60));
   
     wrist.setSpeed(setpoint);
@@ -45,11 +50,6 @@ public class ShootToSpeaker extends Command {
     if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint() || timer >= 2) {
     // if (shooter.getSpeedShooter1() >= 200 && shooter.getSpeedShooter2() >= 200 && anglePID.atSetpoint() || timer >= 2) {
       shooter.setIndexerSpeed(0.3);
-    }
-
-    if (!shooter.noteInShooter()) {
-      double setpoint2 = anglePID2.calculate(wrist.getAbsoluteAngle(), 60);
-      wrist.setSpeed(setpoint2);
     }
 
     timer += 0.04;
@@ -61,11 +61,12 @@ public class ShootToSpeaker extends Command {
     shooter.setSpeed(0);
     wrist.setSpeed(0);
     shooter.setIndexerSpeed(0);
+    System.out.println("part 1 tested");;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return anglePID2.atSetpoint();
+    return !shooter.noteInShooter();
   }
 }
