@@ -147,6 +147,7 @@ public class RobotContainer
     m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator));
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
+    m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 32));
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
     CommandScheduler.getInstance().setDefaultCommand(wrist, runWrist);
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
@@ -175,6 +176,7 @@ public class RobotContainer
     NamedCommands.registerCommand("IntakeNote2", new RunIntake(intake, false, shooter, wrist));
     NamedCommands.registerCommand("ShootToAngle1", new ShootToAngle(shooter, wrist, 16));
     NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21));
+    NamedCommands.registerCommand("ShootToAngle4", new ShootToAngle(shooter, wrist, 25));
 
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));
 
