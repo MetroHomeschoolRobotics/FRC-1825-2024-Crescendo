@@ -8,6 +8,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Distance;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -27,6 +29,7 @@ import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
 import frc.robot.commands.RunWrist;
+import frc.robot.commands.ShootToSpeaker;
 import frc.robot.commands.swervedrive.auto.IntakeBackwards;
 import frc.robot.commands.swervedrive.auto.ShootToAngle;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
@@ -146,7 +149,10 @@ public class RobotContainer
     m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
     m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator));
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
-    m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
+    // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
+    // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
+    m_manipulatorController.y().whileTrue(new ShootToAngle(shooter, wrist, -2.5954*Math.pow(shooter.getSpeakerDistance(), 3) + 27.224*Math.pow(shooter.getSpeakerDistance(), 2) - 97.353*shooter.getSpeakerDistance() + 147.07));
+    
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
     CommandScheduler.getInstance().setDefaultCommand(wrist, runWrist);
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());

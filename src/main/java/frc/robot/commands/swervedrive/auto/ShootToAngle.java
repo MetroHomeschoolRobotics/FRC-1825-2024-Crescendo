@@ -4,6 +4,7 @@
 
 package frc.robot.commands.swervedrive.auto;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
@@ -15,9 +16,9 @@ public class ShootToAngle extends Command {
   private Wrist wrist;
   private double timer;
   private double angle;
-  private double kp = 0.005;
+  private double kp = 0.02;
   private PIDController anglePID = new PIDController(kp, 0, 0);
-  private PIDController anglePID2 = new PIDController(kp, 0, 0);
+  private PIDController anglePID2 = new PIDController(0.005, 0, 0);
 
   /** Creates a new ShootToAngle. */
   public ShootToAngle(Shooter _shooter, Wrist _wrist, double _angle) {
@@ -25,7 +26,7 @@ public class ShootToAngle extends Command {
     
     shooter = _shooter;
     wrist = _wrist;
-    angle = _angle;
+    angle = MathUtil.clamp(_angle, -60, 60);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -42,11 +43,11 @@ public class ShootToAngle extends Command {
       double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), angle);
 
       wrist.setSpeed(setpoint);
-      // shooter.setSpeed(1);
-      shooter.setSpeed(0.1);
+      shooter.setSpeed(1);
+      // shooter.setSpeed(0.1);
 
-      // if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint() || timer >= 2) {
-      if (shooter.getSpeedShooter1() >= 200 && shooter.getSpeedShooter2() >= 200 && anglePID.atSetpoint() || timer >= 2) {
+      if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint() || timer >= 2) {
+      // if (shooter.getSpeedShooter1() >= 200 && shooter.getSpeedShooter2() >= 200 && anglePID.atSetpoint() || timer >= 2) {
         shooter.setIndexerSpeed(0.3);
       }
     //}
