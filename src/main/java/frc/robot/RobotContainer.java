@@ -30,6 +30,7 @@ import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
 import frc.robot.commands.RunWrist;
 import frc.robot.commands.ShootToSpeaker;
+import frc.robot.commands.SetRobotPoseToSpeaker;
 import frc.robot.commands.swervedrive.auto.IntakeBackwards;
 import frc.robot.commands.swervedrive.auto.ShootToAngle;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
@@ -153,8 +154,10 @@ public class RobotContainer
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
     m_manipulatorController.y().whileTrue(new ShootToAngle(shooter, wrist, -2.5954*Math.pow(shooter.getSpeakerDistance(), 3) + 27.224*Math.pow(shooter.getSpeakerDistance(), 2) - 97.353*shooter.getSpeakerDistance() + 147.07));
     
+    m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
     CommandScheduler.getInstance().setDefaultCommand(wrist, runWrist);
+    driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
   }
 
@@ -174,9 +177,6 @@ public class RobotContainer
   {
     drivebase.setMotorBrake(brake);
   }
-  public void resetPose() {
-    drivebase.resetPose(drivebase.getPose());
-  }
 
   public void getAutoChooserOptions() {
     NamedCommands.registerCommand("ShootAtBase", new RunShooter(shooter, wrist));
@@ -184,6 +184,7 @@ public class RobotContainer
     NamedCommands.registerCommand("IntakeNote2", new RunIntake(intake, false, shooter, wrist));
     NamedCommands.registerCommand("ShootToAngle1", new ShootToAngle(shooter, wrist, 16));
     NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21));
+    NamedCommands.registerCommand("ShootToAngle4", new ShootToAngle(shooter, wrist, 25));
 
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));
 

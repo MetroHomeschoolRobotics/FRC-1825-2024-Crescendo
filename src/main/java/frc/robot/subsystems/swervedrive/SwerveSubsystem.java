@@ -352,7 +352,7 @@ public class SwerveSubsystem extends SubsystemBase
     prevGyroAngle = gyroAngle;
 
     swerveDrive.updateOdometry();
-    
+    resetEstimatorPose(getPose());
 
   }
 
@@ -372,6 +372,10 @@ public class SwerveSubsystem extends SubsystemBase
   public SwerveDriveKinematics getKinematics()
   {
     return swerveDrive.kinematics;
+  }
+
+  public SwerveDrive getDrive(){
+    return swerveDrive;
   }
 
   /**
@@ -396,10 +400,13 @@ public class SwerveSubsystem extends SubsystemBase
   {
     return swerveDrive.getPose();
   }
-  public void resetPose(Pose2d pose) {
+  public void resetEstimatorPose(Pose2d pose) {
     estimator.resetPose(pose);
   }
 
+  public void setPose(Pose2d pose){
+    estimator.resetPose(pose);
+  }
   /**
    * Set chassis speeds with closed-loop velocity control.
    *

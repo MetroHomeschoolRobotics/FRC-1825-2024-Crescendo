@@ -46,14 +46,15 @@ public class ShootToAngle extends Command {
       shooter.setSpeed(1);
       // shooter.setSpeed(0.1);
 
-      if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint() || timer >= 2) {
-      // if (shooter.getSpeedShooter1() >= 200 && shooter.getSpeedShooter2() >= 200 && anglePID.atSetpoint() || timer >= 2) {
-        shooter.setIndexerSpeed(0.3);
+        if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint() || timer >= 2) {
+        // if (shooter.getSpeedShooter1() >= 200 && shooter.getSpeedShooter2() >= 200 && anglePID.atSetpoint() || timer >= 2) {
+          shooter.setIndexerSpeed(0.3);
+        }
       }
     //}
-      double setpoint2 = anglePID2.calculate(wrist.getAbsoluteAngle(), 60);
+      
       if (!shooter.noteInShooter()) {
-        
+        double setpoint2 = anglePID2.calculate(wrist.getAbsoluteAngle(), 60);
         wrist.setSpeed(setpoint2);
       }
 
