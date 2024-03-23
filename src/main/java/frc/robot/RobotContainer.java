@@ -168,6 +168,9 @@ public class RobotContainer
   {
     drivebase.setMotorBrake(brake);
   }
+  public void resetPose() {
+    drivebase.resetPose(drivebase.getPose());
+  }
 
   public void getAutoChooserOptions() {
     NamedCommands.registerCommand("ShootAtBase", new RunShooter(shooter, wrist));
