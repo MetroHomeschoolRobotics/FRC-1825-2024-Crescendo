@@ -50,7 +50,7 @@ public class ShootToAngle extends Command {
         // if (shooter.getSpeedShooter1() >= 200 && shooter.getSpeedShooter2() >= 200 && anglePID.atSetpoint() || timer >= 2) {
           shooter.setIndexerSpeed(0.3);
         }
-      }
+      
     //}
       
       if (!shooter.noteInShooter()) {
