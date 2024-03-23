@@ -147,7 +147,7 @@ public class RobotContainer
     m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator));
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
-    m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 32));
+    m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
     CommandScheduler.getInstance().setDefaultCommand(wrist, runWrist);
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
