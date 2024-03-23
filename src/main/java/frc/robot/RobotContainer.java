@@ -142,7 +142,7 @@ public class RobotContainer
     
     driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
-    m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+    m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
     m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
     m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator));
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
@@ -168,6 +168,9 @@ public class RobotContainer
   public void setMotorBrake(boolean brake)
   {
     drivebase.setMotorBrake(brake);
+  }
+  public void resetPose() {
+    drivebase.resetPose(drivebase.getPose());
   }
 
   public void getAutoChooserOptions() {
