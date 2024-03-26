@@ -105,7 +105,7 @@ public class SwerveSubsystem extends SubsystemBase
                 FieldInfo.CRESCENDO_2024,
                 new TagTrackerInput.CameraInfo( // 16 ft + 1
                         "ov9281",
-                        new Pose3d(new Translation3d(0.6096, 0.2595, 0), new Rotation3d(Units.degreesToRadians(180), Math.toRadians(90-60), 0))));
+                        new Pose3d(new Translation3d(0.6096, 0.2595, 0), new Rotation3d(Math.PI *2, Math.toRadians(90-60), 0))));
     setupPathPlanner();
   }
 
@@ -365,7 +365,7 @@ public class SwerveSubsystem extends SubsystemBase
     List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
     
     for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
-      swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
+      swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
     }
     swerveDrive.updateOdometry();
 

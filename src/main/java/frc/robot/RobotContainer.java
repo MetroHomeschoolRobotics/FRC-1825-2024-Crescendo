@@ -157,6 +157,7 @@ public class RobotContainer
     m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
     
     m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
+    driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
     
     
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
