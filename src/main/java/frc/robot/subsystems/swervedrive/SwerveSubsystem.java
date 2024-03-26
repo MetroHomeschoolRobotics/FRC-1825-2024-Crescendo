@@ -11,8 +11,11 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -26,8 +29,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants.AutonConstants;
 import frc.robot.lib.field.FieldInfo;
+import frc.robot.subsystems.tagtracker.TagTrackerInput;
 
 import java.io.File;
+import java.util.List;
 import java.util.function.DoubleSupplier;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -53,11 +58,12 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public double maximumSpeed = Units.feetToMeters(16.6);
 
+  private TagTrackerInput tagTracker;
   //private SwerveKinematics kinematics;
-  private SwerveEstimator estimator;
+  //private SwerveEstimator estimator;
 
-  private SwerveModulePosition[] prevPositions;
-  private Rotation2d prevGyroAngle;
+  //private SwerveModulePosition[] prevPositions;
+  //private Rotation2d prevGyroAngle;
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
    *
@@ -82,7 +88,7 @@ public class SwerveSubsystem extends SubsystemBase
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
-    estimator = new SwerveEstimator(FieldInfo.CRESCENDO_2024);
+    //estimator = new SwerveEstimator(FieldInfo.CRESCENDO_2024);
     //kinematics = new SwerveKinematics(swerveDrive, maximumSpeed);
     try
     {
@@ -95,6 +101,11 @@ public class SwerveSubsystem extends SubsystemBase
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
     swerveDrive.setCosineCompensator(!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
+    tagTracker = new TagTrackerInput(
+                FieldInfo.CRESCENDO_2024,
+                new TagTrackerInput.CameraInfo( // 16 ft + 1
+                        "ov9281",
+                        new Pose3d(new Translation3d(0.6096, 0.2595, 0), new Rotation3d(Math.PI *2, Math.toRadians(90-60), 0))));
     setupPathPlanner();
   }
 
@@ -334,25 +345,29 @@ public class SwerveSubsystem extends SubsystemBase
 
   @Override
   public void periodic()
-  {
-    // Update estimator
-    // Do refresh here, so we get the most up-to-date data
-    SwerveModulePosition[] positions = swerveDrive.getModulePositions();
-    Rotation2d gyroAngle = swerveDrive.getGyro().getRotation3d().toRotation2d();
-    if (prevPositions != null) {
-      Twist2d twist = swerveDrive.kinematics.toTwist2d(positions);
-      // Logger.recordOutput("Drive/Estimated Twist", twist);
+ {
+  //   // Update estimator
+  //   // Do refresh here, so we get the most up-to-date data
+  //   SwerveModulePosition[] positions = swerveDrive.getModulePositions();
+  //   Rotation2d gyroAngle = swerveDrive.getGyro().getRotation3d().toRotation2d();
+  //   if (prevPositions != null) {
+  //     Twist2d twist = swerveDrive.kinematics.toTwist2d(positions);
+  //     // Logger.recordOutput("Drive/Estimated Twist", twist);
 
-      // We trust the gyro more than the kinematics estimate
-      twist.dtheta = gyroAngle.getRadians() - prevGyroAngle.getRadians();
+  //     // We trust the gyro more than the kinematics estimate
+  //     twist.dtheta = gyroAngle.getRadians() - prevGyroAngle.getRadians();
 
-      estimator.update(twist);
+  //     estimator.update(twist, swerveDrive);
+  //   }
+  //   prevPositions = positions;
+  //   prevGyroAngle = gyroAngle;
+
+    List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
+    
+    for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
+      swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
     }
-    prevPositions = positions;
-    prevGyroAngle = gyroAngle;
-
     swerveDrive.updateOdometry();
-    resetEstimatorPose(getPose());
 
   }
 
@@ -361,9 +376,6 @@ public class SwerveSubsystem extends SubsystemBase
   {
   }
 
-  public Pose2d getEstimatedPose() {
-    return estimator.getEstimatedPose();
-}
   /**
    * Get the swerve drive kinematics object.
    *
@@ -388,7 +400,6 @@ public class SwerveSubsystem extends SubsystemBase
   public void resetOdometry(Pose2d initialHolonomicPose)
   {
     swerveDrive.resetOdometry(initialHolonomicPose);
-    estimator.resetPose(initialHolonomicPose);
   }
 
   /**
@@ -400,13 +411,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     return swerveDrive.getPose();
   }
-  public void resetEstimatorPose(Pose2d pose) {
-    estimator.resetPose(pose);
-  }
 
-  public void setPose(Pose2d pose){
-    estimator.resetPose(pose);
-  }
   /**
    * Set chassis speeds with closed-loop velocity control.
    *
