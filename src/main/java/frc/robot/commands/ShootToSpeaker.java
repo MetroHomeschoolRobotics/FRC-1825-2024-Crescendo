@@ -60,8 +60,7 @@ public class ShootToSpeaker extends Command {
   public void end(boolean interrupted) {
     shooter.setSpeed(0);
     wrist.setSpeed(0);
-    shooter.setIndexerSpeed(0);
-    System.out.println("part 1 tested");;
+    shooter.setIndexerSpeed(0);;;;;;;;;;;;;;;; // semicolons are GREAT!!!!!
   }
 
   // Returns true when the command should end.

@@ -21,7 +21,7 @@ public class Wrist extends SubsystemBase {
   public Wrist() {}
 
   public void setSpeed(double speed) {
-    wristMotor.set(speed);
+    wristMotor.set(speed);                
   }
 
   public double getAbsoluteAngle() {

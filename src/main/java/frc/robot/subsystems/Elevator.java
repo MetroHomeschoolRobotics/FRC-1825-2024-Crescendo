@@ -25,8 +25,10 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
-    elevatorMotor1.set(speed);
-    elevatorMotor2.set(speed);
+    if(!beamBreak.get() || speed <= 0) {
+      elevatorMotor1.set(speed);
+      elevatorMotor2.set(speed);
+    }
   }
   public double getDistance() {
     return (elevatorMotor1.getEncoder().getPosition()+elevatorMotor2.getEncoder().getPosition()/2);
@@ -44,6 +46,7 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Elevator is lowest", isLowest());
+    SmartDashboard.putNumber("elevator Distance", getDistance());
 
     if(isLowest()) {
       resetEncoders();

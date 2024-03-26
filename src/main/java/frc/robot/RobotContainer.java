@@ -31,7 +31,9 @@ import frc.robot.commands.RunShooter;
 import frc.robot.commands.RunWrist;
 import frc.robot.commands.ShootToSpeaker;
 import frc.robot.commands.SetRobotPoseToSpeaker;
+import frc.robot.commands.swervedrive.auto.AutoIntake;
 import frc.robot.commands.swervedrive.auto.IntakeBackwards;
+import frc.robot.commands.swervedrive.auto.LowerElevator;
 import frc.robot.commands.swervedrive.auto.SetWristToAngle;
 import frc.robot.commands.swervedrive.auto.ShootToAngle;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
@@ -150,7 +152,7 @@ public class RobotContainer
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
     m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
-    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator));
+    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 60)));
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
@@ -185,13 +187,13 @@ public class RobotContainer
   public void getAutoChooserOptions() {
     NamedCommands.registerCommand("ShootAtBase", new RunShooter(shooter, wrist));
     NamedCommands.registerCommand("IntakeNote", new IntakeBackwards(intake, drivebase, wrist, shooter));
-    NamedCommands.registerCommand("IntakeNote2", new RunIntake(intake, false, shooter, wrist));
+    NamedCommands.registerCommand("IntakeNote2", new AutoIntake(intake, shooter, wrist));
     NamedCommands.registerCommand("ShootToSpeaker", new ShootToSpeaker(shooter, wrist, drivebase).andThen(new SetWristToAngle(wrist, 60)));
     NamedCommands.registerCommand("ShootToAngle1", new ShootToAngle(shooter, wrist, 16));
     NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21));
     NamedCommands.registerCommand("ShootToAngle4", new ShootToAngle(shooter, wrist, 25));
 
-    _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));
+    _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));;;;;;;;;;;
 
     _autoChooser.addOption("Straight3Meters", drivebase.getAutonomousCommand("Straight3Meters"));
     _autoChooser.addOption("AutoTest1", drivebase.getAutonomousCommand("CurvingTest"));
