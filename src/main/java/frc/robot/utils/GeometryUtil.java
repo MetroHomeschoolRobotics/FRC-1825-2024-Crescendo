@@ -12,4 +12,24 @@ public final class GeometryUtil {
     public static Twist2d multiplyTwist(Twist2d twist, double factor) {
         return new Twist2d(twist.dx * factor, twist.dy * factor, twist.dtheta * factor);
     }
+    public static double distanceToLimit(double elevatorExtension, double shoulderAngle) {
+        final double defaultShoulderAngle = -58.0;  // not actually used in this code; just for reference
+        final double defaultShoulderClearance = 22.19;  // Distance from shoulder center to 48" upper limit
+        final double elevatorAngle = 16.5;       // Angle of elevator relative to vertical
+        final int numObstructions = 3;       // Trap wheel, idler roller, shooter compliant wheel
+        final double[] obstructionAngles = { -57.33, -37.56, 2.6 };
+        final double[] obstructionDistances = { 19.5, 15.98, 8.12 };
+        final double[] obstructionRadii = { 3.94/2.0, 1.50/2.0, 4.0/2.0 };
+    
+        double shoulderClearance = defaultShoulderClearance - Math.cos(Math.toRadians(elevatorAngle)) * elevatorExtension;
+    
+        // get the maximum height above the shoulder of all obstructions
+        double maximumHeight = defaultShoulderClearance-48.0; // height of floor
+        for(int i=0;i<numObstructions;i++) {
+            double obstructionCenterY = obstructionDistances[i]*Math.sin(Math.toRadians(shoulderAngle + obstructionAngles[i]));
+            maximumHeight = Math.max(maximumHeight, obstructionCenterY + obstructionRadii[i]);
+        }
+    
+        return shoulderClearance - maximumHeight;
+    }
 }
