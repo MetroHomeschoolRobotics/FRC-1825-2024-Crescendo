@@ -12,6 +12,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -105,7 +106,7 @@ public class SwerveSubsystem extends SubsystemBase
                 FieldInfo.CRESCENDO_2024,
                 new TagTrackerInput.CameraInfo( // 16 ft + 1
                         "ov9281",
-                        new Pose3d(new Translation3d(0.6096, 0.2595, 0), new Rotation3d(Math.PI *2, Math.toRadians(90-60), 0))));
+                        new Pose3d(new Translation3d(0.6096, 0.2595, 0), new Rotation3d(new Quaternion(6.123233995736766, 0.0, Math.toRadians(90-60), 1)))));
     setupPathPlanner();
   }
 
