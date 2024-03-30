@@ -60,7 +60,7 @@ public final class TagTrackerInput {
             cameras[i] = new TagTrackerCamera(
                     info.name,
                     camerasTable.getSubTable(info.name),
-                    GeometryUtil.toTransform(info.robotRelPose).inverse());
+                    GeometryUtil.toTransform(info.robotRelPose));
         }
     }
 
