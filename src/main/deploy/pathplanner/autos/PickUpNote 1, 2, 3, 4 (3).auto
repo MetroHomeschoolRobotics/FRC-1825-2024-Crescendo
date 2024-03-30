@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.172635678604691,
-      "y": 5.54412553269551
+      "x": 0.6453024017159148,
+      "y": 4.5749724832783
     },
-    "rotation": 0
+    "rotation": -60.01836063115069
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Grab Note 3 (2)"
+                  "pathName": "Grab Note 3 (3)"
                 }
               },
               {
