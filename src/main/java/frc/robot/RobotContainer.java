@@ -196,12 +196,9 @@ public class RobotContainer
 
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));;;;;;;;;;;
 
-    _autoChooser.addOption("Straight3Meters", drivebase.getAutonomousCommand("Straight3Meters"));
-    _autoChooser.addOption("AutoTest1", drivebase.getAutonomousCommand("CurvingTest"));
-    _autoChooser.addOption("AutoTest2", drivebase.getAutonomousCommand("CurvingTest2"));
-    _autoChooser.addOption("LongTest", drivebase.getAutonomousCommand("LongTest"));
     _autoChooser.addOption("2.5 NoteAuto", drivebase.getAutonomousCommand("PickUpNote 2, 4"));
     _autoChooser.addOption("4 Note Auto", drivebase.getAutonomousCommand("PickUpNote 2, 1, 4"));
+    _autoChooser.addOption("5 Note Auto attempt", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 4"));
 
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(

@@ -21,11 +21,13 @@ public class Wrist extends SubsystemBase {
   public Wrist() {}
 
   public void setSpeed(double speed) {
-    wristMotor.set(speed);                
+    if(speed <= 0 || getAbsoluteAngle() <= 59){
+      wristMotor.set(speed);        
+    }        
   }
 
   public double getAbsoluteAngle() {
-    return rotationEncoder.getAbsolutePosition()*(360/1)-156.2;
+    return rotationEncoder.getAbsolutePosition()*(360/1)-215.1;
   }
 
   @Override
