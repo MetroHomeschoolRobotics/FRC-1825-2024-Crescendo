@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6310501509891913,
-      "y": 6.527530832839443
+      "x": 1.17,
+      "y": 5.54
     },
     "rotation": 0
   },
@@ -47,6 +47,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootToSpeaker"
           }
         },
         {

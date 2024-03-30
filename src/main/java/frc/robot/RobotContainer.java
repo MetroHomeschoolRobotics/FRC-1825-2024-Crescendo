@@ -193,6 +193,7 @@ public class RobotContainer
     NamedCommands.registerCommand("ShootToAngle1", new ShootToAngle(shooter, wrist, 16));
     NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21));
     NamedCommands.registerCommand("ShootToAngle4", new ShootToAngle(shooter, wrist, 25));
+    NamedCommands.registerCommand("GoToSpeaker", new GoToSpeaker(drivebase, shooter));
 
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));;;;;;;;;;;
 
