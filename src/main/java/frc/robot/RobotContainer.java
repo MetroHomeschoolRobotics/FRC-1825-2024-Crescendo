@@ -74,7 +74,7 @@ public class RobotContainer
   final CommandXboxController driverXbox = new CommandXboxController(0);
 
   private final RunElevator runElevator = new RunElevator(elevator, wrist, m_manipulatorController);
-  private final RunWrist runWrist = new RunWrist(wrist, intake, m_manipulatorController);
+  private final RunWrist runWrist = new RunWrist(wrist, intake, elevator, m_manipulatorController);
 
   public SendableChooser<Command> _autoChooser = new SendableChooser<>();
   public SendableChooser<Command> _driveController = new SendableChooser<>();
@@ -193,14 +193,18 @@ public class RobotContainer
     NamedCommands.registerCommand("ShootToAngle1", new ShootToAngle(shooter, wrist, 16));
     NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21));
     NamedCommands.registerCommand("ShootToAngle4", new ShootToAngle(shooter, wrist, 25));
-    NamedCommands.registerCommand("GoToSpeaker", new GoToSpeaker(drivebase, shooter));
+    NamedCommands.registerCommand("TurnToSpeaker", new GoToSpeaker(drivebase, shooter));
 
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));;;;;;;;;;;
 
-    _autoChooser.addOption("3 NoteAuto (2,4)", drivebase.getAutonomousCommand("PickUpNote 2, 4"));
-    _autoChooser.addOption("4 Note Auto (1,2,4)", drivebase.getAutonomousCommand("PickUpNote 2, 1, 4"));
+    _autoChooser.addOption("3 NoteAuto (2,4 (2))", drivebase.getAutonomousCommand("PickUpNote 2, 4"));
+    _autoChooser.addOption("4 Note Auto (1,2,4 (2))", drivebase.getAutonomousCommand("PickUpNote 2, 1, 4"));
+    _autoChooser.addOption("4 Note Auto (1,4,5 (1))", drivebase.getAutonomousCommand("PickUpNote 1, 4, 5 (1)"));
+    _autoChooser.addOption("4 Note Auto (3,7,8 (3))", drivebase.getAutonomousCommand("PickUpNote 3, 7, 8 (3)"));
+    _autoChooser.addOption("4 Note Auto (2,3,4 (1))", drivebase.getAutonomousCommand("PickUpNote 2, 3, 4 (2)"));
     _autoChooser.addOption("5 Note Auto (1,2,3,4 (2))", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 4 (2)"));
     _autoChooser.addOption("5 Note Auto (1,2,3,4 (3)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 4 (3)"));
+    _autoChooser.addOption("5 Note Auto (1,2,3,8 (1)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 8 (1)"));
 
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(

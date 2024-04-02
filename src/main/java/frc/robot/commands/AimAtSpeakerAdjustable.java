@@ -49,13 +49,13 @@ public class AimAtSpeakerAdjustable extends Command {
     }
     shooter.setSpeed(1);
 
-    wrist.setSpeed(speed);
+    wrist.setSpeed(speed, 100);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    wrist.setSpeed(0);
+    wrist.setSpeed(0, 100);
     shooter.setSpeed(0);
     shooter.setIndexerSpeed(0);
   }

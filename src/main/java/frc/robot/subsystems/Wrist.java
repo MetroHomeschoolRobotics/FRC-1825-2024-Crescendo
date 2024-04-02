@@ -21,12 +21,15 @@ public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   public Wrist() {}
 
-  public void setSpeed(double speed) {
-    if (getAbsoluteAngle() >= -59  && getAbsoluteAngle() <= 59){
+  public void setSpeed(double speed, double distToLim) {
+    if (getAbsoluteAngle() >= -59  && getAbsoluteAngle() <= 59 && distToLim > Constants.distToLimOffset){
       wristMotor.set(speed);
-    } else if ( getAbsoluteAngle() < -59 && speed >= 0) {
+    } //else if (speed >= 0 && distToLim > 5 ) {
+      //wristMotor.set(speed);
+    //}
+    else if ( getAbsoluteAngle() < -59 && speed >= 0) {
       wristMotor.set(speed);
-    } else if ( getAbsoluteAngle() > 59 && speed <= 0) {
+    } else if ( getAbsoluteAngle() > 59 && speed <= 0 && distToLim > Constants.distToLimOffset) {
       wristMotor.set(speed);
     } else {
       wristMotor.set(0);

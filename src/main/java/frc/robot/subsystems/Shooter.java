@@ -90,6 +90,6 @@ public class Shooter extends SubsystemBase {
     return SpeakerNonEstimatedDistance;
   }
   public double getAngleToSpeaker(){
-    return -2.5954*Math.pow(getSpeakerDistance(), 3) + 27.224*Math.pow(getSpeakerDistance(), 2) - 97.353*getSpeakerDistance() + 147.07+1;
+    return -2.5954*Math.pow(getSpeakerDistance(), 3) + 27.224*Math.pow(getSpeakerDistance(), 2) - 97.353*getSpeakerDistance() + 147.07+1.5;
   }
 }

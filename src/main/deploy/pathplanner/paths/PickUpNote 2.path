@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9399147687184266,
-        "y": 3.8481076962153926
+        "x": 2.868912646916203,
+        "y": 4.113976955226638
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5574464482262298,
-        "y": 4.517963480371406
+        "x": 1.4864443264240064,
+        "y": 4.78383273938265
       },
       "isLocked": false,
-      "linkedName": "Note3 1"
+      "linkedName": "Strange Point1"
     },
     {
       "anchor": {

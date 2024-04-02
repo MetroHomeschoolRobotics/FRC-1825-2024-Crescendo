@@ -44,7 +44,7 @@ public class ShootToAngle extends Command {
     //if(shooter.noteInShooter()) {
       double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), MathUtil.clamp(angle, -60, 60));
       
-      wrist.setSpeed(setpoint);
+      wrist.setSpeed(setpoint, 100);
       shooter.setSpeed(1);
       // shooter.setSpeed(0.1);
 
@@ -55,7 +55,7 @@ public class ShootToAngle extends Command {
       
       if (!shooter.noteInShooter()) {
         double setpoint2 = anglePID2.calculate(wrist.getAbsoluteAngle(), 60);
-        wrist.setSpeed(setpoint2);
+        wrist.setSpeed(setpoint2, 100);
       }
 
     timer += 0.04;
@@ -65,7 +65,7 @@ public class ShootToAngle extends Command {
   @Override
   public void end(boolean interrupted) {
     shooter.setSpeed(0);
-    wrist.setSpeed(0);
+    wrist.setSpeed(0, 100);
     shooter.setIndexerSpeed(0);
   }
 

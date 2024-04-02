@@ -16,24 +16,30 @@
     },
     {
       "anchor": {
-        "x": 2.9399147687184266,
-        "y": 3.8481076962153926
+        "x": 2.9062276306370793,
+        "y": 4.179278176738172
       },
       "prevControl": {
-        "x": 1.0165447358548072,
-        "y": 4.318264815359832
+        "x": 2.402475350405246,
+        "y": 4.347195603482113
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Note3 1"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6,
+      "rotationDegrees": -23.627518603944512,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.65,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.35,
+      "maxWaypointRelativePos": 0.5,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 2.0,
@@ -51,7 +57,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -1.0565646791946477,
+    "rotation": -24.9047688080953,
     "rotateFast": false
   },
   "reversed": false,

@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Elevator;
@@ -34,7 +35,9 @@ public class RunElevator extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setSpeed(MathUtil.applyDeadband(xboxcontroller.getRightY(), 0.03),GeometryUtil.distanceToLimit(Math.abs(elevator.getDistance())/10.13, wrist.getAbsoluteAngle()));
+    SmartDashboard.putNumber("Distance To Limit", GeometryUtil.distanceToLimit(Math.abs(elevator.getDistance())/10.13, wrist.getAbsoluteAngle()));
+
+    elevator.setSpeed(MathUtil.applyDeadband(xboxcontroller.getRightY(), 0.03), GeometryUtil.distanceToLimit(Math.abs(elevator.getDistance())/11.47, wrist.getAbsoluteAngle()));
   }
 
   // Called once the command ends or is interrupted.

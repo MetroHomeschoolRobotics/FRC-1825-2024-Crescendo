@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 3.4244912934270317,
+        "y": 6.541783083566167
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 4.424491293427032,
+        "y": 6.541783083566167
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "AlliancePoint1"
     },
     {
       "anchor": {
-        "x": 5.0,
-        "y": 7.0
+        "x": 8.49414644283834,
+        "y": 5.783822476735862
       },
       "prevControl": {
-        "x": 4.0,
-        "y": 7.0
+        "x": 7.494146442838341,
+        "y": 5.783822476735862
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Note5 1"
     }
   ],
   "rotationTargets": [],

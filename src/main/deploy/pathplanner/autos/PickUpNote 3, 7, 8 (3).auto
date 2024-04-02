@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.17,
-      "y": 5.54
+      "x": 0.6453024017159148,
+      "y": 4.5749724832783
     },
-    "rotation": 0
+    "rotation": -59.28896423390896
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "PickUpNote 3 (2)"
+                  "pathName": "Grab Note 3 (3)"
                 }
               },
               {
@@ -52,39 +52,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootToSpeaker"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "PickUpNote 2"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakeNote2"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "name": "TurnToSpeaker"
           }
         },
         {
@@ -100,7 +68,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Get Note 1"
+                  "pathName": "Grab Note 8 (3)"
                 }
               },
               {
@@ -111,44 +79,6 @@
                       "type": "wait",
                       "data": {
                         "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakeNote2"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootToSpeaker"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "PickUpNote 4"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.0
                       }
                     },
                     {
@@ -166,7 +96,51 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go To Alliance Section"
+            "pathName": "GoToAllianceSection2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootToSpeaker"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Grab Note 7"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeNote2"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GoToAllianceSection4"
           }
         },
         {

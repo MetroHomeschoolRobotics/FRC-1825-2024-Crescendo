@@ -3,6 +3,7 @@ package frc.robot.utils;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public final class GeometryUtil {
     public static Transform3d toTransform(Pose3d pose) {
@@ -26,8 +27,10 @@ public final class GeometryUtil {
         // get the maximum height above the shoulder of all obstructions
         double maximumHeight = defaultShoulderClearance-48.0; // height of floor
         for(int i=0;i<numObstructions;i++) {
-            double obstructionCenterY = obstructionDistances[i]*Math.sin(Math.toRadians(shoulderAngle + obstructionAngles[i]));
+            double obstructionCenterY = obstructionDistances[i]*Math.sin(Math.toRadians(-shoulderAngle + obstructionAngles[i])); // +
             maximumHeight = Math.max(maximumHeight, obstructionCenterY + obstructionRadii[i]);
+            String num = String.valueOf(i);
+            SmartDashboard.putNumber("maxHeight" + num, maximumHeight);
         }
     
         return shoulderClearance - maximumHeight;

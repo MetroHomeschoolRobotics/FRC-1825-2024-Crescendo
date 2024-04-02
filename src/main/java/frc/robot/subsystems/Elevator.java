@@ -25,9 +25,15 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setSpeed(double speed, double distanceToLimit ) {
-    if(!beamBreak.get() || speed <= 0 || getDistance() >= -195 || distanceToLimit < 5) {
+    if(speed <= 0 && getDistance() >= -195 && distanceToLimit > Constants.distToLimOffset) {
       elevatorMotor1.set(speed);
       elevatorMotor2.set(speed);
+    }else if(speed >= 0 && !beamBreak.get()) {
+      elevatorMotor1.set(speed);
+      elevatorMotor2.set(speed);
+    } else {
+      elevatorMotor1.set(0);
+      elevatorMotor2.set(0);
     }
   }
   public double getDistance() {

@@ -44,7 +44,7 @@ public class ShootToSpeaker extends Command {
     
     double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), MathUtil.clamp(shooter.getAngleToSpeaker(), -60, 60));
   
-    wrist.setSpeed(setpoint);
+    wrist.setSpeed(setpoint, 100);
     shooter.setSpeed(1);
 
     if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint() || timer >= 2) {
@@ -59,7 +59,7 @@ public class ShootToSpeaker extends Command {
   @Override
   public void end(boolean interrupted) {
     shooter.setSpeed(0);
-    wrist.setSpeed(0);
+    wrist.setSpeed(0, 100);
     shooter.setIndexerSpeed(0);;;;;;;;;;;;;;;; // semicolons are GREAT!!!!!
   }
 

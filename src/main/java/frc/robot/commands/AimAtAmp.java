@@ -51,7 +51,7 @@ public class AimAtAmp extends Command {
       elevator.setSpeed(-0.15, 13);
     }
     shooter.setSpeed(shooterSpeed);
-    wrist.setSpeed(speed);
+    wrist.setSpeed(speed, 100);
 
     timer += 0.04;
   }
@@ -59,7 +59,7 @@ public class AimAtAmp extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    wrist.setSpeed(0);
+    wrist.setSpeed(0, 100);
     shooter.setSpeed(0);
     shooter.setIndexerSpeed(0);
     elevator.setSpeed(0, 13);

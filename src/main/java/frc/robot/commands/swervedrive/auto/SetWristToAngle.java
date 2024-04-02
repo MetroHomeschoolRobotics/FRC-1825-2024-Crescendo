@@ -38,14 +38,14 @@ public class SetWristToAngle extends Command {
   public void execute() {
     double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), angle);
     
-    wrist.setSpeed(setpoint);
+    wrist.setSpeed(setpoint, 100);
     timer += 0.04;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    wrist.setSpeed(0);
+    wrist.setSpeed(0, 100);
     System.out.println("part 2 ended");
   }
 
