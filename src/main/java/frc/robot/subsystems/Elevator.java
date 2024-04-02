@@ -24,8 +24,8 @@ public class Elevator extends SubsystemBase {
     elevatorMotor1.setInverted(true);
   }
 
-  public void setSpeed(double speed) {
-    if(!beamBreak.get() || speed <= 0) {
+  public void setSpeed(double speed, double distanceToLimit ) {
+    if(!beamBreak.get() || speed <= 0 || getDistance() >= -195 || distanceToLimit < 5) {
       elevatorMotor1.set(speed);
       elevatorMotor2.set(speed);
     }

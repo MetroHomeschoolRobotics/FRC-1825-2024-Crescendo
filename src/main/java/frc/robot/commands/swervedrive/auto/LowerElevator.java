@@ -26,7 +26,7 @@ public class LowerElevator extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setSpeed(1);
+    elevator.setSpeed(1,13);
   }
 
   // Called once the command ends or is interrupted.

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utils.GeometryUtil;
 
 public class Wrist extends SubsystemBase {
 
@@ -21,9 +22,19 @@ public class Wrist extends SubsystemBase {
   public Wrist() {}
 
   public void setSpeed(double speed) {
-    if(speed <= 0 || getAbsoluteAngle() <= 59){
-      wristMotor.set(speed);        
-    }        
+    if (getAbsoluteAngle() >= -59  && getAbsoluteAngle() <= 59){
+      wristMotor.set(speed);
+    } else if ( getAbsoluteAngle() < -59 && speed >= 0) {
+      wristMotor.set(speed);
+    } else if ( getAbsoluteAngle() > 59 && speed <= 0) {
+      wristMotor.set(speed);
+    } else {
+      wristMotor.set(0);
+    }
+
+    // if(speed <= 0 || getAbsoluteAngle() <= 59){
+    //   wristMotor.set(speed);        
+    // }        
   }
 
   public double getAbsoluteAngle() {

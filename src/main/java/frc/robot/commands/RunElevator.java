@@ -8,17 +8,21 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Wrist;
+import frc.robot.utils.GeometryUtil;
 
 public class RunElevator extends Command {
 
   private Elevator elevator;
+  private Wrist wrist;
 
   private CommandXboxController xboxcontroller;
   /** Creates a new RunElevator. */
-  public RunElevator(Elevator _elevator, CommandXboxController _xboxController) {
+  public RunElevator(Elevator _elevator, Wrist _wrist, CommandXboxController _xboxController) {
     addRequirements(_elevator);
 
     elevator = _elevator;
+    wrist = _wrist;
     xboxcontroller = _xboxController;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -30,7 +34,7 @@ public class RunElevator extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setSpeed(MathUtil.applyDeadband(xboxcontroller.getRightY(), 0.03));
+    elevator.setSpeed(MathUtil.applyDeadband(xboxcontroller.getRightY(), 0.03),GeometryUtil.distanceToLimit(Math.abs(elevator.getDistance())/10.13, wrist.getAbsoluteAngle()));
   }
 
   // Called once the command ends or is interrupted.

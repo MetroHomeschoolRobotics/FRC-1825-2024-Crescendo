@@ -73,7 +73,7 @@ public class RobotContainer
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandXboxController driverXbox = new CommandXboxController(0);
 
-  private final RunElevator runElevator = new RunElevator(elevator, m_manipulatorController);
+  private final RunElevator runElevator = new RunElevator(elevator, wrist, m_manipulatorController);
   private final RunWrist runWrist = new RunWrist(wrist, intake, m_manipulatorController);
 
   public SendableChooser<Command> _autoChooser = new SendableChooser<>();

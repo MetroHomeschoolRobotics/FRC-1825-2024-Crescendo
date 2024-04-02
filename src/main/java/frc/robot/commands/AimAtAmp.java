@@ -48,7 +48,7 @@ public class AimAtAmp extends Command {
     if (anglePID.atSetpoint() || timer > 2) {
       shooter.setIndexerSpeed(0.3);
     }else {
-      elevator.setSpeed(-0.15);
+      elevator.setSpeed(-0.15, 13);
     }
     shooter.setSpeed(shooterSpeed);
     wrist.setSpeed(speed);
@@ -62,7 +62,7 @@ public class AimAtAmp extends Command {
     wrist.setSpeed(0);
     shooter.setSpeed(0);
     shooter.setIndexerSpeed(0);
-    elevator.setSpeed(0);
+    elevator.setSpeed(0, 13);
   }
 
   // Returns true when the command should end.
