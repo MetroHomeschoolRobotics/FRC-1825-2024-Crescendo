@@ -31,6 +31,7 @@ import frc.robot.commands.RunShooter;
 import frc.robot.commands.RunWrist;
 import frc.robot.commands.ShootToSpeaker;
 import frc.robot.commands.SetRobotPoseToSpeaker;
+import frc.robot.commands.swervedrive.LobShot;
 import frc.robot.commands.swervedrive.auto.AutoIntake;
 import frc.robot.commands.swervedrive.auto.IntakeBackwards;
 import frc.robot.commands.swervedrive.auto.LowerElevator;
@@ -159,6 +160,9 @@ public class RobotContainer
     m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
     
     m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
+    m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5));// 23.8
+    m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33));
+
     driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
     
     

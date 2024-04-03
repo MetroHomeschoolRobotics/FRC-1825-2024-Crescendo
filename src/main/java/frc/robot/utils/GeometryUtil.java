@@ -19,7 +19,7 @@ public final class GeometryUtil {
         final double elevatorAngle = 16.5;       // Angle of elevator relative to vertical
         final int numObstructions = 3;       // Trap wheel, idler roller, shooter compliant wheel
         final double[] obstructionAngles = { -57.33, -37.56, 2.6 };
-        final double[] obstructionDistances = { 19.5, 15.98, 8.12 };
+        final double[] obstructionDistances = { 18, 15.98, 8.12 };
         final double[] obstructionRadii = { 3.94/2.0, 1.50/2.0, 4.0/2.0 };
     
         double shoulderClearance = defaultShoulderClearance - Math.cos(Math.toRadians(elevatorAngle)) * elevatorExtension;
@@ -27,12 +27,14 @@ public final class GeometryUtil {
         // get the maximum height above the shoulder of all obstructions
         double maximumHeight = defaultShoulderClearance-48.0; // height of floor
         for(int i=0;i<numObstructions;i++) {
-            double obstructionCenterY = obstructionDistances[i]*Math.sin(Math.toRadians(-shoulderAngle + obstructionAngles[i])); // +
+            double obstructionCenterY = obstructionDistances[i]*Math.sin(Math.toRadians((-shoulderAngle+60.5) + obstructionAngles[i]));
             maximumHeight = Math.max(maximumHeight, obstructionCenterY + obstructionRadii[i]);
             String num = String.valueOf(i);
-            SmartDashboard.putNumber("maxHeight" + num, maximumHeight);
+            SmartDashboard.putNumber("maxHeight" + num, obstructionCenterY);
         }
     
+        //SmartDashboard.putNumber("Clearance", shoulderClearance - maximumHeight);
+
         return shoulderClearance - maximumHeight;
     }
 }

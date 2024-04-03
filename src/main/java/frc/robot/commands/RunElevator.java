@@ -35,9 +35,11 @@ public class RunElevator extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Distance To Limit", GeometryUtil.distanceToLimit(Math.abs(elevator.getDistance())/10.13, wrist.getAbsoluteAngle()));
 
-    elevator.setSpeed(MathUtil.applyDeadband(xboxcontroller.getRightY(), 0.03), GeometryUtil.distanceToLimit(Math.abs(elevator.getDistance())/11.47, wrist.getAbsoluteAngle()));
+    double distToLim = GeometryUtil.distanceToLimit(Math.abs(elevator.getDistance())*(18.0/195.0), wrist.getAbsoluteAngle());
+    SmartDashboard.putNumber("Distance To Limit", distToLim);
+
+    elevator.setSpeed(MathUtil.applyDeadband(xboxcontroller.getRightY(), 0.03), distToLim);
   }
 
   // Called once the command ends or is interrupted.

@@ -17,6 +17,7 @@ public class Elevator extends SubsystemBase {
   private CANSparkMax elevatorMotor1 = new CANSparkMax(Constants.elevatorMotorID1, CANSparkLowLevel.MotorType.kBrushless);
   private CANSparkMax elevatorMotor2 = new CANSparkMax(Constants.elevatorMotorID2, CANSparkLowLevel.MotorType.kBrushless);
   private DigitalInput beamBreak = new DigitalInput(1);
+  private double gearRatio = 20/1;
 
 
   /** Creates a new Elevator. */

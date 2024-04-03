@@ -39,7 +39,7 @@ public class RunWrist extends Command {
   @Override
   public void execute() {
     if (!intake.noteInIntake()) {
-       wrist.setSpeed(MathUtil.applyDeadband(xboxcontroller.getLeftY(),0.03), GeometryUtil.distanceToLimit(Math.abs(elevator.getDistance())/10.13, wrist.getAbsoluteAngle()));
+       wrist.setSpeed(MathUtil.applyDeadband(xboxcontroller.getLeftY(),0.03), GeometryUtil.distanceToLimit(Math.abs(elevator.getDistance())*(18/195.0), wrist.getAbsoluteAngle()));
     }
   }
 
