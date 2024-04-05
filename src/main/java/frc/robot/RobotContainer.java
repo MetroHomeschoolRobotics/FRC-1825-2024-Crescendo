@@ -201,6 +201,8 @@ public class RobotContainer
 
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));;;;;;;;;;;
 
+
+    _autoChooser.addOption("2 NoteAuto (3 (3) )", drivebase.getAutonomousCommand("PickUpNote 3 (3)"));
     _autoChooser.addOption("3 NoteAuto (2,4 (2))", drivebase.getAutonomousCommand("PickUpNote 2, 4"));
     _autoChooser.addOption("3.5 NoteAuto (6,7,8 (3))", drivebase.getAutonomousCommand("PickUpNote 6, 7, 8 (3)"));
     _autoChooser.addOption("4 Note Auto (1,2,4 (2))", drivebase.getAutonomousCommand("PickUpNote 2, 1, 4"));
