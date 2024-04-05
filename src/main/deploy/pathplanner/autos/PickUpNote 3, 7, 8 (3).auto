@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6453024017159148,
-      "y": 4.5749724832783
+      "x": 0.6673286073844874,
+      "y": 4.4777980465051845
     },
     "rotation": -59.28896423390896
   },
@@ -52,12 +52,6 @@
         {
           "type": "named",
           "data": {
-            "name": "TurnToSpeaker"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "ShootToSpeaker"
           }
         },
@@ -68,7 +62,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Grab Note 8 (3)"
+                  "pathName": "PickUpNote8 (3)"
                 }
               },
               {

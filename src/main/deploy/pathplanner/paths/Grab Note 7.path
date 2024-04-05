@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.483842745463269,
-        "y": 3.4490446758671296
+        "x": 2.374489112614589,
+        "y": 3.274389821506916
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.242062484124968,
-        "y": 2.0523241046482092
+        "x": 3.1327088512762877,
+        "y": 1.8776692502879957
       },
       "isLocked": false,
       "linkedName": "AlliancePoint2"
@@ -20,8 +20,8 @@
         "y": 2.472117671508071
       },
       "prevControl": {
-        "x": 6.031357517260489,
-        "y": 1.9870228831366759
+        "x": 6.050015009120926,
+        "y": 1.9776941372064571
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,17 +29,29 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.25,
+      "maxWaypointRelativePos": 0.8,
+      "constraints": {
+        "maxVelocity": 4.88,
+        "maxAcceleration": 6.0,
+        "maxAngularVelocity": 760.8,
+        "maxAngularAcceleration": 935.8
+      }
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.88,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 760.8,
     "maxAngularAcceleration": 935.8
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 11.309932474020195,
     "rotateFast": false
   },
   "reversed": false,
@@ -48,5 +60,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

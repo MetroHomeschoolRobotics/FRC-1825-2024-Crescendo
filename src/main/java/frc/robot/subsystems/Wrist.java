@@ -32,7 +32,11 @@ public class Wrist extends SubsystemBase {
     } else if ( getAbsoluteAngle() > 59 && speed <= 0 && distToLim > Constants.distToLimOffset) {
       wristMotor.set(speed);
     } else {
-      wristMotor.set(0);
+      if(wristMotor.getEncoder().getVelocity() > 500) {
+        wristMotor.set(-0.01);
+      } else {
+        wristMotor.set(0);
+      }
     }
 
     // if(speed <= 0 || getAbsoluteAngle() <= 59){
@@ -41,7 +45,7 @@ public class Wrist extends SubsystemBase {
   }
 
   public double getAbsoluteAngle() {
-    return rotationEncoder.getAbsolutePosition()*(360/1)-215.1;
+    return rotationEncoder.getAbsolutePosition()*(360/1)-215.1;// -212.1;
   }
 
   @Override

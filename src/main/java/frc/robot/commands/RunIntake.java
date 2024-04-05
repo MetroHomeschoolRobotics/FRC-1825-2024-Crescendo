@@ -43,7 +43,7 @@ public class RunIntake extends Command {
       
     }else{
       if (!indexer.noteInShooter()) {
-        if(wrist.getAbsoluteAngle() >= 59) {
+        if(wrist.getAbsoluteAngle() >= 57) {
           intake.setSpeed(1);
           indexer.setIndexerSpeed(0.3);
         }

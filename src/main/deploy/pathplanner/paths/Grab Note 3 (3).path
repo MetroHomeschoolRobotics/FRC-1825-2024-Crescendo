@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6113561318031727,
-        "y": 4.561756759877157
+        "x": 0.6206848777333918,
+        "y": 4.505784284295841
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3809776710462511,
-        "y": 3.9061532264478673
+        "x": 1.39030641697647,
+        "y": 3.850180750866552
       },
       "isLocked": false,
       "linkedName": null
@@ -17,29 +17,56 @@
     {
       "anchor": {
         "x": 2.9062276306370793,
-        "y": 4.179278176738172
+        "y": 4.113976955226638
       },
       "prevControl": {
-        "x": 1.3483270602904844,
-        "y": 5.028194056388112
+        "x": 1.1320482829362686,
+        "y": 4.113976955226638
+      },
+      "nextControl": {
+        "x": 3.0181725817997087,
+        "y": 4.113976955226638
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.4491190800563416,
+        "y": 4.281894381970583
+      },
+      "prevControl": {
+        "x": 2.6636802364513814,
+        "y": 4.179278176738172
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Note3 1"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.85,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.88,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 760.8,
     "maxAngularAcceleration": 935.8
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -34.992020198558734,
+    "rotation": -22.16634582208252,
     "rotateFast": false
   },
   "reversed": false,
@@ -48,5 +75,5 @@
     "rotation": -59.858614447924595,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

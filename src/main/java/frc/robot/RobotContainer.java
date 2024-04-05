@@ -153,7 +153,7 @@ public class RobotContainer
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
     m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
-    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 60)));
+    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 60))); // .alongWith(new LowerElevator(elevator))));
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
@@ -190,18 +190,19 @@ public class RobotContainer
   }
 
   public void getAutoChooserOptions() {
-    NamedCommands.registerCommand("ShootAtBase", new RunShooter(shooter, wrist));
+    NamedCommands.registerCommand("ShootAtBase", new RunShooter(shooter, wrist)); //new WaitCommand(0.8));
     NamedCommands.registerCommand("IntakeNote", new IntakeBackwards(intake, drivebase, wrist, shooter));
     NamedCommands.registerCommand("IntakeNote2", new AutoIntake(intake, shooter, wrist));
     NamedCommands.registerCommand("ShootToSpeaker", new ShootToSpeaker(shooter, wrist, drivebase).andThen(new SetWristToAngle(wrist, 60)));
     NamedCommands.registerCommand("ShootToAngle1", new ShootToAngle(shooter, wrist, 16));
-    NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21));
+    NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21)); // new WaitCommand(0.8));
     NamedCommands.registerCommand("ShootToAngle4", new ShootToAngle(shooter, wrist, 25));
     NamedCommands.registerCommand("TurnToSpeaker", new GoToSpeaker(drivebase, shooter));
 
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));;;;;;;;;;;
 
     _autoChooser.addOption("3 NoteAuto (2,4 (2))", drivebase.getAutonomousCommand("PickUpNote 2, 4"));
+    _autoChooser.addOption("3.5 NoteAuto (6,7,8 (3))", drivebase.getAutonomousCommand("PickUpNote 6, 7, 8 (3)"));
     _autoChooser.addOption("4 Note Auto (1,2,4 (2))", drivebase.getAutonomousCommand("PickUpNote 2, 1, 4"));
     _autoChooser.addOption("4 Note Auto (1,4,5 (1))", drivebase.getAutonomousCommand("PickUpNote 1, 4, 5 (1)"));
     _autoChooser.addOption("4 Note Auto (3,7,8 (3))", drivebase.getAutonomousCommand("PickUpNote 3, 7, 8 (3)"));
@@ -209,12 +210,13 @@ public class RobotContainer
     _autoChooser.addOption("5 Note Auto (1,2,3,4 (2))", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 4 (2)"));
     _autoChooser.addOption("5 Note Auto (1,2,3,4 (3)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 4 (3)"));
     _autoChooser.addOption("5 Note Auto (1,2,3,8 (1)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 8 (1)"));
-
+    _autoChooser.addOption("Just Shoot", new RunShooter(shooter, wrist));
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> driverXbox.getRightX(),
+
         () -> driverXbox.getRightY()));
     _driveController.addOption(("FieldOrientedAnglularVelocity"), drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
