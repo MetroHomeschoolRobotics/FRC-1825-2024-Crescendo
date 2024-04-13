@@ -25,6 +25,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtAmp;
 import frc.robot.commands.AimAtSpeakerAdjustable;
 import frc.robot.commands.GoToSpeaker;
+import frc.robot.commands.ReverseShooter;
 import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
@@ -158,7 +159,8 @@ public class RobotContainer
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
     m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
-    
+
+    m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter));
     m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
     m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5));// 23.8
     m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33));
