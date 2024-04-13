@@ -37,7 +37,7 @@ public class RunElevator extends Command {
   public void execute() {
 
     double distToLim = GeometryUtil.distanceToLimit(Math.abs(elevator.getDistance())*(18.0/195.0), wrist.getAbsoluteAngle());
-    SmartDashboard.putNumber("Distance To Limit", distToLim);
+    // SmartDashboard.putNumber("Distance To Limit", distToLim);
 
     elevator.setSpeed(MathUtil.applyDeadband(xboxcontroller.getRightY(), 0.03), distToLim);
   }

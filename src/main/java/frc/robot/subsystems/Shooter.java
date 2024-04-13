@@ -52,10 +52,10 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putBoolean("Note In Shooter", !beamBrake.get());
     double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getDrive().swerveDrivePoseEstimator.getEstimatedPosition().getTranslation());
     AimCalculator.Aim aim = aimCalculator.calculateAim(SpeakerDistance);
-    SmartDashboard.putNumber("Distance to Speaker April Tag", SpeakerDistance);
+    // SmartDashboard.putNumber("Distance to Speaker April Tag", SpeakerDistance);
     SpeakerNonEstimatedDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
-    SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
-    SmartDashboard.putNumber("Speaker angle", getAngleToSpeaker());
+    // SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
+    // SmartDashboard.putNumber("Speaker angle", getAngleToSpeaker());
     targetAim = aim;
     // This method will be called once per scheduler run
   }

@@ -46,7 +46,7 @@ public class SetWristToAngle extends Command {
   @Override
   public void end(boolean interrupted) {
     wrist.setSpeed(0, 100);
-    System.out.println("part 2 ended");
+    //System.out.println("part 2 ended");
   }
 
   // Returns true when the command should end.

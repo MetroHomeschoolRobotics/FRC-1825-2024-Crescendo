@@ -30,7 +30,7 @@ public final class GeometryUtil {
             double obstructionCenterY = obstructionDistances[i]*Math.sin(Math.toRadians((-shoulderAngle+60.5) + obstructionAngles[i]));
             maximumHeight = Math.max(maximumHeight, obstructionCenterY + obstructionRadii[i]);
             String num = String.valueOf(i);
-            SmartDashboard.putNumber("maxHeight" + num, obstructionCenterY);
+            // SmartDashboard.putNumber("maxHeight" + num, obstructionCenterY);
         }
     
         //SmartDashboard.putNumber("Clearance", shoulderClearance - maximumHeight);
