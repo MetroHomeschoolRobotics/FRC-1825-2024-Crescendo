@@ -147,27 +147,25 @@ public class RobotContainer
   {
     // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    // driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    // driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
-    // driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
+    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+    driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
+    driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
     
-    // m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
-    // m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
-    // m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
-    // m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 60).alongWith(new LowerElevator(elevator))));// TODO test this
-    // // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
-    // // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
-    // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
+    m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+    m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
+    m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
+    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 60).alongWith(new LowerElevator(elevator))));// TODO test this
+    // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
+    // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
+    m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
 
-    // m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter));
-    // m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
-    // m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5));// 23.8
-    // m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33));
+    m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter));
+    m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
+    m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5));// 23.8
+    m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33));
 
-    // driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
+    driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
 
-    driverXbox.a().whileTrue(drivebase.sysIdAngleMotorCommand());
-    driverXbox.b().whileTrue(drivebase.sysIdDriveMotorCommand());
     
     
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
