@@ -15,7 +15,6 @@ public class SetWristToAngle extends Command {
 
   private double angle;
   private double timer;
-  private double cutoffTime;
 
   /** Creates a new SetWristToAngle. */
   public SetWristToAngle(Wrist _wrist, double _angle) {

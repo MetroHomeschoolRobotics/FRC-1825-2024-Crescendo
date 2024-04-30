@@ -25,6 +25,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
@@ -166,10 +167,11 @@ public class SwerveSubsystem extends SubsystemBase
       PhotonPipelineResult result = camera.getLatestResult();
       if (result.hasTargets())
       {
-        drive(getTargetSpeeds(0,
-                              0,
-                              Rotation2d.fromDegrees(result.getBestTarget()
-                                                           .getYaw()))); // Not sure if this will work, more math may be required.
+        // drive(getTargetSpeeds(0,
+        //                       0,
+        //                       Rotation2d.fromDegrees(result.getBestTarget()
+        //                                                    .getYaw()))); // Not sure if this will work, more math may be required.
+        SmartDashboard.putNumber("Angle to Note", result.getBestTarget().getYaw());
       }
     });
   }
