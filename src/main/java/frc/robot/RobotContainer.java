@@ -19,14 +19,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtAmp;
 import frc.robot.commands.AimAtSpeakerAdjustable;
 import frc.robot.commands.GoToSpeaker;
 import frc.robot.commands.LobShot;
 import frc.robot.commands.ReverseShooter;
+import frc.robot.commands.RunAimAtTarget;
 import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
@@ -46,6 +49,8 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+
+import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -68,6 +73,8 @@ public class RobotContainer
   private final Elevator elevator = new Elevator();
 
   private final Wrist wrist = new Wrist();
+
+  private final PhotonCamera camera = new PhotonCamera("OV5647");
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
@@ -154,7 +161,8 @@ public class RobotContainer
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
     m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
-    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 60).alongWith(new LowerElevator(elevator))));// TODO test this
+    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 55).alongWith(new LowerElevator(elevator))));
+    m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
     m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
@@ -164,8 +172,9 @@ public class RobotContainer
     m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5));// 23.8
     m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33));
 
-    driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
+    driverXbox.povRight().whileTrue(new RunAimAtTarget(camera, drivebase, intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
 
+    driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
     
     
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
