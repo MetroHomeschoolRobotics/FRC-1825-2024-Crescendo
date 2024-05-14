@@ -215,7 +215,7 @@ public class RobotContainer
     _autoChooser.addOption("5 Note Auto (1,2,3,4 (3)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 4 (3)"));
     _autoChooser.addOption("5 Note Auto (1,2,3,8 (1)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 8 (1)"));
     _autoChooser.addOption("Just Shoot", new RunShooter(shooter, wrist));
-    _autoChooser.addOption("Straight4Meter", drivebase.getAutonomousCommand("Straight6Meters"));
+    _autoChooser.addOption("Straight6Meter", drivebase.getAutonomousCommand("Straight6Meters"));
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -226,7 +226,7 @@ public class RobotContainer
     _driveController.addOption(("FieldOrientedAnglularVelocity"), drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> -driverXbox.getRightX()));
+        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), 0.2)));
 
 
     SmartDashboard.putData(_autoChooser);
