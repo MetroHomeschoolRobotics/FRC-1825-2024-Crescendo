@@ -154,9 +154,9 @@ public class RobotContainer
   {
     // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    // driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    // driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
-    // driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
+    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+    driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
+    driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
     
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
@@ -167,10 +167,10 @@ public class RobotContainer
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
     m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
 
-    // m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter));
-    // m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
-    // m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5));// 23.8
-    // m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33));
+    m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter));
+    m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
+    m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5));// 23.8
+    m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33));
 
     driverXbox.povRight().whileTrue(new RunAimAtTarget(camera, drivebase, intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
 
@@ -224,6 +224,7 @@ public class RobotContainer
     _autoChooser.addOption("5 Note Auto (1,2,3,4 (3)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 4 (3)"));
     _autoChooser.addOption("5 Note Auto (1,2,3,8 (1)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 8 (1)"));
     _autoChooser.addOption("Just Shoot", new RunShooter(shooter, wrist));
+    _autoChooser.addOption("Straight4Meter", drivebase.getAutonomousCommand("Straight6Meters"));
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
