@@ -11,6 +11,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Odometry;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -24,6 +27,7 @@ public class GoToSpeaker extends Command {
   private final Shooter shooter;
   private PIDController pid;
   private double errorRad;
+  private Rotation2d angleToTargetChanged;
 
   /** Creates a new GoToSpeaker. */
   public GoToSpeaker(SwerveSubsystem _drivetrain, Shooter _shooter) {
@@ -37,16 +41,16 @@ public class GoToSpeaker extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Pose2d robotPose = drivetrain.getEstimatedPose();
-        ChassisSpeeds robotSpeeds = drivetrain.getRobotVelocity();
+    Pose2d robotPose = drivetrain.getPose();
+    ChassisSpeeds robotSpeeds = drivetrain.getRobotVelocity();
 
-        Translation2d robotPos = robotPose.getTranslation();
-
-        Translation2d target = shooter.getSpeakerPosition();
-        double distToTarget = target.getDistance(robotPos);
-        Rotation2d angleToTarget = target.minus(robotPos).getAngle();
-      // just simple turn to target
-        drivetrain.drive(drivetrain.getTargetSpeeds(0, 0, angleToTarget));
+    Translation2d robotPos = robotPose.getTranslation();
+    Translation2d target = shooter.getSpeakerPosition();
+    
+    double distToTarget = target.getDistance(robotPos);
+    Rotation2d angleToTarget = target.minus(robotPos).getAngle();
+    // just simple turn to target
+    drivetrain.drive(drivetrain.getTargetSpeeds(0, 0, angleToTarget));
 
 // TODO Implement Shooter logic 
         // AimCalculator.Aim aim = shooter.getTargetAim();
@@ -75,11 +79,13 @@ public class GoToSpeaker extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    drivetrain.drive(new ChassisSpeeds());
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return angleToTargetChanged.getDegrees() <= 2 && angleToTargetChanged.getDegrees() >= -2;
   }
 }

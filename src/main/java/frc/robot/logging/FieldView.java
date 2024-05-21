@@ -14,6 +14,6 @@ public final class FieldView {
     public static final FieldObject2d pathPlannerSetpoint = field.getObject("PathPlanner setpoint");
 
     public static void publish() {
-        SmartDashboard.putData("Field View", field);
+        SmartDashboard.putData("Field", field);
     }
 }

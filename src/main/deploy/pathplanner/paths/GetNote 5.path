@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.4244912934270317,
+        "y": 6.541783083566167
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.424491293427032,
+        "y": 6.541783083566167
+      },
+      "isLocked": false,
+      "linkedName": "AlliancePoint1"
+    },
+    {
+      "anchor": {
+        "x": 8.49414644283834,
+        "y": 5.783822476735862
+      },
+      "prevControl": {
+        "x": 7.494146442838341,
+        "y": 5.783822476735862
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Note5 1"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.88,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 760.8,
+    "maxAngularAcceleration": 935.8
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

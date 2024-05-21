@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utils.GeometryUtil;
 
 public class Wrist extends SubsystemBase {
 
@@ -20,17 +21,36 @@ public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   public Wrist() {}
 
-  public void setSpeed(double speed) {
-    wristMotor.set(speed);
+  public void setSpeed(double speed, double distToLim) {
+    if (getAbsoluteAngle() >= -59  && getAbsoluteAngle() <= 59 && distToLim > Constants.distToLimOffset){
+      wristMotor.set(speed);
+    } //else if (speed >= 0 && distToLim > 5 ) {
+      //wristMotor.set(speed);
+    //}
+    else if ( getAbsoluteAngle() < -59 && speed >= 0) {
+      wristMotor.set(speed);
+    } else if ( getAbsoluteAngle() > 59 && speed <= 0 && distToLim > Constants.distToLimOffset) {
+      wristMotor.set(speed);
+    } else {
+      if(wristMotor.getEncoder().getVelocity() > 500) {
+        wristMotor.set(-0.01);
+      } else {
+        wristMotor.set(0);
+      }
+    }
+
+    // if(speed <= 0 || getAbsoluteAngle() <= 59){
+    //   wristMotor.set(speed);        
+    // }        
   }
 
   public double getAbsoluteAngle() {
-    return rotationEncoder.getAbsolutePosition()*(360/1)-156.2;
+    return rotationEncoder.getAbsolutePosition()*(360/1)-215.1;// -212.1;
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Wrist Angle", rotationEncoder.getAbsolutePosition()*360);
+    SmartDashboard.putNumber("Wrist Angle", getAbsoluteAngle());
     // This method will be called once per scheduler run
   }
 }

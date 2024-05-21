@@ -8,22 +8,26 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
+import frc.robot.utils.GeometryUtil;
 
 public class RunWrist extends Command {
   private Wrist wrist;
   private Intake intake;
-  private CommandXboxController xboxcontroller;
+  private Elevator elevator;
+    private CommandXboxController xboxcontroller;
 
   /** Creates a new RunWrist. */
-  public RunWrist(Wrist _wrist, Intake _intake, CommandXboxController _xboxController) {
+  public RunWrist(Wrist _wrist, Intake _intake, Elevator _elevator, CommandXboxController _xboxController) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_wrist);
     addRequirements(_intake);
 
     wrist = _wrist;
     intake = _intake;
+    elevator = _elevator;
     xboxcontroller = _xboxController;
   }
 
@@ -35,7 +39,7 @@ public class RunWrist extends Command {
   @Override
   public void execute() {
     if (!intake.noteInIntake()) {
-       wrist.setSpeed(MathUtil.applyDeadband(xboxcontroller.getLeftY(),0.03));
+       wrist.setSpeed(MathUtil.applyDeadband(xboxcontroller.getLeftY(),0.03), GeometryUtil.distanceToLimit(Math.abs(elevator.getDistance())*(18/195.0), wrist.getAbsoluteAngle()));
     }
   }
 

@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,6 +30,7 @@ public class Shooter extends SubsystemBase {
   private AimCalculator.Aim targetAim; // Target aim is null if not currently aiming
   private AimCalculator aimCalculator;
   private final AimCalculator tableAimCalculator;
+  private double SpeakerNonEstimatedDistance;
 
   /** Creates a new Shooter. */
   public Shooter(SwerveSubsystem _drivetrain) {
@@ -48,8 +50,12 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Note In Shooter", !beamBrake.get());
-    double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
+    double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getDrive().swerveDrivePoseEstimator.getEstimatedPosition().getTranslation());
     AimCalculator.Aim aim = aimCalculator.calculateAim(SpeakerDistance);
+    // SmartDashboard.putNumber("Distance to Speaker April Tag", SpeakerDistance);
+    SpeakerNonEstimatedDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
+    // SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
+    // SmartDashboard.putNumber("Speaker angle", getAngleToSpeaker());
     targetAim = aim;
     // This method will be called once per scheduler run
   }
@@ -79,5 +85,11 @@ public class Shooter extends SubsystemBase {
   }
   public AimCalculator.Aim getTargetAim() {
     return targetAim;
+  }
+  public double getSpeakerDistance() {
+    return SpeakerNonEstimatedDistance;
+  }
+  public double getAngleToSpeaker(){
+    return -2.5954*Math.pow(getSpeakerDistance(), 3) + 27.224*Math.pow(getSpeakerDistance(), 2) - 97.353*getSpeakerDistance() + 147.07+1.5;
   }
 }

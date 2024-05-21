@@ -1,0 +1,64 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.456831459117463,
+        "y": 4.505784284295841
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.1041632992356885,
+        "y": 1.4459556191839662
+      },
+      "isLocked": false,
+      "linkedName": "Note6 1"
+    },
+    {
+      "anchor": {
+        "x": 2.2718729073821784,
+        "y": 3.143787378483848
+      },
+      "prevControl": {
+        "x": 4.146950839356224,
+        "y": 0.8955596093010365
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "AlliancePoint2"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.15,
+      "maxWaypointRelativePos": 0.85,
+      "constraints": {
+        "maxVelocity": 4.88,
+        "maxAcceleration": 6.0,
+        "maxAngularVelocity": 760.8,
+        "maxAngularAcceleration": 935.8
+      }
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.88,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 760.8,
+    "maxAngularAcceleration": 935.8
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -38.88449643371458,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

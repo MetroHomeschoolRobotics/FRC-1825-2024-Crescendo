@@ -1,172 +1,188 @@
-package frc.robot.subsystems.swervedrive;
+// package frc.robot.subsystems.swervedrive;
 
-import frc.robot.lib.field.FieldInfo;
-import frc.robot.utils.MathUtil;
-import frc.robot.logging.FieldView;
-import frc.robot.subsystems.tagtracker.TagTrackerInput;
-import frc.robot.utils.GeometryUtil;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.Timer;
+// import frc.robot.lib.field.FieldInfo;
+// import frc.robot.utils.MathUtil;
+// import swervelib.SwerveDrive;
+// import frc.robot.logging.FieldView;
+// import frc.robot.subsystems.tagtracker.TagTrackerInput;
+// import frc.robot.utils.GeometryUtil;
+// import edu.wpi.first.math.Matrix;
+// import edu.wpi.first.math.Nat;
+// import edu.wpi.first.math.VecBuilder;
+// import edu.wpi.first.math.geometry.*;
+// import edu.wpi.first.math.numbers.N1;
+// import edu.wpi.first.math.numbers.N3;
+// import edu.wpi.first.wpilibj.Timer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+// import java.util.ArrayList;
+// import java.util.List;
+// import java.util.Map;
+// import java.util.TreeMap;
 
-public final class SwerveEstimator {
-    private static final double[] STATE_STD_DEVS = {0.003, 0.003, 0.0002};
-    private static final double HISTORY_TIME = 0.3;
+// public final class SwerveEstimator {
+//     private static final double[] STATE_STD_DEVS = {0.003, 0.003, 0.0002};
+//     private static final double HISTORY_TIME = 0.3;
 
-    private final TagTrackerInput tagTracker;
+//     private final TagTrackerInput tagTracker;
 
-    private Pose2d basePose, latestPose;
-    private final TreeMap<Double, PoseUpdate> updates = new TreeMap<>();
-    private final Matrix<N3, N1> q;
+//     private Pose2d basePose, latestPose;
+//     private final TreeMap<Double, PoseUpdate> updates = new TreeMap<>();
+//     private final Matrix<N3, N1> q;
 
-    public SwerveEstimator(FieldInfo field) {
-        tagTracker = new TagTrackerInput(
-                field,
-                new TagTrackerInput.CameraInfo( // 16 ft + 1
-                        "front",
-                        new Pose3d(new Translation3d(0.34, -0.225, 0), new Rotation3d(Math.PI, Math.toRadians(90-67), 0)))
-//		new TagTrackerInput.CameraInfo(
-//			"back",
-//			new Pose3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0)))
-        );
-        latestPose = new Pose2d();
-        basePose = new Pose2d();
+//     private boolean ignoreVision;
 
-        q = new Matrix<>(Nat.N3(), Nat.N1());
-        for (int i = 0; i < 3; i++) {
-            q.set(i, 0, MathUtil.square(STATE_STD_DEVS[i]));
-        }
-    }
+//     public SwerveEstimator(FieldInfo field) {
+//         tagTracker = new TagTrackerInput(
+//                 field,
+//                 new TagTrackerInput.CameraInfo( // 16 ft + 1
+//                         "ov9281",
+//                         new Pose3d(new Translation3d(0.6096, 0.2595, 0), new Rotation3d(180, Math.toRadians(90-60), 0)))
+// //		new TagTrackerInput.CameraInfo(
+// //			"back",
+// //			new Pose3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0)))
+//         );
+//         latestPose = new Pose2d();
+//         basePose = new Pose2d();
 
-    public Pose2d getEstimatedPose() {
-        return latestPose;
-    }
+//         q = new Matrix<>(Nat.N3(), Nat.N1());
+//         for (int i = 0; i < 3; i++) {
+//             q.set(i, 0, MathUtil.square(STATE_STD_DEVS[i]));
+//         }
 
-    public void resetPose(Pose2d newPose) {
-        basePose = newPose;
-        updates.clear();
-        update();
-    }
+//         ignoreVision = false;
+//     }
 
-    public void update(Twist2d driveTwist) {
-        // Sample vision data before updating drive so the drive is guaranteed
-        // to be the most recent update
-        List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
-        updates.put(Timer.getFPGATimestamp(), new PoseUpdate(driveTwist, new ArrayList<>()));
+//     public void setIgnoreVision(boolean ignoreVision) {
+//         this.ignoreVision = ignoreVision;
+//     }
 
-        List<Pose2d> tagPoses = new ArrayList<>();
-        for (Pose3d tagPose3d : tagTracker.getEnvironment().getAllPoses()) {
-            tagPoses.add(tagPose3d.toPose2d());
-        }
-        FieldView.aprilTagPoses.setPoses(tagPoses);
+//     public Pose2d getEstimatedPose() {
+//         return latestPose;
+//     }
 
-        for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
-            double timestamp = visionUpdate.timestamp;
+//     public void resetPose(Pose2d newPose) {
+//         basePose = newPose;
+//         updates.clear();
+//         update();
+//     }
 
-            if (updates.containsKey(timestamp)) {
-                List<TagTrackerInput.VisionUpdate> oldUpdates = updates.get(timestamp).visionUpdates;
-                oldUpdates.add(visionUpdate);
-                oldUpdates.sort(this::compareStdDevs);
-            } else {
-                Map.Entry<Double, PoseUpdate> prevUpdate = updates.floorEntry(timestamp);
-                Map.Entry<Double, PoseUpdate> nextUpdate = updates.ceilingEntry(timestamp);
+//     public void update(Twist2d driveTwist, SwerveDrive swerveDrive) {
+//         // Sample vision data before updating drive so the drive is guaranteed
+//         // to be the most recent update
+//         List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
+//         updates.put(Timer.getFPGATimestamp(), new PoseUpdate(driveTwist, new ArrayList<>()));
 
-                if (prevUpdate == null || nextUpdate == null)
-                    return;
+//         List<Pose2d> tagPoses = new ArrayList<>();
+//         for (Pose3d tagPose3d : tagTracker.getEnvironment().getAllPoses()) {
+//             tagPoses.add(tagPose3d.toPose2d());
+//         }
+//         FieldView.aprilTagPoses.setPoses(tagPoses);
 
-                Twist2d prevToVisionTwist = GeometryUtil.multiplyTwist(
-                        nextUpdate.getValue().twist,
-                        MathUtil.percent(timestamp, prevUpdate.getKey(), nextUpdate.getKey()));
-                Twist2d visionToNextTwist = GeometryUtil.multiplyTwist(
-                        nextUpdate.getValue().twist,
-                        (nextUpdate.getKey() - timestamp) / (nextUpdate.getKey() - prevUpdate.getKey()));
+//         if (ignoreVision) {
+//             update();
+//             return;
+//         }
 
-                List<TagTrackerInput.VisionUpdate> newVisionUpdates = new ArrayList<>();
-                newVisionUpdates.add(visionUpdate);
+//         for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
+//             double timestamp = visionUpdate.timestamp;
 
-                // Insert new update entry for this vision update
-                updates.put(timestamp, new PoseUpdate(prevToVisionTwist, newVisionUpdates));
+//             if (updates.containsKey(timestamp)) {
+//                 List<TagTrackerInput.VisionUpdate> oldUpdates = updates.get(timestamp).visionUpdates;
+//                 oldUpdates.add(visionUpdate);
+//                 oldUpdates.sort(this::compareStdDevs);
+//                 swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
+//             } else {
+//                 swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(visionUpdate.estPose, timestamp, visionUpdate.stdDevs);
+//                 Map.Entry<Double, PoseUpdate> prevUpdate = updates.floorEntry(timestamp);
+//                 Map.Entry<Double, PoseUpdate> nextUpdate = updates.ceilingEntry(timestamp);
 
-                // Overwrite nextUpdate with twist after this vision update
-                updates.put(nextUpdate.getKey(), new PoseUpdate(visionToNextTwist, nextUpdate.getValue().visionUpdates));
-            }
-        }
+//                 if (prevUpdate == null || nextUpdate == null)
+//                     return;
 
-        update();
-    }
+//                 Twist2d prevToVisionTwist = GeometryUtil.multiplyTwist(
+//                         nextUpdate.getValue().twist,
+//                         MathUtil.percent(timestamp, prevUpdate.getKey(), nextUpdate.getKey()));
+//                 Twist2d visionToNextTwist = GeometryUtil.multiplyTwist(
+//                         nextUpdate.getValue().twist,
+//                         (nextUpdate.getKey() - timestamp) / (nextUpdate.getKey() - prevUpdate.getKey()));
 
-    private void update() {
-        while (updates.size() > 1 && updates.firstKey() < Timer.getFPGATimestamp() - HISTORY_TIME) {
-            Map.Entry<Double, PoseUpdate> update = updates.pollFirstEntry();
-            basePose = update.getValue().apply(basePose, q);
-        }
+//                 List<TagTrackerInput.VisionUpdate> newVisionUpdates = new ArrayList<>();
+//                 newVisionUpdates.add(visionUpdate);
 
-        latestPose = basePose;
-        for (Map.Entry<Double, PoseUpdate> entry : updates.entrySet()) {
-            latestPose = entry.getValue().apply(latestPose, q);
-        }
+//                 // Insert new update entry for this vision update
+//                 updates.put(timestamp, new PoseUpdate(prevToVisionTwist, newVisionUpdates));
 
-        // Debug field stuffs
-        FieldView.robotPose.setPose(latestPose);
-        List<Pose2d> visionPoses = new ArrayList<>();
-        for (PoseUpdate update : updates.values()) {
-            for (TagTrackerInput.VisionUpdate visionUpdate : update.visionUpdates) {
-                visionPoses.add(visionUpdate.estPose);
-            }
-        }
-        FieldView.visionEstimates.setPoses(visionPoses);
-    }
+//                 // Overwrite nextUpdate with twist after this vision update
+//                 updates.put(nextUpdate.getKey(), new PoseUpdate(visionToNextTwist, nextUpdate.getValue().visionUpdates));
+//             }
+//         }
 
-    private int compareStdDevs(TagTrackerInput.VisionUpdate u1, TagTrackerInput.VisionUpdate u2) {
-        return -Double.compare(
-                u1.stdDevs.get(0, 0) + u1.stdDevs.get(1, 0),
-                u2.stdDevs.get(0, 0) + u2.stdDevs.get(1, 0)
-        );
-    }
+//         update();
+//     }
 
-    private static final class PoseUpdate {
-        public final Twist2d twist;
-        public final List<TagTrackerInput.VisionUpdate> visionUpdates;
+//     private void update() {
+//         while (updates.size() > 1 && updates.firstKey() < Timer.getFPGATimestamp() - HISTORY_TIME) {
+//             Map.Entry<Double, PoseUpdate> update = updates.pollFirstEntry();
+//             basePose = update.getValue().apply(basePose, q);
+//         }
 
-        public PoseUpdate(Twist2d twist, List<TagTrackerInput.VisionUpdate> visionUpdates) {
-            this.twist = twist;
-            this.visionUpdates = visionUpdates;
-        }
+//         latestPose = basePose;
+//         for (Map.Entry<Double, PoseUpdate> entry : updates.entrySet()) {
+//             latestPose = entry.getValue().apply(latestPose, q);
+//         }
 
-        public Pose2d apply(Pose2d prevPose, Matrix<N3, N1> q) {
-            Pose2d pose = prevPose.exp(twist);
+//         // Debug field stuffs
+//         FieldView.robotPose.setPose(latestPose);
+//         List<Pose2d> visionPoses = new ArrayList<>();
+//         for (PoseUpdate update : updates.values()) {
+//             for (TagTrackerInput.VisionUpdate visionUpdate : update.visionUpdates) {
+//                 visionPoses.add(visionUpdate.estPose);
+//             }
+//         }
+//         FieldView.visionEstimates.setPoses(visionPoses);
+//     }
 
-            for (TagTrackerInput.VisionUpdate visionUpdate : visionUpdates) {
-                Matrix<N3, N3> visionK = new Matrix<>(Nat.N3(), Nat.N3());
-                double[] r = new double[3];
-                for (int i = 0; i < 3; i++)
-                    r[i] = MathUtil.square(visionUpdate.stdDevs.get(i, 0));
+//     private int compareStdDevs(TagTrackerInput.VisionUpdate u1, TagTrackerInput.VisionUpdate u2) {
+//         return -Double.compare(
+//                 u1.stdDevs.get(0, 0) + u1.stdDevs.get(1, 0),
+//                 u2.stdDevs.get(0, 0) + u2.stdDevs.get(1, 0)
+//         );
+//     }
 
-                for (int row = 0; row < 3; row++) {
-                    if (q.get(row, 0) == 0.0) {
-                        visionK.set(row, row, 0.0);
-                    } else {
-                        double qRow0 = q.get(row, 0);
-                        visionK.set(row, row, qRow0 / (qRow0 + Math.sqrt(qRow0 * r[row])));
-                    }
-                }
+//     private static final class PoseUpdate {
+//         public final Twist2d twist;
+//         public final List<TagTrackerInput.VisionUpdate> visionUpdates;
 
-                Twist2d visionTwist = pose.log(visionUpdate.estPose);
-                Matrix<N3, N1> twistMatrix = visionK.times(VecBuilder.fill(visionTwist.dx, visionTwist.dy, visionTwist.dtheta));
+//         public PoseUpdate(Twist2d twist, List<TagTrackerInput.VisionUpdate> visionUpdates) {
+//             this.twist = twist;
+//             this.visionUpdates = visionUpdates;
+//         }
 
-                pose = pose.exp(new Twist2d(twistMatrix.get(0, 0), twistMatrix.get(1, 0), twistMatrix.get(2, 0)));
-            }
+//         public Pose2d apply(Pose2d prevPose, Matrix<N3, N1> q) {
+//             Pose2d pose = prevPose.exp(twist);
 
-            return pose;
-        }
-    }
-}
+//             for (TagTrackerInput.VisionUpdate visionUpdate : visionUpdates) {
+//                 Matrix<N3, N3> visionK = new Matrix<>(Nat.N3(), Nat.N3());
+//                 double[] r = new double[3];
+//                 for (int i = 0; i < 3; i++)
+//                     r[i] = MathUtil.square(visionUpdate.stdDevs.get(i, 0));
+
+//                 for (int row = 0; row < 3; row++) {
+//                     if (q.get(row, 0) == 0.0) {
+//                         visionK.set(row, row, 0.0);
+//                     } else {
+//                         double qRow0 = q.get(row, 0);
+//                         visionK.set(row, row, qRow0 / (qRow0 + Math.sqrt(qRow0 * r[row])));
+//                     }
+//                 }
+
+//                 Twist2d visionTwist = pose.log(visionUpdate.estPose);
+//                 Matrix<N3, N1> twistMatrix = visionK.times(VecBuilder.fill(visionTwist.dx, visionTwist.dy, visionTwist.dtheta));
+
+//                 pose = pose.exp(new Twist2d(twistMatrix.get(0, 0), twistMatrix.get(1, 0), twistMatrix.get(2, 0)));
+//             }
+
+//             return pose;
+//         }
+//     }
+// }
