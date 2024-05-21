@@ -174,7 +174,9 @@ public class RobotContainer
 
     driverXbox.povRight().whileTrue(new RunAimAtTarget(camera, drivebase, intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
 
-    driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
+    //TODO This crashes the code needs to see the April tag if it doesn't it won't work.  
+    //driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
+
     
     
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
