@@ -49,10 +49,8 @@ public class GoToSpeaker extends Command {
     
     double distToTarget = target.getDistance(robotPos);
     Rotation2d angleToTarget = target.minus(robotPos).getAngle();
-    double angleToTargetDeg = angleToTarget.getDegrees()+180;
-    angleToTargetChanged = new Rotation2d(Units.degreesToRadians(angleToTargetDeg));
     // just simple turn to target
-    drivetrain.drive(drivetrain.getTargetSpeeds(0, 0, angleToTargetChanged));
+    drivetrain.drive(drivetrain.getTargetSpeeds(0, 0, angleToTarget));
 
 // TODO Implement Shooter logic 
         // AimCalculator.Aim aim = shooter.getTargetAim();
