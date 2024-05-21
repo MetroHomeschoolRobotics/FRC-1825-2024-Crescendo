@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants.AutonConstants;
+import frc.robot.Constants;
 import frc.robot.lib.field.FieldInfo;
 import frc.robot.subsystems.tagtracker.TagTrackerInput;
 
@@ -81,10 +82,10 @@ public class SwerveSubsystem extends SubsystemBase
     //  In this case the wheel diameter is 4 inches, which must be converted to meters to get meters/second.
     //  The gear ratio is 6.75 motor revolutions per wheel rotation.
     //  The encoder resolution per motor revolution is 1 per motor revolution.
-    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
+    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(Constants.wheelDiameterInches), Constants.driveGearRatioL3);
     // System.out.println("\"conversionFactor\": {");
     // System.out.println("\t\"angle\": " + angleConversionFactor + ",");
-    // System.out.println("\t\"drive\": " + driveConversionFactor);
+     System.out.println("\t\"drive\": " + driveConversionFactor);
     // System.out.println("}");
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
@@ -409,7 +410,14 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public void resetOdometry(Pose2d initialHolonomicPose)
   {
+    Rotation3d rot = new Rotation3d(0,0,initialHolonomicPose.getRotation().getRadians());
+    swerveDrive.setGyro(rot);
+    
+    swerveDrive.zeroGyro();
     swerveDrive.resetOdometry(initialHolonomicPose);
+    
+    SmartDashboard.putNumber("initialX", initialHolonomicPose.getX());
+    SmartDashboard.putNumber("InitialYaw", initialHolonomicPose.getRotation().getDegrees());
   }
 
   /**
@@ -419,6 +427,8 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public Pose2d getPose()
   {
+    SmartDashboard.putNumber("CurrentX", swerveDrive.getPose().getX());
+    SmartDashboard.putNumber("CurrentYaw", swerveDrive.getPose().getRotation().getDegrees());
     return swerveDrive.getPose();
   }
 

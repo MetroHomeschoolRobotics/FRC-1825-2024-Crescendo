@@ -154,9 +154,9 @@ public class RobotContainer
   {
     // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    // driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    // driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
-    // driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
+    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+    driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
+    driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
     
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
@@ -175,7 +175,6 @@ public class RobotContainer
     driverXbox.povRight().whileTrue(new RunAimAtTarget(camera, drivebase, intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
 
     driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
-
     
     
     CommandScheduler.getInstance().setDefaultCommand(elevator, runElevator);
@@ -225,6 +224,7 @@ public class RobotContainer
     _autoChooser.addOption("5 Note Auto (1,2,3,4 (3)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 4 (3)"));
     _autoChooser.addOption("5 Note Auto (1,2,3,8 (1)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 8 (1)"));
     _autoChooser.addOption("Just Shoot", new RunShooter(shooter, wrist));
+    _autoChooser.addOption("Straight6Meter", drivebase.getAutonomousCommand("Straight6Meters"));
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -235,7 +235,7 @@ public class RobotContainer
     _driveController.addOption(("FieldOrientedAnglularVelocity"), drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> -driverXbox.getRightX()));
+        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), 0.2)));
 
 
     SmartDashboard.putData(_autoChooser);
