@@ -64,6 +64,6 @@ public class AutoIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      return indexer.noteInShooter() || timer >= 4;
+      return indexer.noteInShooter() || timer >= 6;
   }
 }
