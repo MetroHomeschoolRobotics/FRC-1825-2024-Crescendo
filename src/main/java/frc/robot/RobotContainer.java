@@ -26,8 +26,10 @@ import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtAmp;
 import frc.robot.commands.AimAtSpeakerAdjustable;
+import frc.robot.commands.DischargeShooter;
 import frc.robot.commands.GoToSpeaker;
 import frc.robot.commands.LobShot;
+import frc.robot.commands.PrechargeShooter;
 import frc.robot.commands.ReverseShooter;
 import frc.robot.commands.RunAimAtTarget;
 import frc.robot.commands.RunElevator;
@@ -161,11 +163,13 @@ public class RobotContainer
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
     m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
-    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 55).alongWith(new LowerElevator(elevator))));
+    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 55, 0.8).alongWith(new LowerElevator(elevator))));
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
-    m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
+    //m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
+    m_manipulatorController.y().whileTrue(new PrechargeShooter(shooter, wrist)).whileFalse(new DischargeShooter(shooter, wrist));
+
 
     m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter));
     m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
@@ -217,6 +221,7 @@ public class RobotContainer
 
     _autoChooser.addOption("2 NoteAuto (3 (3) )", drivebase.getAutonomousCommand("PickUpNote 3 (3)"));
     _autoChooser.addOption("Eat 4 Notes (3)", drivebase.getAutonomousCommand("Eat 4 Notes (3)"));
+    _autoChooser.addOption("Steal Midline Notes (3)", drivebase.getAutonomousCommand("Steal Midline Notes (3)"));
     _autoChooser.addOption("3 NoteAuto (2,4 (2))", drivebase.getAutonomousCommand("PickUpNote 2, 4"));
     _autoChooser.addOption("3.5 NoteAuto (6,7,8 (3))", drivebase.getAutonomousCommand("PickUpNote 6, 7, 8 (3)"));
     _autoChooser.addOption("4 Note Auto (1,2,4 (2))", drivebase.getAutonomousCommand("PickUpNote 2, 1, 4"));
