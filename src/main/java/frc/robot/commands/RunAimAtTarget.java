@@ -23,7 +23,7 @@ public class RunAimAtTarget extends Command {
   private Intake intake;
   private Shooter indexer;
 
-  private PIDController turnPid = new PIDController(0.1, 0, 0);
+  private PIDController turnPid = new PIDController(0.025, 0, 0);
 
 
   double yaw = 0;
@@ -67,7 +67,10 @@ public class RunAimAtTarget extends Command {
       double angleOutput = 0;
 
       if (yaw != 0) {
-        driveOutput = Math.min(10/Math.abs(yaw),4.8);
+        driveOutput = Math.min(6/Math.abs(yaw),3);
+      }
+      else{
+        driveOutput = 3;
       }
       if(!turnPid.atSetpoint()) {
         pidOutput = turnPid.calculate(result.getBestTarget().getYaw(), 0);
@@ -78,7 +81,7 @@ public class RunAimAtTarget extends Command {
         swerveSubsystem.drive(new ChassisSpeeds(3, 0, 0));
       }
       else {
-      swerveSubsystem.drive(new ChassisSpeeds(driveOutput, pidOutput/1.5, 0));
+      swerveSubsystem.drive(new ChassisSpeeds(driveOutput, pidOutput, 0));
       }
       indexer.setIndexerSpeed(0.3);
       intake.setSpeed(1);
@@ -98,6 +101,7 @@ public class RunAimAtTarget extends Command {
     swerveSubsystem.drive(new ChassisSpeeds(0,0, 0));
     indexer.setIndexerSpeed(0);
     intake.setSpeed(0);
+    turnPid.reset();
   }
 
   // Returns true when the command should end.
