@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 
@@ -19,6 +21,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.aim.AimCalculator;
 import frc.robot.subsystems.aim.TableAimCalculator;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.tagtracker.TagTrackerInput;
 import frc.robot.lib.field.FieldInfo;
 
 public class Shooter extends SubsystemBase {
@@ -52,16 +55,24 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Note In Shooter", !beamBrake.get());
-    double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getDrive().swerveDrivePoseEstimator.getEstimatedPosition().getTranslation());
+    //double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getDrive().swerveDrivePoseEstimator.getEstimatedPosition().getTranslation());
+    double SpeakerDistance = getSpeakerPosition().getDistance(getEstimatePose().getTranslation());
     AimCalculator.Aim aim = aimCalculator.calculateAim(SpeakerDistance);
-    // SmartDashboard.putNumber("Distance to Speaker April Tag", SpeakerDistance);
+    SmartDashboard.putNumber("Distance to Speaker April Tag", SpeakerDistance);
     SpeakerNonEstimatedDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
     // SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
     // SmartDashboard.putNumber("Speaker angle", getAngleToSpeaker());
     targetAim = aim;
     // This method will be called once per scheduler run
   }
-
+  private Pose2d getEstimatePose(){
+    Pose2d lastPose = new Pose2d();
+    List<TagTrackerInput.VisionUpdate> visionData = drivetrain.getTagTracker().getNewUpdates();
+    for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
+       lastPose = visionUpdate.estPose;
+     }
+     return lastPose;
+  }
   public void setSpeed(double speed) {
     shooterMotor1.set(speed);
     shooterMotor2.set(speed);
