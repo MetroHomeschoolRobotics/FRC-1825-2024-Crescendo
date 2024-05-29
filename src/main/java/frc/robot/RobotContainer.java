@@ -145,6 +145,7 @@ public class RobotContainer
     SmartDashboard.putNumber("SetShooterSpeed", 2000);
   }
 
+  
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
@@ -169,7 +170,8 @@ public class RobotContainer
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
     //m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
     m_manipulatorController.y().whileTrue(new PrechargeShooter(shooter, wrist)).whileFalse(new DischargeShooter(shooter, wrist));
-
+    m_manipulatorController.start().onTrue(shooter.incrementTrimCommand());
+    m_manipulatorController.back().onTrue(shooter.decrementTrimCommand());
 
     m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter));
     m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));

@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.aim.AimCalculator;
@@ -31,6 +32,7 @@ public class Shooter extends SubsystemBase {
   private AimCalculator aimCalculator;
   private final AimCalculator tableAimCalculator;
   private double SpeakerNonEstimatedDistance;
+  private double wristTrim = 0.0;
 
   /** Creates a new Shooter. */
   public Shooter(SwerveSubsystem _drivetrain) {
@@ -86,11 +88,21 @@ public class Shooter extends SubsystemBase {
   public AimCalculator.Aim getTargetAim() {
     return targetAim;
   }
+
+  public Command incrementTrimCommand() {
+    return this.runOnce(() -> wristTrim = wristTrim + 0.5);
+  }
+public Command decrementTrimCommand() {
+    return this.runOnce(() -> wristTrim = wristTrim - 0.5);
+  }
+
+
+
   public double getSpeakerDistance() {
     return SpeakerNonEstimatedDistance;
   }
   public double getAngleToSpeaker(){
     double angle = -2.5954*Math.pow(getSpeakerDistance(), 3) + 27.224*Math.pow(getSpeakerDistance(), 2) - 97.353*getSpeakerDistance() + 147.07+1.5;
-    return Math.max(angle, 25);
+    return Math.max(angle + wristTrim, 25);
   }
 }

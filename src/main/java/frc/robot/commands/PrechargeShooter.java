@@ -24,7 +24,7 @@ public class PrechargeShooter extends Command {
     addRequirements(_shooter, _wrist);
     wrist = _wrist;
     shooter = _shooter;
-  
+   
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -43,7 +43,7 @@ public class PrechargeShooter extends Command {
     wrist.setSpeed(setpoint, 100);
     shooter.setSpeed(1);
 
-    if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint() || timer >= 2) {
+    if (shooter.getSpeedShooter1() >= 5000 /*&& shooter.getSpeedShooter2() >= 5000*/ && anglePID.atSetpoint() || timer >= 2) {
     // if (shooter.getSpeedShooter1() >= 200 && shooter.getSpeedShooter2() >= 200 && anglePID.atSetpoint() || timer >= 2) {
       //shooter.setIndexerSpeed(0.3);
     }

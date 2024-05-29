@@ -16,7 +16,7 @@ public class DischargeShooter extends Command {
   private Wrist wrist;
   
   private double timer;
-
+  
   private double kp = 0.02;
   private PIDController anglePID = new PIDController(kp, 0, 0);
   /** Creates a new ShootToSpeaker. */
@@ -38,7 +38,8 @@ public class DischargeShooter extends Command {
   @Override
   public void execute() {
     
-    double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), MathUtil.clamp(shooter.getAngleToSpeaker(), -60, 60));
+    final double angle = wrist.getAbsoluteAngle();
+    double setpoint = anglePID.calculate(angle, MathUtil.clamp(shooter.getAngleToSpeaker(), -60, 60));
   
     wrist.setSpeed(setpoint, 100);
     shooter.setSpeed(1);
@@ -51,6 +52,7 @@ public class DischargeShooter extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("Fire Angle " + wrist.getAbsoluteAngle() + " Distance " + shooter.getSpeakerDistance() + " RPM " +  shooter.getSpeedShooter1());
     shooter.setSpeed(0);
     wrist.setSpeed(0, 100);
     shooter.setIndexerSpeed(0);;;;;;;;;;;;;;;; // semicolons are GREAT!!!!!
