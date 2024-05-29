@@ -58,7 +58,7 @@ public class Shooter extends SubsystemBase {
     //double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getDrive().swerveDrivePoseEstimator.getEstimatedPosition().getTranslation());
     double SpeakerDistance = getSpeakerPosition().getDistance(getEstimatePose().getTranslation());
     AimCalculator.Aim aim = aimCalculator.calculateAim(SpeakerDistance);
-    SmartDashboard.putNumber("Distance to Speaker April Tag", SpeakerDistance);
+    SmartDashboard.putNumber("Distance April Tag", SpeakerDistance);
     SpeakerNonEstimatedDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
     // SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
     // SmartDashboard.putNumber("Speaker angle", getAngleToSpeaker());
@@ -67,9 +67,13 @@ public class Shooter extends SubsystemBase {
   }
   private Pose2d getEstimatePose(){
     Pose2d lastPose = new Pose2d();
+    double lastTimestamp = 0.0;
     List<TagTrackerInput.VisionUpdate> visionData = drivetrain.getTagTracker().getNewUpdates();
     for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
-       lastPose = visionUpdate.estPose;
+      if (visionUpdate.timestamp > lastTimestamp) {
+        lastTimestamp = visionUpdate.timestamp;
+        lastPose = visionUpdate.estPose;
+      }
      }
      return lastPose;
   }
