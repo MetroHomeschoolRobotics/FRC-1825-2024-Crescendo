@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7420153420490998,
-      "y": 4.431021860015951
+      "x": 1.2923545847091693,
+      "y": 5.558377783422233
     },
-    "rotation": -59.74356283647076
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -24,38 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Grab Note 3 (3)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeNote2"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Strafe to 2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootToSpeaker"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Eat Note 2"
+                  "pathName": "Grab Note 2 (2)"
                 }
               },
               {
@@ -80,7 +49,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Strafe to 1"
+                  "pathName": "Strafe to 3"
                 }
               },
               {
@@ -95,7 +64,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Aim at Speaker from 1"
+            "pathName": "Shoot Note 3"
           }
         },
         {

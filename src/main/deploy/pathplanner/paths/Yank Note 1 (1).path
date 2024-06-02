@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.063356561495732,
-        "y": 1.668518293558327
+        "x": 0.7191527426533114,
+        "y": 6.644156331790925
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.378129451911079,
-        "y": 1.7179600446157415
+        "x": 1.555167805987786,
+        "y": 6.5272940111097615
       },
       "isLocked": false,
-      "linkedName": "Lob Note 6-7"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.292730063720997,
-        "y": 4.1046482092964185
+        "x": 2.890543075817907,
+        "y": 7.000273074388452
       },
       "prevControl": {
-        "x": 6.324049430707557,
-        "y": 4.405793420282493
+        "x": 1.9017080546696041,
+        "y": 6.820484888725123
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Note 1"
     }
   ],
   "rotationTargets": [],
@@ -33,19 +33,19 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.5,
-    "maxAcceleration": 2.25,
-    "maxAngularVelocity": 760.8,
-    "maxAngularAcceleration": 700.0
+    "maxAcceleration": 2.5,
+    "maxAngularVelocity": 500.0,
+    "maxAngularAcceleration": 500.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 60.19524852681989,
     "velocity": 0
   },
   "useDefaultConstraints": false

@@ -164,7 +164,7 @@ public class RobotContainer
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
     m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
-    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 55, 0.8).alongWith(new LowerElevator(elevator))));
+    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 55, 0.8).alongWith(new LowerElevator(elevator)))).whileFalse(new SetWristToAngle(wrist, 58, 0.8));
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
@@ -178,7 +178,7 @@ public class RobotContainer
     m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5));// 23.8
     m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33));
 
-    driverXbox.povRight().whileTrue(new RunAimAtTarget(camera, drivebase, intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+    driverXbox.rightBumper().whileTrue(new RunAimAtTarget(camera, drivebase, intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
 
     //TODO This crashes the code needs to see the April tag if it doesn't it won't work.  
     //driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
@@ -217,12 +217,14 @@ public class RobotContainer
     NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21)); // new WaitCommand(0.8));
     NamedCommands.registerCommand("ShootToAngle4", new ShootToAngle(shooter, wrist, 25));
     NamedCommands.registerCommand("TurnToSpeaker", new GoToSpeaker(drivebase, shooter));
+    NamedCommands.registerCommand("LobNote", new LobShot(shooter, wrist, 33.0));
 
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));;;;;;;;;;;
 
 
-    _autoChooser.addOption("2 NoteAuto (3 (3) )", drivebase.getAutonomousCommand("PickUpNote 3 (3)"));
-    _autoChooser.addOption("Eat 4 Notes (3)", drivebase.getAutonomousCommand("Eat 4 Notes (3)"));
+    _autoChooser.addOption("Mobility (1)", drivebase.getAutonomousCommand("Mobility (1)"));
+    _autoChooser.addOption("Yank 1 Note (1)", drivebase.getAutonomousCommand("Yank 1 Note (1)"));
+    _autoChooser.addOption("Eat 2 Notes (2)", drivebase.getAutonomousCommand("Eat 2 Notes (2)"));
     _autoChooser.addOption("Steal Midline Notes (3)", drivebase.getAutonomousCommand("Steal Midline Notes (3)"));
     _autoChooser.addOption("3 NoteAuto (2,4 (2))", drivebase.getAutonomousCommand("PickUpNote 2, 4"));
     _autoChooser.addOption("3.5 NoteAuto (6,7,8 (3))", drivebase.getAutonomousCommand("PickUpNote 6, 7, 8 (3)"));

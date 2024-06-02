@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.063356561495732,
-        "y": 1.668518293558327
+        "x": 2.894589789179579,
+        "y": 5.5429536946030415
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.378129451911079,
-        "y": 1.7179600446157415
+        "x": 1.7304612870095308,
+        "y": 5.367660213581297
       },
       "isLocked": false,
-      "linkedName": "Lob Note 6-7"
+      "linkedName": "Note3 2"
     },
     {
       "anchor": {
-        "x": 8.292730063720997,
-        "y": 4.1046482092964185
+        "x": 2.723791012799417,
+        "y": 4.09116409537167
       },
       "prevControl": {
-        "x": 6.324049430707557,
-        "y": 4.405793420282493
+        "x": 1.352906097116542,
+        "y": 4.100153504654835
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Pre-Note 2"
     }
   ],
   "rotationTargets": [],
@@ -33,13 +33,13 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.5,
-    "maxAcceleration": 2.25,
+    "maxAcceleration": 2.2,
     "maxAngularVelocity": 760.8,
-    "maxAngularAcceleration": 700.0
+    "maxAngularAcceleration": 935.8
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 1.1299531469957953,
     "rotateFast": false
   },
   "reversed": false,

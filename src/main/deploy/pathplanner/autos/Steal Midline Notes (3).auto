@@ -20,7 +20,38 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Race to Note 7"
+            "pathName": "Race to Note 8"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Steal Note 8"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Lob Note 8"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LobNote"
           }
         },
         {
@@ -43,9 +74,15 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Lob Note 7"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "ShootToSpeaker"
+            "name": "LobNote"
           }
         },
         {
@@ -68,59 +105,15 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "ShootToSpeaker"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Steal Note 5"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeNote2"
-                }
-              }
-            ]
+            "pathName": "Lob Note 6"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ShootToSpeaker"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Steal Note 4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeNote2"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootToSpeaker"
+            "name": "LobNote"
           }
         }
       ]
