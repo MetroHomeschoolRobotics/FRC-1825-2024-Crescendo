@@ -373,11 +373,13 @@ public class SwerveSubsystem extends SubsystemBase
   //   prevPositions = positions;
   //   prevGyroAngle = gyroAngle;
 
-    // List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
+    List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
+    //System.out.println("Got " + visionData.size() + " tags");
     // // //Rotation2d rotate = new Rotation2d(Math.PI);
-    // for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
-    //   swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
-    // }
+    for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
+      System.out.print(visionUpdate.estPose);
+      swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
+    }
     swerveDrive.updateOdometry();
 
   }

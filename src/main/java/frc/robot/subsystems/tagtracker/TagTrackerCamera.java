@@ -64,6 +64,7 @@ public final class TagTrackerCamera {
             }
 
             double timeOffset = data[data.length - 1];
+            System.out.println("Camera got " + data.length + " data, " + count + " count");
             return new EstimateInput(timestamp - timeOffset, poseA, poseB, visibleTagIds);
         }
 
