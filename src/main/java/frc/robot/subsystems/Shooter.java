@@ -58,7 +58,7 @@ public class Shooter extends SubsystemBase {
     //double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getDrive().swerveDrivePoseEstimator.getEstimatedPosition().getTranslation());
     double SpeakerDistance = getSpeakerPosition().getDistance(getEstimatePose().getTranslation());
     AimCalculator.Aim aim = aimCalculator.calculateAim(SpeakerDistance);
-    SmartDashboard.putNumber("Distance April Tag", SpeakerDistance);
+    //SmartDashboard.putNumber("Distance April Tag", SpeakerDistance);
     SpeakerNonEstimatedDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
     // SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
     // SmartDashboard.putNumber("Speaker angle", getAngleToSpeaker());

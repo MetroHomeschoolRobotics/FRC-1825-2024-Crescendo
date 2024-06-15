@@ -172,7 +172,7 @@ public class SwerveSubsystem extends SubsystemBase
         //                       0,
         //                       Rotation2d.fromDegrees(result.getBestTarget()
         //                                                    .getYaw()))); // Not sure if this will work, more math may be required.
-        SmartDashboard.putNumber("Angle to Note", result.getBestTarget().getYaw());
+        //SmartDashboard.putNumber("Angle to Note", result.getBestTarget().getYaw());
       }
     });
   }
@@ -418,8 +418,8 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive.zeroGyro();
     swerveDrive.resetOdometry(initialHolonomicPose);
     
-    SmartDashboard.putNumber("initialX", initialHolonomicPose.getX());
-    SmartDashboard.putNumber("InitialYaw", initialHolonomicPose.getRotation().getDegrees());
+    //SmartDashboard.putNumber("initialX", initialHolonomicPose.getX());
+    //SmartDashboard.putNumber("InitialYaw", initialHolonomicPose.getRotation().getDegrees());
   }
 
   /**
@@ -429,8 +429,8 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public Pose2d getPose()
   {
-    SmartDashboard.putNumber("CurrentX", swerveDrive.getPose().getX());
-    SmartDashboard.putNumber("CurrentYaw", swerveDrive.getPose().getRotation().getDegrees());
+    //SmartDashboard.putNumber("CurrentX", swerveDrive.getPose().getX());
+    //SmartDashboard.putNumber("CurrentYaw", swerveDrive.getPose().getRotation().getDegrees());
     return swerveDrive.getPose();
   }
 

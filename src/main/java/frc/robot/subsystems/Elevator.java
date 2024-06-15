@@ -53,7 +53,7 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Elevator is lowest", isLowest());
-    SmartDashboard.putNumber("elevator Distance", getDistance());
+    //SmartDashboard.putNumber("elevator Distance", getDistance());
 
     if(isLowest()) {
       resetEncoders();
