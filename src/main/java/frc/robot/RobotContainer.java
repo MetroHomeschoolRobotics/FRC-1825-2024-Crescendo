@@ -129,9 +129,9 @@ public class RobotContainer
     // left stick controls translation
     // right stick controls the angular velocity of the robot
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX() * 0.5);
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND), //added a negative J.B.
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND), //added a negative J.B.
+        () -> MathUtil.applyDeadband(driverXbox.getRightX(), 0.2)); // Changed this to match the driver controller sendable chooser - J.B.
 
     Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -139,7 +139,7 @@ public class RobotContainer
         () -> driverXbox.getRawAxis(2));
 
     getAutoChooserOptions();
-    drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); //Made anglularVelocity the default since everyone prefers that. J.B.
     FieldView.publish();
     SmartDashboard.putNumber("SetWriteAngle", 0);
     SmartDashboard.putNumber("SetShooterSpeed", 2000);
@@ -245,9 +245,9 @@ public class RobotContainer
 
         () -> driverXbox.getRightY()));
     _driveController.addOption(("FieldOrientedAnglularVelocity"), drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), 0.2)));
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND), //added a negative J.B.
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND), //added a negative J.B.
+        () -> MathUtil.applyDeadband(driverXbox.getRightX(), 0.2)));
 
 
     SmartDashboard.putData(_autoChooser);
