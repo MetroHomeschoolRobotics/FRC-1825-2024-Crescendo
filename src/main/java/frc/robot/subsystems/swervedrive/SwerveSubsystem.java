@@ -56,6 +56,7 @@ public class SwerveSubsystem extends SubsystemBase
    * Swerve drive object.
    */
   private final SwerveDrive swerveDrive;
+  private double timer = 0;
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
@@ -377,11 +378,14 @@ public class SwerveSubsystem extends SubsystemBase
     //System.out.println("Got " + visionData.size() + " tags");
     // // //Rotation2d rotate = new Rotation2d(Math.PI);
     for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
-      System.out.print(visionUpdate.estPose);
-      swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
+      //System.out.print(visionUpdate.estPose);
+      // take out the rotation aspect of the vision tracking TODO Check if this is correct / test with an actual battery
+      Pose2d poseUpdated = new Pose2d(visionUpdate.estPose.getTranslation(), getHeading());
+      
+      swerveDrive.addVisionMeasurement(poseUpdated, visionUpdate.timestamp, visionUpdate.stdDevs);
     }
-    swerveDrive.updateOdometry();
 
+    swerveDrive.updateOdometry();
   }
 
   @Override

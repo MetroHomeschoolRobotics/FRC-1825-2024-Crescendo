@@ -52,7 +52,7 @@ public class DischargeShooter extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Fire Angle " + wrist.getAbsoluteAngle() + " Distance " + shooter.getSpeakerDistance() + " RPM " +  shooter.getSpeedShooter1());
+    //System.out.println("Fire Angle " + wrist.getAbsoluteAngle() + " Distance " + shooter.getSpeakerDistance() + " RPM " +  shooter.getSpeedShooter1());
     shooter.setSpeed(0);
     wrist.setSpeed(0, 100);
     shooter.setIndexerSpeed(0);;;;;;;;;;;;;;;; // semicolons are GREAT!!!!!

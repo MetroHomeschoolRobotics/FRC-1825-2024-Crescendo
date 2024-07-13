@@ -12,9 +12,16 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "Straight2meters"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Straight2meters"
+                }
+              }
+            ]
           }
         }
       ]

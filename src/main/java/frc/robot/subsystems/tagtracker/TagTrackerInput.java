@@ -52,12 +52,12 @@ public final class TagTrackerInput {
 
         NetworkTable table = NetworkTableInstance.getDefault().getTable("TagTracker");
         environment = new TagTrackerEnvironment(table.getDoubleArrayTopic("environment"));
-        System.out.println("Yo mama so fat" + table.getPath());
+        //System.out.println("Yo mama so fat" + table.getPath());
         NetworkTable camerasTable = table.getSubTable("Cameras");
         cameras = new TagTrackerCamera[infos.length];
         for (int i = 0; i < infos.length; i++) {
             CameraInfo info = infos[i];
-            System.out.println("Camera " + i + " Name: " + info.name + " Path: " + camerasTable.getSubTable(info.name).getPath());
+            //System.out.println("Camera " + i + " Name: " + info.name + " Path: " + camerasTable.getSubTable(info.name).getPath());
             cameras[i] = new TagTrackerCamera(
                     info.name,
                     camerasTable.getSubTable(info.name),
