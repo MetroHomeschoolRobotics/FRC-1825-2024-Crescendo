@@ -238,6 +238,7 @@ public class RobotContainer
     _autoChooser.addOption("Just Shoot", new RunShooter(shooter, wrist));
     _autoChooser.addOption("Straight6Meter", drivebase.getAutonomousCommand("Straight6Meters"));
     _autoChooser.addOption("Straight2Meters", drivebase.getAutonomousCommand("Straight2Meters"));
+    _autoChooser.addOption("Forward 3 then Back 1", drivebase.getAutonomousCommand("F3 then B1"));
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
