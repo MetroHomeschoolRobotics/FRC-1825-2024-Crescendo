@@ -10,6 +10,9 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
@@ -124,6 +127,24 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
   }
 
+ private final SwerveDrivePoseEstimator m_poseEstimator =
+
+  new SwerveDrivePoseEstimator(
+      
+      getKinematics(),
+
+      getHeading(),
+
+      getModulePositions(),
+
+      new Pose2d(),
+
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+
+      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+      // shamelessly  stolen from https://docs.wpilib.org/en/stable/docs/software/advanced-controls/state-space/state-space-pose-estimators.html#pose-estimators
+
+      
   /**
    * Setup AutoBuilder for PathPlanner.
    */
@@ -403,6 +424,11 @@ public class SwerveSubsystem extends SubsystemBase
     return swerveDrive.kinematics;
   }
 
+  public SwerveModulePosition[] getModulePositions()
+  {
+    return  swerveDrive.getModulePositions();
+  }
+
   public SwerveDrive getDrive(){
     return swerveDrive;
   }
@@ -598,4 +624,5 @@ public class SwerveSubsystem extends SubsystemBase
   public TagTrackerInput getTagTracker(){
     return tagTracker;
   }
+  
 }
