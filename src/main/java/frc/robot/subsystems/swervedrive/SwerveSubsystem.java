@@ -126,25 +126,6 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
   }
-
- private final SwerveDrivePoseEstimator m_poseEstimator =
-
-  new SwerveDrivePoseEstimator(
-      
-      getKinematics(),
-
-      getHeading(),
-
-      getModulePositions(),
-
-      new Pose2d(),
-
-      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-
-      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
-      // shamelessly  stolen from https://docs.wpilib.org/en/stable/docs/software/advanced-controls/state-space/state-space-pose-estimators.html#pose-estimators
-
-      
   /**
    * Setup AutoBuilder for PathPlanner.
    */
@@ -253,7 +234,7 @@ public class SwerveSubsystem extends SubsystemBase
       driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(xInput, yInput,
                                                                       headingX.getAsDouble(),
                                                                       headingY.getAsDouble(),
-                                                                      swerveDrive.getOdometryHeading().getRadians(),
+                                                                      (swerveDrive.getOdometryHeading().getRadians())-Math.PI, 
                                                                       swerveDrive.getMaximumVelocity()));
     });
   }
@@ -274,7 +255,7 @@ public class SwerveSubsystem extends SubsystemBase
       driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(translationX.getAsDouble(),
                                                                       translationY.getAsDouble(),
                                                                       rotation.getAsDouble() * Math.PI,
-                                                                      swerveDrive.getOdometryHeading().getRadians(),
+                                                                      swerveDrive.getOdometryHeading().getRadians()-Math.PI,
                                                                       swerveDrive.getMaximumVelocity()));
     });
   }
@@ -401,12 +382,15 @@ public class SwerveSubsystem extends SubsystemBase
     for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
       //System.out.print(visionUpdate.estPose);
       // take out the rotation aspect of the vision tracking TODO Check if this is correct / test with an actual battery
-      Pose2d poseUpdated = new Pose2d(visionUpdate.estPose.getTranslation(), getHeading());
+      //Pose2d poseUpdated = new Pose2d(visionUpdate.estPose.getTranslation(), getHeading());
+      //taking this out to try using the regular addvisionmeausurment function - J.B.
       
-      swerveDrive.addVisionMeasurement(poseUpdated, visionUpdate.timestamp, visionUpdate.stdDevs);
-    }
-
+      swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
+      System.out.println(visionUpdate.stdDevs);
+  }
+    
     swerveDrive.updateOdometry();
+
   }
 
   @Override

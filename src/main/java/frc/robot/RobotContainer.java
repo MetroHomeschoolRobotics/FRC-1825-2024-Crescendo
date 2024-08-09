@@ -95,6 +95,7 @@ public class RobotContainer
    */
   public RobotContainer()
   {
+  
     shooter = new Shooter(drivebase);
 
     // Configure the trigger bindings
