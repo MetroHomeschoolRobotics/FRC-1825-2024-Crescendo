@@ -106,7 +106,7 @@ public class RobotContainer
                                                                                                 OperatorConstants.LEFT_Y_DEADBAND),
                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
                                                                                                 OperatorConstants.LEFT_X_DEADBAND),
-                                                                   () -> -MathUtil.applyDeadband(driverXbox.getRightX(),
+                                                                   () -> MathUtil.applyDeadband(-driverXbox.getRightX(),
                                                                                                 OperatorConstants.RIGHT_X_DEADBAND),
                                                                    driverXbox.getHID()::getYButtonPressed,
                                                                    driverXbox.getHID()::getAButtonPressed,
@@ -121,7 +121,7 @@ public class RobotContainer
     Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX(),
+        () -> -driverXbox.getRightX(),
         () -> driverXbox.getRightY());
 
     // Applies deadbands and inverts controls because joysticks
@@ -132,12 +132,12 @@ public class RobotContainer
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
         () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND), //added a negative J.B.
         () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND), //added a negative J.B.
-        () -> MathUtil.applyDeadband(driverXbox.getRightX(), 0.2)); // Changed this to match the driver controller sendable chooser - J.B.
+        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), 0.2)); // Changed this to match the driver controller sendable chooser - J.B.
 
     Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRawAxis(2));
+        () -> -driverXbox.getRawAxis(2));
 
     getAutoChooserOptions();
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); //Made anglularVelocity the default since everyone prefers that. J.B.
@@ -244,13 +244,13 @@ public class RobotContainer
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX(),
+        () -> -driverXbox.getRightX(),
 
         () -> driverXbox.getRightY()));
     _driveController.addOption(("FieldOrientedAnglularVelocity"), drivebase.driveCommand(
         () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND), //added a negative J.B.
         () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND), //added a negative J.B.
-        () -> MathUtil.applyDeadband(driverXbox.getRightX(), 0.2)));
+        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), 0.2)));
 
 
     SmartDashboard.putData(_autoChooser);

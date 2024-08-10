@@ -386,7 +386,9 @@ public class SwerveSubsystem extends SubsystemBase
       //taking this out to try using the regular addvisionmeausurment function - J.B.
       
       swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
-      System.out.println(visionUpdate.stdDevs);
+      for(int i=0; i<3; i++) {
+      SmartDashboard.putNumber("stddev" + i, visionUpdate.stdDevs.get(i));
+      }
   }
     
     swerveDrive.updateOdometry();
