@@ -356,7 +356,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive.drive(velocity);
   }
-
+int lastNumberOfTargets;
   @Override
   public void periodic()
  {
@@ -377,7 +377,14 @@ public class SwerveSubsystem extends SubsystemBase
   //   prevGyroAngle = gyroAngle;
 
     List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
-    //System.out.println("Got " + visionData.size() + " tags");
+    
+    if (lastNumberOfTargets == visionData.size()) {
+    }
+    else {
+      System.out.println("Got " + visionData.size() + " tags");
+      lastNumberOfTargets = visionData.size();
+    }
+
     // // //Rotation2d rotate = new Rotation2d(Math.PI);
     for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
       //System.out.print(visionUpdate.estPose);
@@ -389,6 +396,10 @@ public class SwerveSubsystem extends SubsystemBase
       for(int i=0; i<3; i++) {
       SmartDashboard.putNumber("stddev" + i, visionUpdate.stdDevs.get(i));
       }
+      System.out.println("stddev");
+      System.out.println(visionUpdate.stdDevs.get(1));
+      System.out.println(visionUpdate.stdDevs.get(2));
+      System.out.println(visionUpdate.stdDevs.get(3));
   }
     
     swerveDrive.updateOdometry();
