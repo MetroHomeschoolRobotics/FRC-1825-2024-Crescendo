@@ -47,6 +47,7 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.logging.FieldView;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.OrangePiTagTracking;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -77,6 +78,8 @@ public class RobotContainer
   private final Wrist wrist = new Wrist();
 
   private final PhotonCamera camera = new PhotonCamera("OV5647");
+
+  private final OrangePiTagTracking orangePi = new OrangePiTagTracking();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
