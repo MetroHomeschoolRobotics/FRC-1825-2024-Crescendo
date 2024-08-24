@@ -376,31 +376,20 @@ int lastNumberOfTargets;
   //   prevPositions = positions;
   //   prevGyroAngle = gyroAngle;
 
-    List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
-    
-    if (lastNumberOfTargets == visionData.size()) {
-    }
-    else {
-      System.out.println("Got " + visionData.size() + " tags");
-      lastNumberOfTargets = visionData.size();
-    }
-
-    // // //Rotation2d rotate = new Rotation2d(Math.PI);
-    for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
-      //System.out.print(visionUpdate.estPose);
-      // take out the rotation aspect of the vision tracking TODO Check if this is correct / test with an actual battery
-      //Pose2d poseUpdated = new Pose2d(visionUpdate.estPose.getTranslation(), getHeading());
-      //taking this out to try using the regular addvisionmeausurment function - J.B.
+    // List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
+    // //System.out.println("Got " + visionData.size() + " tags");
+    // // // //Rotation2d rotate = new Rotation2d(Math.PI);
+    // for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
+    //   //System.out.print(visionUpdate.estPose);
+    //   // take out the rotation aspect of the vision tracking TODO Check if this is correct / test with an actual battery
+    //   //Pose2d poseUpdated = new Pose2d(visionUpdate.estPose.getTranslation(), getHeading());
+    //   //taking this out to try using the regular addvisionmeausurment function - J.B.
       
-      swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
-      for(int i=0; i<3; i++) {
-      SmartDashboard.putNumber("stddev" + i, visionUpdate.stdDevs.get(i));
-      }
-      System.out.println("stddev");
-      System.out.println(visionUpdate.stdDevs.get(1));
-      System.out.println(visionUpdate.stdDevs.get(2));
-      System.out.println(visionUpdate.stdDevs.get(3));
-  }
+    //   swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
+    //   for(int i=0; i<3; i++) {
+    //   SmartDashboard.putNumber("stddev" + i, visionUpdate.stdDevs.get(i));
+    //   }
+  // }
     
     swerveDrive.updateOdometry();
 
