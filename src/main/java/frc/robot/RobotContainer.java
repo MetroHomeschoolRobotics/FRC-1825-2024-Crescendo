@@ -145,8 +145,8 @@ public class RobotContainer
     getAutoChooserOptions();
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); //Made anglularVelocity the default since everyone prefers that. J.B.
     FieldView.publish();
-    SmartDashboard.putNumber("SetWriteAngle", 0);
-    SmartDashboard.putNumber("SetShooterSpeed", 2000);
+    // SmartDashboard.putNumber("SetWriteAngle", 0);
+    // SmartDashboard.putNumber("SetShooterSpeed", 2000);
   }
 
   

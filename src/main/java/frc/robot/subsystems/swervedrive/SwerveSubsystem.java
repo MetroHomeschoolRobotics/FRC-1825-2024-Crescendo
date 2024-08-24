@@ -356,7 +356,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive.drive(velocity);
   }
-
+int lastNumberOfTargets;
   @Override
   public void periodic()
  {
