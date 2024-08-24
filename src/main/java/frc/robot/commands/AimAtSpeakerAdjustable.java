@@ -26,8 +26,8 @@ public class AimAtSpeakerAdjustable extends Command {
 
     wrist = _wrist;
     shooter = _shooter;
-    wristAngle = SmartDashboard.getNumber("SetWriteAngle", 0);
-    shooterSpeed = SmartDashboard.getNumber("SetShooterSpeed", 2000);
+    //wristAngle = SmartDashboard.getNumber("SetWriteAngle", 0);
+    // shooterSpeed = SmartDashboard.getNumber("SetShooterSpeed", 2000);
 
     // Use addRequirements() here to declare subsystem dependencies.
   }

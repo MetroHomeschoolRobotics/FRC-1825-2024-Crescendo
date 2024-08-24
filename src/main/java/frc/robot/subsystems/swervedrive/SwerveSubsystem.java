@@ -10,6 +10,9 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
@@ -30,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants.AutonConstants;
+import frc.robot.Constants;
 import frc.robot.lib.field.FieldInfo;
 import frc.robot.subsystems.tagtracker.TagTrackerInput;
 
@@ -55,6 +59,7 @@ public class SwerveSubsystem extends SubsystemBase
    * Swerve drive object.
    */
   private final SwerveDrive swerveDrive;
+  private double timer = 0;
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
@@ -81,10 +86,10 @@ public class SwerveSubsystem extends SubsystemBase
     //  In this case the wheel diameter is 4 inches, which must be converted to meters to get meters/second.
     //  The gear ratio is 6.75 motor revolutions per wheel rotation.
     //  The encoder resolution per motor revolution is 1 per motor revolution.
-    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
+    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(Constants.wheelDiameterInches), Constants.driveGearRatioL3);
     // System.out.println("\"conversionFactor\": {");
     // System.out.println("\t\"angle\": " + angleConversionFactor + ",");
-    // System.out.println("\t\"drive\": " + driveConversionFactor);
+     System.out.println("\t\"drive\": " + driveConversionFactor);
     // System.out.println("}");
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
@@ -107,7 +112,7 @@ public class SwerveSubsystem extends SubsystemBase
                 FieldInfo.CRESCENDO_2024,
                 new TagTrackerInput.CameraInfo( // 16 ft + 1
                         "ov9281",
-                        new Pose3d(new Translation3d(0, Units.inchesToMeters(10.21875), 0), new Rotation3d(new Quaternion(6.123233995736766, Math.PI, Math.toRadians(90-60), 1)))));
+                        new Pose3d(new Translation3d(0, Units.inchesToMeters(10.21875), 0), new Rotation3d())));
     setupPathPlanner();
   }
 
@@ -121,7 +126,6 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
   }
-
   /**
    * Setup AutoBuilder for PathPlanner.
    */
@@ -171,7 +175,7 @@ public class SwerveSubsystem extends SubsystemBase
         //                       0,
         //                       Rotation2d.fromDegrees(result.getBestTarget()
         //                                                    .getYaw()))); // Not sure if this will work, more math may be required.
-        SmartDashboard.putNumber("Angle to Note", result.getBestTarget().getYaw());
+        //SmartDashboard.putNumber("Angle to Note", result.getBestTarget().getYaw());
       }
     });
   }
@@ -230,7 +234,7 @@ public class SwerveSubsystem extends SubsystemBase
       driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(xInput, yInput,
                                                                       headingX.getAsDouble(),
                                                                       headingY.getAsDouble(),
-                                                                      swerveDrive.getOdometryHeading().getRadians(),
+                                                                      (swerveDrive.getOdometryHeading().getRadians())-Math.PI, 
                                                                       swerveDrive.getMaximumVelocity()));
     });
   }
@@ -251,7 +255,7 @@ public class SwerveSubsystem extends SubsystemBase
       driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(translationX.getAsDouble(),
                                                                       translationY.getAsDouble(),
                                                                       rotation.getAsDouble() * Math.PI,
-                                                                      swerveDrive.getOdometryHeading().getRadians(),
+                                                                      swerveDrive.getOdometryHeading().getRadians()-Math.PI,
                                                                       swerveDrive.getMaximumVelocity()));
     });
   }
@@ -352,7 +356,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive.drive(velocity);
   }
-
+int lastNumberOfTargets;
   @Override
   public void periodic()
  {
@@ -372,11 +376,32 @@ public class SwerveSubsystem extends SubsystemBase
   //   prevPositions = positions;
   //   prevGyroAngle = gyroAngle;
 
-    // List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
-    // //Rotation2d rotate = new Rotation2d(Math.PI);
-    // for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
-    //   swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
-    // }
+    List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
+    
+    if (lastNumberOfTargets == visionData.size()) {
+    }
+    else {
+      System.out.println("Got " + visionData.size() + " tags");
+      lastNumberOfTargets = visionData.size();
+    }
+
+    // // //Rotation2d rotate = new Rotation2d(Math.PI);
+    for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
+      //System.out.print(visionUpdate.estPose);
+      // take out the rotation aspect of the vision tracking TODO Check if this is correct / test with an actual battery
+      //Pose2d poseUpdated = new Pose2d(visionUpdate.estPose.getTranslation(), getHeading());
+      //taking this out to try using the regular addvisionmeausurment function - J.B.
+      
+      swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
+      for(int i=0; i<3; i++) {
+      SmartDashboard.putNumber("stddev" + i, visionUpdate.stdDevs.get(i));
+      }
+      System.out.println("stddev");
+      System.out.println(visionUpdate.stdDevs.get(1));
+      System.out.println(visionUpdate.stdDevs.get(2));
+      System.out.println(visionUpdate.stdDevs.get(3));
+  }
+    
     swerveDrive.updateOdometry();
 
   }
@@ -396,6 +421,11 @@ public class SwerveSubsystem extends SubsystemBase
     return swerveDrive.kinematics;
   }
 
+  public SwerveModulePosition[] getModulePositions()
+  {
+    return  swerveDrive.getModulePositions();
+  }
+
   public SwerveDrive getDrive(){
     return swerveDrive;
   }
@@ -409,7 +439,14 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public void resetOdometry(Pose2d initialHolonomicPose)
   {
+    Rotation3d rot = new Rotation3d(0,0,initialHolonomicPose.getRotation().getRadians());
+    swerveDrive.setGyro(rot);
+    
+    swerveDrive.zeroGyro();
     swerveDrive.resetOdometry(initialHolonomicPose);
+    
+    //SmartDashboard.putNumber("initialX", initialHolonomicPose.getX());
+    //SmartDashboard.putNumber("InitialYaw", initialHolonomicPose.getRotation().getDegrees());
   }
 
   /**
@@ -419,6 +456,8 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public Pose2d getPose()
   {
+    //SmartDashboard.putNumber("CurrentX", swerveDrive.getPose().getX());
+    //SmartDashboard.putNumber("CurrentYaw", swerveDrive.getPose().getRotation().getDegrees());
     return swerveDrive.getPose();
   }
 
@@ -578,4 +617,9 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
+
+  public TagTrackerInput getTagTracker(){
+    return tagTracker;
+  }
+  
 }

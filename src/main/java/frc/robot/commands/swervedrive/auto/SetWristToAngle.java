@@ -15,6 +15,7 @@ public class SetWristToAngle extends Command {
 
   private double angle;
   private double timer;
+  private double speed;
 
   /** Creates a new SetWristToAngle. */
   public SetWristToAngle(Wrist _wrist, double _angle) {
@@ -22,6 +23,16 @@ public class SetWristToAngle extends Command {
 
     wrist = _wrist;
     angle = _angle;
+    speed = 1.0;
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  public SetWristToAngle(Wrist _wrist, double _angle, double _speed) {
+    addRequirements(_wrist);
+
+    wrist = _wrist;
+    angle = _angle;
+    speed = _speed;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -37,7 +48,7 @@ public class SetWristToAngle extends Command {
   public void execute() {
     double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), angle);
     
-    wrist.setSpeed(setpoint, 100);
+    wrist.setSpeed(setpoint*speed, 100);
     timer += 0.04;
   }
 

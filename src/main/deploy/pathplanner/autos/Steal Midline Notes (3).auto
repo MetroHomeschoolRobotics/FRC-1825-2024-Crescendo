@@ -1,0 +1,124 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7435336964604535,
+      "y": 4.441751057415159
+    },
+    "rotation": -59.92119856231712
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootAtBase"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Race to Note 8"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Steal Note 8"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Lob Note 8"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LobNote"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Steal Note 7"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Lob Note 7"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LobNote"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Steal Note 6"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Lob Note 6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LobNote"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

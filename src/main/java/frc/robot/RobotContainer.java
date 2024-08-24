@@ -26,8 +26,10 @@ import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtAmp;
 import frc.robot.commands.AimAtSpeakerAdjustable;
+import frc.robot.commands.DischargeShooter;
 import frc.robot.commands.GoToSpeaker;
 import frc.robot.commands.LobShot;
+import frc.robot.commands.PrechargeShooter;
 import frc.robot.commands.ReverseShooter;
 import frc.robot.commands.RunAimAtTarget;
 import frc.robot.commands.RunElevator;
@@ -93,6 +95,7 @@ public class RobotContainer
    */
   public RobotContainer()
   {
+  
     shooter = new Shooter(drivebase);
 
     // Configure the trigger bindings
@@ -103,7 +106,7 @@ public class RobotContainer
                                                                                                 OperatorConstants.LEFT_Y_DEADBAND),
                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
                                                                                                 OperatorConstants.LEFT_X_DEADBAND),
-                                                                   () -> -MathUtil.applyDeadband(driverXbox.getRightX(),
+                                                                   () -> MathUtil.applyDeadband(-driverXbox.getRightX(),
                                                                                                 OperatorConstants.RIGHT_X_DEADBAND),
                                                                    driverXbox.getHID()::getYButtonPressed,
                                                                    driverXbox.getHID()::getAButtonPressed,
@@ -118,7 +121,7 @@ public class RobotContainer
     Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX(),
+        () -> -driverXbox.getRightX(),
         () -> driverXbox.getRightY());
 
     // Applies deadbands and inverts controls because joysticks
@@ -127,22 +130,23 @@ public class RobotContainer
     // left stick controls translation
     // right stick controls the angular velocity of the robot
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX() * 0.5);
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND), //added a negative J.B.
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND), //added a negative J.B.
+        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), 0.2)); // Changed this to match the driver controller sendable chooser - J.B.
 
     Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRawAxis(2));
+        () -> -driverXbox.getRawAxis(2));
 
     getAutoChooserOptions();
-    drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); //Made anglularVelocity the default since everyone prefers that. J.B.
     FieldView.publish();
-    SmartDashboard.putNumber("SetWriteAngle", 0);
-    SmartDashboard.putNumber("SetShooterSpeed", 2000);
+    // SmartDashboard.putNumber("SetWriteAngle", 0);
+    // SmartDashboard.putNumber("SetShooterSpeed", 2000);
   }
 
+  
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
@@ -154,27 +158,31 @@ public class RobotContainer
   {
     // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    // driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    // driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
-    // driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
-    
-    m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+    driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
+    driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
+    driverXbox.b().whileTrue(drivebase.driveToPose(new Pose2d(2.90, 5.54, null)));
+        m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));  
     m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
-    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 55).alongWith(new LowerElevator(elevator))));
+    m_manipulatorController.a().whileTrue(new AimAtAmp(wrist, shooter, elevator).andThen(new SetWristToAngle(wrist, 55, 0.8).alongWith(new LowerElevator(elevator)))).whileFalse(new SetWristToAngle(wrist, 58, 0.8));
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
-    m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
+    //m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
+    m_manipulatorController.y().whileTrue(new PrechargeShooter(shooter, wrist)).whileFalse(new DischargeShooter(shooter, wrist));
+    m_manipulatorController.start().onTrue(shooter.incrementTrimCommand());
+    m_manipulatorController.back().onTrue(shooter.decrementTrimCommand());
 
     m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter));
     m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
     m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5));// 23.8
     m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33));
 
-    driverXbox.povRight().whileTrue(new RunAimAtTarget(camera, drivebase, intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+    driverXbox.rightBumper().whileTrue(new RunAimAtTarget(camera, drivebase, intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
 
-    driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
+    //TODO This crashes the code needs to see the April tag if it doesn't it won't work.  
+    //driverXbox.povDown().whileTrue(new GoToSpeaker(drivebase, shooter));
 
     
     
@@ -210,11 +218,15 @@ public class RobotContainer
     NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21)); // new WaitCommand(0.8));
     NamedCommands.registerCommand("ShootToAngle4", new ShootToAngle(shooter, wrist, 25));
     NamedCommands.registerCommand("TurnToSpeaker", new GoToSpeaker(drivebase, shooter));
+    NamedCommands.registerCommand("LobNote", new LobShot(shooter, wrist, 33.0));
 
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));;;;;;;;;;;
 
 
-    _autoChooser.addOption("2 NoteAuto (3 (3) )", drivebase.getAutonomousCommand("PickUpNote 3 (3)"));
+    _autoChooser.addOption("Mobility (1)", drivebase.getAutonomousCommand("Mobility (1)"));
+    _autoChooser.addOption("Yank 1 Note (1)", drivebase.getAutonomousCommand("Yank 1 Note (1)"));
+    _autoChooser.addOption("Eat 2 Notes (2)", drivebase.getAutonomousCommand("Eat 2 Notes (2)"));
+    _autoChooser.addOption("Steal Midline Notes (3)", drivebase.getAutonomousCommand("Steal Midline Notes (3)"));
     _autoChooser.addOption("3 NoteAuto (2,4 (2))", drivebase.getAutonomousCommand("PickUpNote 2, 4"));
     _autoChooser.addOption("3.5 NoteAuto (6,7,8 (3))", drivebase.getAutonomousCommand("PickUpNote 6, 7, 8 (3)"));
     _autoChooser.addOption("4 Note Auto (1,2,4 (2))", drivebase.getAutonomousCommand("PickUpNote 2, 1, 4"));
@@ -225,17 +237,20 @@ public class RobotContainer
     _autoChooser.addOption("5 Note Auto (1,2,3,4 (3)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 4 (3)"));
     _autoChooser.addOption("5 Note Auto (1,2,3,8 (1)) (Untested)", drivebase.getAutonomousCommand("PickUpNote 1, 2, 3, 8 (1)"));
     _autoChooser.addOption("Just Shoot", new RunShooter(shooter, wrist));
+    _autoChooser.addOption("Straight6Meter", drivebase.getAutonomousCommand("Straight6Meters"));
+    _autoChooser.addOption("Straight2Meters", drivebase.getAutonomousCommand("Straight2Meters"));
+    _autoChooser.addOption("Forward 3 then Back 1", drivebase.getAutonomousCommand("F3 then B1"));
 
     _driveController.addOption("FieldOrientedDirectDrive", drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX(),
+        () -> -driverXbox.getRightX(),
 
         () -> driverXbox.getRightY()));
     _driveController.addOption(("FieldOrientedAnglularVelocity"), drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> -driverXbox.getRightX()));
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND), //added a negative J.B.
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND), //added a negative J.B.
+        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), 0.2)));
 
 
     SmartDashboard.putData(_autoChooser);
