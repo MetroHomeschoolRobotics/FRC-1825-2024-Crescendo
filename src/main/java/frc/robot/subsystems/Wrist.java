@@ -50,7 +50,7 @@ public class Wrist extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //SmartDashboard.putNumber("Wrist Angle", getAbsoluteAngle());
+    SmartDashboard.putNumber("Wrist Angle", getAbsoluteAngle());
     // This method will be called once per scheduler run
   }
 }

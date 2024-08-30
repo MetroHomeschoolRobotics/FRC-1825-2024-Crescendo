@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -24,7 +23,6 @@ import frc.robot.commands.GoToSpeaker;
 import frc.robot.commands.LobShot;
 import frc.robot.commands.PrechargeShooter;
 import frc.robot.commands.ReverseShooter;
-import frc.robot.commands.RunAimAtTarget;
 import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
@@ -36,17 +34,13 @@ import frc.robot.commands.swervedrive.auto.IntakeBackwards;
 import frc.robot.commands.swervedrive.auto.LowerElevator;
 import frc.robot.commands.swervedrive.auto.SetWristToAngle;
 import frc.robot.commands.swervedrive.auto.ShootToAngle;
-import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.logging.FieldView;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.OrangePiTagTracking;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
-
-import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -66,7 +60,7 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Elevator elevator = new Elevator();
   private final Wrist wrist = new Wrist();
-  private final PhotonCamera camera = new PhotonCamera("OV5647");
+  // private final PhotonCamera camera = new PhotonCamera("OV5647");
   private final Shooter shooter = new Shooter(drivebase);
 
   // Define the controllers
@@ -80,7 +74,7 @@ public class RobotContainer {
   // Define the dropdown menus we will put on the dashboard
   public SendableChooser<Command> _autoChooser = new SendableChooser<>();
   public SendableChooser<Command> _driveController = new SendableChooser<>();
-
+  public double turnDeadband = 0.2;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -88,19 +82,6 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
-
-    AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
-        () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
-            OperatorConstants.LEFT_Y_DEADBAND),
-        () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
-            OperatorConstants.LEFT_X_DEADBAND),
-        () -> MathUtil.applyDeadband(-driverXbox.getRightX(),
-            OperatorConstants.RIGHT_X_DEADBAND),
-        driverXbox.getHID()::getYButtonPressed,
-        driverXbox.getHID()::getAButtonPressed,
-        driverXbox.getHID()::getXButtonPressed,
-        driverXbox.getHID()::getBButtonPressed);
-
 
     // Applies deadbands and inverts controls because joysticks
     // are back-right positive while robot
@@ -110,12 +91,12 @@ public class RobotContainer {
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
         () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), 0.2));
+        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), turnDeadband));
     // Added negative to the controllers to make the directions work                                                              
 
     getAutoChooserOptions();
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Made anglularVelocity the default since everyone
-                                                                     // prefers that. J.B.
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); 
+    // Made anglularVelocity the default since everyone prefers that. J.B.
 
     FieldView.publish();
     // SmartDashboard.putNumber("SetWriteAngle", 0);
@@ -236,10 +217,11 @@ public class RobotContainer {
         () -> -driverXbox.getRightX(),
         () -> driverXbox.getRightY()));
         // TODO Should check if this command needs negatives
+  
     _driveController.addOption(("FieldOrientedAnglularVelocity"), drivebase.driveCommand(
         () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND), 
         () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND), 
-        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), 0.2)));
+        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), turnDeadband)));
         // Added negative to the controllers to make the directions work
 
     // Puts the two dropdown choosers on the dashboard
