@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.swervedrive.auto;
+package frc.robot.commands.auto;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,22 +18,22 @@ public class SetWristToAngle extends Command {
   private double speed;
 
   /** Creates a new SetWristToAngle. */
+  // This version of the constructor is used if the speed is unspecified, it is assumed to be 1
   public SetWristToAngle(Wrist _wrist, double _angle) {
     addRequirements(_wrist);
-
+    // Use addRequirements() here to declare subsystem dependencies.
     wrist = _wrist;
     angle = _angle;
     speed = 1.0;
-    // Use addRequirements() here to declare subsystem dependencies.
   }
-
+  /** Creates a new SetWristToAngle. */
+  // This version of the constructor is used if the speed is specified when the function is called
   public SetWristToAngle(Wrist _wrist, double _angle, double _speed) {
     addRequirements(_wrist);
-
+    // Use addRequirements() here to declare subsystem dependencies.
     wrist = _wrist;
     angle = _angle;
     speed = _speed;
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -47,8 +47,7 @@ public class SetWristToAngle extends Command {
   @Override
   public void execute() {
     double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), angle);
-    
-    wrist.setSpeed(setpoint*speed, 100);
+    wrist.setSpeed(setpoint * speed, 100);
     timer += 0.04;
   }
 
@@ -56,7 +55,7 @@ public class SetWristToAngle extends Command {
   @Override
   public void end(boolean interrupted) {
     wrist.setSpeed(0, 100);
-    //System.out.println("part 2 ended");
+    // System.out.println("part 2 ended");
   }
 
   // Returns true when the command should end.
