@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 
@@ -40,12 +41,9 @@ public class PrechargeShooter extends Command {
     double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), MathUtil.clamp(shooter.getAngleToSpeaker(), -60, 60));
   
     wrist.setSpeed(setpoint, 100);
-    shooter.setSpeed(1);
+    shooter.setSpeed(Constants.shooterMaxSpeed);
 
-    if (shooter.getSpeedShooter1() >= 5000 /*&& shooter.getSpeedShooter2() >= 5000*/ && anglePID.atSetpoint() || timer >= 2) {
-    // if (shooter.getSpeedShooter1() >= 200 && shooter.getSpeedShooter2() >= 200 && anglePID.atSetpoint() || timer >= 2) {
-      //shooter.setIndexerSpeed(0.3);
-    }
+    
 
     timer += 0.04;
   }

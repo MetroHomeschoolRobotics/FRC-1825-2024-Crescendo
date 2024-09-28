@@ -120,32 +120,47 @@ public class RobotContainer {
     // Bind all your commands to controller conditions
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
-    driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
-    driverXbox.b().whileTrue(drivebase.driveToPose(new Pose2d(2.90, 5.54, null)));
+
+    //NOTICE ☺ means its tested and works (9/27/24)
+
+    // driver commands
+    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));// ☺
+    driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox)); // ☺
+    
+    // TODO this is unlikely to work. it was supposed to turn to the speaker based on pos
+    // driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter)); 
+    // driverXbox.b().whileTrue(drivebase.driveToPose(new Pose2d(2.90, 5.54, null)));
+
+    //manipulator commands
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist)
-        .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+        .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming)); // ☺
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist)
-        .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
-    m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
+        .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming)); // ☺
+
+    m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist)); // 
     double wristSpeed = 0.8;
+
+    // amp shot
     m_manipulatorController.a()
         .whileTrue(new AimAtAmp(wrist, shooter, elevator)
             .andThen(new SetWristToAngle(wrist, 55, wristSpeed).alongWith(new LowerElevator(elevator))))
-        .whileFalse(new SetWristToAngle(wrist, 58, wristSpeed));
-    m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
+        .whileFalse(new SetWristToAngle(wrist, 58, wristSpeed)); // ☺
+
+    //m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
     //m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
-    m_manipulatorController.y().whileTrue(new PrechargeShooter(shooter, wrist)).whileFalse(new DischargeShooter(shooter, wrist));
+    
     // m_manipulatorController.start().onTrue(shooter.incrementTrimCommand());  TODO: WHY IS THIS HERE!!!
     // m_manipulatorController.back().onTrue(shooter.decrementTrimCommand());
 
-    m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter));
-    m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30));
-    m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5));// at one point was 23.8
-    m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33));
+    m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter)); // ☺
+    m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30)); // ☺
+    m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5)); // ☺
+    m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33)); // ☺
+
+    m_manipulatorController.y().whileTrue(new PrechargeShooter(shooter, wrist)).whileFalse(new DischargeShooter(shooter, wrist)); // shoot at speaker based on pose, so it's inaccurate
+
 
     //driverXbox.rightBumper().whileTrue(new RunAimAtTarget(camera, drivebase, intake, shooter)
     //    .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));

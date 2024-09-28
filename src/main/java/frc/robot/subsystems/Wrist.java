@@ -45,7 +45,7 @@ public class Wrist extends SubsystemBase {
   }
 
   public double getAbsoluteAngle() {
-    return rotationEncoder.getAbsolutePosition()*(360/1)-219.1;// -212.1;
+    return rotationEncoder.getAbsolutePosition()*(360/1)-219.1;
   }
 
   @Override
