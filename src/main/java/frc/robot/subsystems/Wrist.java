@@ -45,12 +45,12 @@ public class Wrist extends SubsystemBase {
   }
 
   public double getAbsoluteAngle() {
-    return rotationEncoder.getAbsolutePosition()*(360/1)-215.1;// -212.1;
+    return rotationEncoder.getAbsolutePosition()*(360/1)-219.1;// -212.1;
   }
 
   @Override
   public void periodic() {
-    //SmartDashboard.putNumber("Wrist Angle", getAbsoluteAngle());
+    SmartDashboard.putNumber("Wrist Angle", getAbsoluteAngle());
     // This method will be called once per scheduler run
   }
 }

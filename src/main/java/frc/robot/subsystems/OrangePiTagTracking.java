@@ -9,6 +9,8 @@ import java.util.List;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class OrangePiTagTracking extends SubsystemBase {
@@ -37,4 +39,27 @@ public PhotonTrackedTarget getBestTarget() {
   return orangePi.getLatestResult().getBestTarget();
 }
 
+public double getYaw() {
+  return getBestTarget().getYaw();
+}
+
+public double getPitch() {
+  return getBestTarget().getPitch();
+}
+
+public double getArea() {
+  return getBestTarget().getArea();
+}
+
+public double skew() {
+  return getBestTarget().getSkew();
+}
+
+public Transform3d getCameraToTarget() {
+  return getBestTarget().getBestCameraToTarget();
+}
+
+public int targetID() {
+  return getBestTarget().getFiducialId();
+}
 }
