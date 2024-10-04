@@ -122,8 +122,10 @@ public class RobotContainer {
 
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
-    driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
-    driverXbox.b().whileTrue(drivebase.driveToPose(new Pose2d(2.90, 5.54, null)));
+    //driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
+   // driverXbox.b().whileTrue(drivebase.driveToPose(new Pose2d(2.90, 5.54, null)));
+   // These two commands were causing the robot to crash 10/03 womp womp :(
+   //todo fix this
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist)
         .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist)
