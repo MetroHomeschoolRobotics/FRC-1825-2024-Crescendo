@@ -23,6 +23,7 @@ import frc.robot.commands.GoToSpeaker;
 import frc.robot.commands.LobShot;
 import frc.robot.commands.PrechargeShooter;
 import frc.robot.commands.ReverseShooter;
+import frc.robot.commands.RunAimAtTarget;
 import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
@@ -42,6 +43,8 @@ import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
+import org.photonvision.PhotonCamera;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
 /**
@@ -60,7 +63,7 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Elevator elevator = new Elevator();
   private final Wrist wrist = new Wrist();
-  // private final PhotonCamera camera = new PhotonCamera("OV5647");
+  //private final PhotonCamera noteCamera = new PhotonCamera("Camera_Module_v1"); TODO Commented out for 
   private final Shooter shooter = new Shooter(drivebase);
 
   // Define the controllers
@@ -162,7 +165,7 @@ public class RobotContainer {
     m_manipulatorController.y().whileTrue(new PrechargeShooter(shooter, wrist)).whileFalse(new DischargeShooter(shooter, wrist)); // shoot at speaker based on pose, so it's inaccurate
 
 
-    //driverXbox.rightBumper().whileTrue(new RunAimAtTarget(camera, drivebase, intake, shooter)
+    //driverXbox.rightBumper().whileTrue(new RunAimAtTarget(noteCamera, drivebase, intake, shooter)); TODO commented out while waiting for updates
     //    .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
     // Commented this out because it crashes the code
 
@@ -203,6 +206,7 @@ public class RobotContainer {
 
     // Defines all the auto chooser options on the dropdown and their associated
     // functions
+    _autoChooser.addOption("GetFrontNote", drivebase.getAutonomousCommand("PickUpFrontNote"));
     _autoChooser.addOption("Mobility (1)", drivebase.getAutonomousCommand("Mobility (1)"));
     _autoChooser.addOption("Yank 1 Note (1)", drivebase.getAutonomousCommand("Yank 1 Note (1)"));
     _autoChooser.addOption("Eat 2 Notes (2)", drivebase.getAutonomousCommand("Eat 2 Notes (2)"));

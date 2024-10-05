@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.pathplanner.lib.util.PIDConstants;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -28,6 +30,9 @@ public final class Constants {
   public static final double distToLimOffset = 1;
   public static final double wheelDiameterInches = 3.9365;
   public static final double driveGearRatioL3 = 6.12;
+
+  // must be in meters TODO find the position of the camera (yaw, y,  is correct)
+  public static final Transform3d tagCameraPosition = new Transform3d(0.323, 0, 0.579, new Rotation3d(0, 28.5, 0)); 
 
   public static final class AutonConstants
   {

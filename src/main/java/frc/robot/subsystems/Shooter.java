@@ -116,8 +116,8 @@ public Command decrementTrimCommand() {
   public double getSpeakerDistance() {
     return SpeakerNonEstimatedDistance;
   }
-  public double getAngleToSpeaker(){
-    double angle = -2.5954*Math.pow(getSpeakerDistance(), 3) + 27.224*Math.pow(getSpeakerDistance(), 2) - 97.353*getSpeakerDistance() + 147.07+1.5;
+  public double getAngleToSpeaker(double distance){
+    double angle = -2.5954*Math.pow(distance, 3) + 27.224*Math.pow(distance, 2) - 97.353*distance + 147.07+1.5;
     return Math.max(angle + wristTrim, 25);
   }
 }

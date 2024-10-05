@@ -35,11 +35,15 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants;
 import frc.robot.lib.field.FieldInfo;
+import frc.robot.subsystems.OrangePiTagTracking;
 import frc.robot.subsystems.tagtracker.TagTrackerInput;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
+
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
@@ -59,7 +63,9 @@ public class SwerveSubsystem extends SubsystemBase
    * Swerve drive object.
    */
   private final SwerveDrive swerveDrive;
+  private final OrangePiTagTracking tagTracking = new OrangePiTagTracking();
   private double timer = 0;
+  private Pose2d lastVisionPose = new Pose2d();
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
@@ -389,7 +395,19 @@ int lastNumberOfTargets;
     //   for(int i=0; i<3; i++) {
     //   SmartDashboard.putNumber("stddev" + i, visionUpdate.stdDevs.get(i));
     //   }
-  // }
+    // }
+    
+    
+    
+    
+    // TODO add pose estimation
+    // Optional<EstimatedRobotPose> estematedPose = tagTracking.getEstimatedPose3d(lastVisionPose);
+    // Pose2d currentVisionPose = estematedPose.get().estimatedPose.toPose2d();
+
+    // swerveDrive.addVisionMeasurement(currentVisionPose, estematedPose.get().timestampSeconds);
+    
+    // lastVisionPose = currentVisionPose;
+    
     
     swerveDrive.updateOdometry();
 

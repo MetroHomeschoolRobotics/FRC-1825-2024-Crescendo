@@ -41,7 +41,7 @@ public class AutoIntake extends Command {
   public void execute() {
 
       if (!indexer.noteInShooter()) {
-        if(wrist.getAbsoluteAngle() >= 59) {
+        if(wrist.getAbsoluteAngle() >= 55) {
           intake.setSpeed(1);
           indexer.setIndexerSpeed(0.3);
         }

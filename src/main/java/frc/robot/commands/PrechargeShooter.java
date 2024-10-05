@@ -38,7 +38,7 @@ public class PrechargeShooter extends Command {
   @Override
   public void execute() {
     
-    double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), MathUtil.clamp(shooter.getAngleToSpeaker(), -60, 60));
+    double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), MathUtil.clamp(shooter.getAngleToSpeaker(0), -60, 60));
   
     wrist.setSpeed(setpoint, 100);
     shooter.setSpeed(Constants.shooterMaxSpeed);

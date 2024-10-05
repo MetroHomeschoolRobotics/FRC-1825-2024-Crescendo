@@ -8,6 +8,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.subsystems.OrangePiTagTracking;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 
@@ -15,17 +17,20 @@ public class AimAtSpeakerAdjustable extends Command {
 
   private Wrist wrist;
   private PIDController anglePID = new PIDController(0.005, 0, 0);
+  private OrangePiTagTracking tagTracking;
   private Shooter shooter;
   private double wristAngle;
   private double shooterSpeed;
+  
 
   /** Creates a new AimAtAmp. */
-  public AimAtSpeakerAdjustable(Wrist _wrist, Shooter _shooter) {
+  public AimAtSpeakerAdjustable(Wrist _wrist, Shooter _shooter, OrangePiTagTracking _tagTracking) {
     addRequirements(_wrist);
     addRequirements(_shooter);
 
     wrist = _wrist;
     shooter = _shooter;
+    tagTracking = _tagTracking;
     //wristAngle = SmartDashboard.getNumber("SetWriteAngle", 0);
     // shooterSpeed = SmartDashboard.getNumber("SetShooterSpeed", 2000);
 
@@ -41,13 +46,14 @@ public class AimAtSpeakerAdjustable extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    double distance = tagTracking.getLinearDistanceFromTarget();
+
+    double angle =  shooter.getAngleToSpeaker(distance);
+
     double speed = anglePID.calculate(wrist.getAbsoluteAngle(), wristAngle);
     
-    
-    if (shooter.getSpeedShooter1() >= shooterSpeed && shooter.getSpeedShooter2() >= shooterSpeed) {
-      shooter.setIndexerSpeed(0.3);
-    }
-    shooter.setSpeed(1);
+    shooter.setSpeed(Constants.shooterMaxSpeed);
 
     wrist.setSpeed(speed, 100);
   }

@@ -10,6 +10,7 @@ import java.nio.file.FileSystems;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -18,25 +19,27 @@ import frc.robot.subsystems.OrangePiTagTracking;
 
 public class RunTagTracking extends Command {
 
-  //private AprilTagFieldLayout aprilTagFieldLayout = new AprilTagFieldLayout("C:/Users/Blah/Desktop/Github Folder/2024 Offseason Swerve Experiments/FRC-1825-2024-Crescendo/src/main/deploy/2024-crescendo-apriltagposes.json");
-
   private OrangePiTagTracking tagTracking;
 
   /** Creates a new RunTagTracking. */
-  public RunTagTracking() {
-    
+  public RunTagTracking(OrangePiTagTracking _tagTracking) {
+    addRequirements(_tagTracking);
+    tagTracking = _tagTracking;
+
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //estimateFieldToRobotAprilTag(tagTracking.getCameraToTarget(), tagTracking.fieldRelativeTagPose, tagTracking.cameraToRobot);
+
   }
   // Called every time the scheduler runs while the command is scheduled.
   
   @Override
-  public void execute() {}
+  public void execute() {
+    
+  }
 
   // Called once the command ends or is interrupted.
   @Override

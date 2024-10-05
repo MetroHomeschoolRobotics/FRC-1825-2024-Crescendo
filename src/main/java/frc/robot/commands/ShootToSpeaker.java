@@ -42,7 +42,7 @@ public class ShootToSpeaker extends Command {
   public void execute() {
     drivetrain.drive(new ChassisSpeeds());
     
-    double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), MathUtil.clamp(shooter.getAngleToSpeaker(), -60, 60));
+    double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), MathUtil.clamp(shooter.getAngleToSpeaker(0), -60, 60));
   
     wrist.setSpeed(setpoint, 100);
     shooter.setSpeed(1);
