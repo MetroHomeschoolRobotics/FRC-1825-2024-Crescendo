@@ -25,6 +25,8 @@ import frc.robot.commands.PrechargeShooter;
 import frc.robot.commands.ReverseShooter;
 import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
+import frc.robot.commands.RunIntake_In;
+import frc.robot.commands.RunIntake_Out;
 import frc.robot.commands.RunShooter;
 import frc.robot.commands.RunWrist;
 import frc.robot.commands.ShootToSpeaker;
@@ -126,10 +128,17 @@ public class RobotContainer {
    // driverXbox.b().whileTrue(drivebase.driveToPose(new Pose2d(2.90, 5.54, null)));
    // These two commands were causing the robot to crash 10/03 womp womp :(
    //todo fix this
+   /*
     m_manipulatorController.leftBumper().whileTrue(new RunIntake(intake, false, shooter, wrist)
         .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+
     m_manipulatorController.rightBumper().whileTrue(new RunIntake(intake, true, shooter, wrist)
         .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+    */
+    m_manipulatorController.leftBumper().whileTrue(new RunIntake_In(intake, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming)); 
+
+    m_manipulatorController.rightBumper().whileTrue(new RunIntake_Out(intake, shooter, wrist).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming)); 
+
     m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist));
     double wristSpeed = 0.8;
     m_manipulatorController.a()
