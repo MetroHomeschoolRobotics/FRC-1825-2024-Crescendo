@@ -24,7 +24,7 @@ import frc.robot.commands.LobShot;
 import frc.robot.commands.PrechargeShooter;
 import frc.robot.commands.ReverseShooter;
 import frc.robot.commands.RunElevator;
-import frc.robot.commands.RunIntake;
+//import frc.robot.commands.RunIntake; Commented out for testing of seperate commands. 
 import frc.robot.commands.RunIntake_In;
 import frc.robot.commands.RunIntake_Out;
 import frc.robot.commands.RunShooter;

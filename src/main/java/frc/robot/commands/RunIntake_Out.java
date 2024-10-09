@@ -14,7 +14,7 @@ public class RunIntake_Out extends Command {
   private Intake intake;
   private Boolean reversed;
   private Shooter indexer;
-  private Wrist wrist;
+  //private Wrist wrist;
 
   /** Creates a new RunIntake. */
   public RunIntake_Out(Intake _intake, Shooter _indexer, Wrist _wrist) {
@@ -24,7 +24,9 @@ public class RunIntake_Out extends Command {
     
     intake = _intake;
     indexer = _indexer;
-    wrist = _wrist;
+    //wrist = _wrist; 
+
+    //TODO If testing works commented out Wrist code can be removed. 
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
