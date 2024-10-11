@@ -36,7 +36,7 @@ public class Shooter extends SubsystemBase {
   private final AimCalculator tableAimCalculator;
   private double SpeakerNonEstimatedDistance;
   private double wristTrim = 0.0;
-
+  private double subwooferOffset = 1.245;
   /** Creates a new Shooter. */
   public Shooter(SwerveSubsystem _drivetrain) {
     indexerMotor.setInverted(true);
@@ -60,7 +60,8 @@ public class Shooter extends SubsystemBase {
     AimCalculator.Aim aim = aimCalculator.calculateAim(SpeakerDistance);
     //SmartDashboard.putNumber("Distance April Tag", SpeakerDistance);
     SpeakerNonEstimatedDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
-    // SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
+    SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
+        SmartDashboard.putNumber("Distance to speaker in feet", ((SpeakerNonEstimatedDistance-subwooferOffset)*3.28));
     // SmartDashboard.putNumber("Speaker angle", getAngleToSpeaker());
     targetAim = aim;
     // This method will be called once per scheduler run
@@ -114,10 +115,12 @@ public Command decrementTrimCommand() {
 
 
   public double getSpeakerDistance() {
-    return SpeakerNonEstimatedDistance;
+    return ((SpeakerNonEstimatedDistance-subwooferOffset)*3.28);
+    //removes the length of the subwoofer and converts to feet
   }
   public double getAngleToSpeaker(){
-    double angle = -2.5954*Math.pow(getSpeakerDistance(), 3) + 27.224*Math.pow(getSpeakerDistance(), 2) - 97.353*getSpeakerDistance() + 147.07+1.5;
+
+    double angle = -0.0206*Math.pow(getSpeakerDistance(), 3) + 0.6783*Math.pow(getSpeakerDistance(), 2) - 8.0431*(getSpeakerDistance()) + 60.125;
     return Math.max(angle + wristTrim, 25);
   }
 }

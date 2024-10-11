@@ -139,10 +139,9 @@ public class RobotContainer {
     m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
     // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist));
-    // m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist,
-    // drivebase));
-    m_manipulatorController.y().whileTrue(new PrechargeShooter(shooter, wrist))
-        .whileFalse(new DischargeShooter(shooter, wrist));
+    m_manipulatorController.y().whileTrue(new ShootToSpeaker(shooter, wrist, drivebase));
+    //m_manipulatorController.y().whileTrue(new PrechargeShooter(shooter, wrist))
+        //.whileFalse(new DischargeShooter(shooter, wrist));
     m_manipulatorController.start().onTrue(shooter.incrementTrimCommand());
     m_manipulatorController.back().onTrue(shooter.decrementTrimCommand());
 

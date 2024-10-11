@@ -47,11 +47,14 @@ public class ShootToSpeaker extends Command {
     wrist.setSpeed(setpoint, 100);
     shooter.setSpeed(1);
 
-    if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint() || timer >= 2) {
+    if (shooter.getSpeedShooter1() >= 2000 /*&& shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint()) */ || timer >= 1.5) {
+      // setting to 1 second of time limit to match the performance of x button 10/10/2024
+      // set the speed limit
     // if (shooter.getSpeedShooter1() >= 200 && shooter.getSpeedShooter2() >= 200 && anglePID.atSetpoint() || timer >= 2) {
       shooter.setIndexerSpeed(0.3);
     }
 
+  
     timer += 0.04;
   }
 
