@@ -610,5 +610,11 @@ int lastNumberOfTargets;
   public TagTrackerInput getTagTracker(){
     return tagTracker;
   }
+
+  public void setGyro(double rot) {
+
+    swerveDrive.setGyro(new Rotation3d(0,0,rot));
+
+  }
   
 }

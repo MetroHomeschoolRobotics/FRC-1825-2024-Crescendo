@@ -31,6 +31,8 @@ public class SetRobotPoseToSpeaker extends Command {
   @Override
   public void execute() {
     drive.resetOdometry(FieldInfo.CRESCENDO_2024.flipPoseForAlliance(new Pose2d(1.2446, 5.512, new Rotation2d(Math.PI))));
+
+    //drive.setGyro(drive.getPose().getRotation().getRadians()+Math.PI);
   }
 
   // Called once the command ends or is interrupted.

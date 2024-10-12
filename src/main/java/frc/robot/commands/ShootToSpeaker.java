@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -45,7 +46,7 @@ public class ShootToSpeaker extends Command {
     double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), MathUtil.clamp(shooter.getAngleToSpeaker(), -60, 60));
   
     wrist.setSpeed(setpoint, 100);
-    shooter.setSpeed(1);
+    shooter.setSpeed(Constants.maxShooterSpeed);
 
     if (shooter.getSpeedShooter1() >= 2000 /*&& shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint()) */ || timer >= 1.5) {
       // setting to 1 second of time limit to match the performance of x button 10/10/2024
