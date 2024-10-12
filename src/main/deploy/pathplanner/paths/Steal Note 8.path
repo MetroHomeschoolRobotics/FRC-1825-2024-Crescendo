@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.555598502501352,
-        "y": 0.7605879559585207
+        "x": 8.328999269805339,
+        "y": 0.7636554807993345
       },
       "isLocked": false,
       "linkedName": "Pre Note 7"
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 178.52918964337627,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -179.33672411506757,
     "velocity": 0
   },
   "useDefaultConstraints": false

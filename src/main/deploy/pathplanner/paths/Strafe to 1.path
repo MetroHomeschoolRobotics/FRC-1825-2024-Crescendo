@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.236915715383371,
-        "y": 5.240644023215455
+        "x": 1.2369351148000076,
+        "y": 5.240544112660069
       },
       "isLocked": false,
       "linkedName": "Note 2"
@@ -20,8 +20,8 @@
         "y": 7.000273074388452
       },
       "prevControl": {
-        "x": 1.3197217883797472,
-        "y": 7.1969374977548455
+        "x": 1.3197347915744317,
+        "y": 7.197041330565566
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 0,
+      "rotationDegrees": -179.1097291393033,
       "rotateFast": false
     }
   ],
@@ -45,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 6.6723511952018635,
+    "rotation": -158.68637223993915,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -179.3145184720893,
     "velocity": 0
   },
   "useDefaultConstraints": false
