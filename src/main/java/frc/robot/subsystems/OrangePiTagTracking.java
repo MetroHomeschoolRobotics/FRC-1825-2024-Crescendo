@@ -29,7 +29,7 @@ public class OrangePiTagTracking extends SubsystemBase {
   private AprilTagFieldLayout tagLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
   PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(
-    tagLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, Constants.tagCameraPosition);
+    tagLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, orangePi, Constants.tagCameraPosition);
 
   /** Creates a new OrangePiTagTracking. */
   public OrangePiTagTracking() {}
@@ -38,6 +38,7 @@ public class OrangePiTagTracking extends SubsystemBase {
   @Override
   public void periodic() {
     
+    // photonPoseEstimator.
     
 
     // This method will be called once per scheduler run
