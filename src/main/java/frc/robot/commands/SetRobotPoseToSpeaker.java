@@ -38,10 +38,10 @@ public class SetRobotPoseToSpeaker extends Command {
   public void execute() {
     drive.resetOdometry(FieldInfo.CRESCENDO_2024.flipPoseForAlliance(new Pose2d(1.2446, 5.512, new Rotation2d(Math.PI))));
 
-    // Optional<Alliance> ally = DriverStation.getAlliance();
-    // if (ally.get() == Alliance.Red) {
-    //   drive.setGyro(drive.getPose().getRotation().getRadians()+Math.PI);
-    // }
+     Optional<Alliance> ally = DriverStation.getAlliance();
+     if (ally.get() == Alliance.Red) {
+       drive.setGyro(drive.getPose().getRotation().getRadians());
+     }
 
   }
 

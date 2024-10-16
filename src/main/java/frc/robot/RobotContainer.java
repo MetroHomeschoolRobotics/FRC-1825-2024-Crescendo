@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,6 +43,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+import java.util.Optional;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -75,6 +78,9 @@ public class RobotContainer {
   public SendableChooser<Command> _autoChooser = new SendableChooser<>();
   public SendableChooser<Command> _driveController = new SendableChooser<>();
   public double turnDeadband = 0.2;
+
+
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -87,7 +93,7 @@ public class RobotContainer {
     // are back-right positive while robot
     // controls are front-left positive
     // left stick controls translation
-    // right stick controls the angular velocity of the robot
+    // right stick controls the angular velocity of the robot 
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
         () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
@@ -219,11 +225,17 @@ public class RobotContainer {
         () -> driverXbox.getRightY()));
         // TODO Should check if this command needs negatives
   
-    _driveController.addOption(("FieldOrientedAnglularVelocity"), drivebase.driveCommand(
+    _driveController.addOption(("BLUE - FieldOrientedAnglularVelocity"), drivebase.driveCommand(
         () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND), 
         () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND), 
         () -> MathUtil.applyDeadband(-driverXbox.getRightX(), turnDeadband)));
         // Added negative to the controllers to make the directions work
+
+    _driveController.addOption(("RED - FieldOrientedAnglularVelocityInverted"), drivebase.driveCommand(
+        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> MathUtil.applyDeadband(-driverXbox.getRightX(), turnDeadband)));
+        // This is testing for the red side driving
 
     // Puts the two dropdown choosers on the dashboard
     SmartDashboard.putData(_autoChooser);
