@@ -27,6 +27,7 @@ import frc.robot.commands.RunAimAtTarget;
 import frc.robot.commands.RunElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
+import frc.robot.commands.RunTagTracking;
 import frc.robot.commands.RunWrist;
 import frc.robot.commands.ShootToSpeaker;
 import frc.robot.commands.auto.AutoIntake;
@@ -38,6 +39,7 @@ import frc.robot.commands.SetRobotPoseToSpeaker;
 import frc.robot.logging.FieldView;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.OrangePiTagTracking;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -65,6 +67,7 @@ public class RobotContainer {
   private final Wrist wrist = new Wrist();
   //private final PhotonCamera noteCamera = new PhotonCamera("Camera_Module_v1"); TODO Commented out for 
   private final Shooter shooter = new Shooter(drivebase);
+  private final OrangePiTagTracking tagTracking = new OrangePiTagTracking();
 
   // Define the controllers
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -148,6 +151,15 @@ public class RobotContainer {
         .whileTrue(new AimAtAmp(wrist, shooter, elevator)
             .andThen(new SetWristToAngle(wrist, 55, wristSpeed).alongWith(new LowerElevator(elevator))))
         .whileFalse(new SetWristToAngle(wrist, 58, wristSpeed)); // ☺
+    
+    m_manipulatorController.y().whileTrue(new PrechargeShooter(shooter, wrist)).whileFalse(new DischargeShooter(shooter, wrist)); // shoot at speaker based on pose, so it's inaccurate
+
+    m_manipulatorController.b().whileTrue(new RunTagTracking(false, tagTracking, shooter, wrist)).whileFalse(new RunTagTracking(true, tagTracking, shooter, wrist));
+
+    m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter)); // ☺
+    m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30)); // ☺
+    m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5)); // ☺
+    m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33)); // ☺
 
     //m_manipulatorController.b().whileTrue(new AimAtSpeakerAdjustable(wrist, shooter));
     // m_manipulatorController.y().whileTrue(new GoToSpeaker(drivebase, shooter));
@@ -157,12 +169,7 @@ public class RobotContainer {
     // m_manipulatorController.start().onTrue(shooter.incrementTrimCommand());  TODO: WHY IS THIS HERE!!!
     // m_manipulatorController.back().onTrue(shooter.decrementTrimCommand());
 
-    m_manipulatorController.povLeft().whileTrue(new ReverseShooter(shooter)); // ☺
-    m_manipulatorController.povUp().whileTrue(new ShootToAngle(shooter, wrist, 30)); // ☺
-    m_manipulatorController.povRight().whileTrue(new ShootToAngle(shooter, wrist, 23.5)); // ☺
-    m_manipulatorController.povDown().whileTrue(new LobShot(shooter, wrist, 33)); // ☺
-
-    m_manipulatorController.y().whileTrue(new PrechargeShooter(shooter, wrist)).whileFalse(new DischargeShooter(shooter, wrist)); // shoot at speaker based on pose, so it's inaccurate
+    
 
 
     //driverXbox.rightBumper().whileTrue(new RunAimAtTarget(noteCamera, drivebase, intake, shooter)); TODO commented out while waiting for updates
