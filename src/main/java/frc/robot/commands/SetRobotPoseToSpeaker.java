@@ -1,9 +1,13 @@
 package frc.robot.commands;
 
 
+import java.util.Optional;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.lib.field.FieldInfo;
@@ -21,6 +25,8 @@ public class SetRobotPoseToSpeaker extends Command {
     this.drive = drive;
     this.xboxcontroller = xboxController;
     addRequirements(this.drive);
+  
+
 }
 
   // Called when the command is initially scheduled.
@@ -32,7 +38,11 @@ public class SetRobotPoseToSpeaker extends Command {
   public void execute() {
     drive.resetOdometry(FieldInfo.CRESCENDO_2024.flipPoseForAlliance(new Pose2d(1.2446, 5.512, new Rotation2d(Math.PI))));
 
-    //drive.setGyro(drive.getPose().getRotation().getRadians()+Math.PI);
+    // Optional<Alliance> ally = DriverStation.getAlliance();
+    // if (ally.get() == Alliance.Red) {
+    //   drive.setGyro(drive.getPose().getRotation().getRadians()+Math.PI);
+    // }
+
   }
 
   // Called once the command ends or is interrupted.
