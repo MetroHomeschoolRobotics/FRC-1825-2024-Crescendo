@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -30,6 +31,7 @@ import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
 import frc.robot.commands.RunWrist;
 import frc.robot.commands.ShootToSpeaker;
+import frc.robot.commands.resetGyro;
 import frc.robot.commands.auto.AutoIntake;
 import frc.robot.commands.auto.IntakeBackwards;
 import frc.robot.commands.auto.LowerElevator;
@@ -125,8 +127,8 @@ public class RobotContainer {
   private void configureBindings() {
     // Bind all your commands to controller conditions
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
-    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+    driverXbox.a().onTrue(new resetGyro(drivebase));
+    //driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox));
     //driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter));
    // driverXbox.b().whileTrue(drivebase.driveToPose(new Pose2d(2.90, 5.54, null)));
