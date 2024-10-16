@@ -2,11 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.swervedrive.auto;
+package frc.robot.commands.auto;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 
@@ -45,7 +46,7 @@ public class ShootToAngle extends Command {
       double setpoint = anglePID.calculate(wrist.getAbsoluteAngle(), MathUtil.clamp(angle, -60, 60));
       
       wrist.setSpeed(setpoint, 100);
-      shooter.setSpeed(1);
+      shooter.setSpeed(Constants.maxShooterSpeed);
       // shooter.setSpeed(0.1);
 
       if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 && anglePID.atSetpoint() || timer >= 2) {

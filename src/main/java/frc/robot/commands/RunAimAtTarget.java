@@ -91,8 +91,8 @@ public class RunAimAtTarget extends Command {
     //   swerveSubsystem.drive(new ChassisSpeeds(1, 0, 0));
     // }
 
-    SmartDashboard.putNumber("Angle to Note", yaw);
-    SmartDashboard.putBoolean("At setpoint", turnPid.atSetpoint());
+    //SmartDashboard.putNumber("Angle to Note", yaw);
+    //SmartDashboard.putBoolean("At setpoint", turnPid.atSetpoint());
 
   }
   // Called once the command ends or is interrupted.

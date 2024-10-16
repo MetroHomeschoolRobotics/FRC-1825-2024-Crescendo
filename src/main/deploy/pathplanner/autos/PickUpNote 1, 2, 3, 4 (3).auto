@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6206848777333918,
-      "y": 4.468469300574965
+      "x": 1.3304325739086262,
+      "y": 5.529469580678291
     },
-    "rotation": -60.01836063115069
+    "rotation": -179.48022695318198
   },
   "command": {
     "type": "sequential",
@@ -25,44 +25,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "Grab Note 3 (3)"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakeNote2"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootToSpeaker"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "PickUpNote 2"
                 }
               },
               {

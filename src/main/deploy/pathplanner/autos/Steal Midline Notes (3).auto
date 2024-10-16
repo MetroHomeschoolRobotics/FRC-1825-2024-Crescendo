@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7420153420490998,
-      "y": 4.431021860015951
+      "x": 0.7435336964604535,
+      "y": 4.441751057415159
     },
-    "rotation": -59.74356283647076
+    "rotation": 122.01532674728558
   },
   "command": {
     "type": "sequential",
@@ -18,13 +18,19 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Race to Note 8"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Grab Note 3 (3)"
+                  "pathName": "Steal Note 8"
                 }
               },
               {
@@ -39,13 +45,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Strafe to 2"
+            "pathName": "Lob Note 8"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ShootToSpeaker"
+            "name": "LobNote"
           }
         },
         {
@@ -55,32 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Eat Note 2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeNote2"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootToSpeaker"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Strafe to 1"
+                  "pathName": "Steal Note 7"
                 }
               },
               {
@@ -95,13 +76,44 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Aim at Speaker from 1"
+            "pathName": "Lob Note 7"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ShootToSpeaker"
+            "name": "LobNote"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Steal Note 6"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Lob Note 6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LobNote"
           }
         }
       ]

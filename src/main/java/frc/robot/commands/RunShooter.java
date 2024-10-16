@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 
@@ -33,9 +34,9 @@ public class RunShooter extends Command {
   @Override
   public void execute() {
     if(shooter.noteInShooter()) {
-      shooter.setSpeed(1);
+      shooter.setSpeed(Constants.maxShooterSpeed);
 
-      if (shooter.getSpeedShooter1() >= 5000 && shooter.getSpeedShooter2() >= 5000 || timer >= 2) {
+      if (shooter.getSpeedShooter1() >= 2000 /*&& shooter.getSpeedShooter2() >= 5000*/ || timer >= 1.5) {
         shooter.setIndexerSpeed(0.3);
       }
     }

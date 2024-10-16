@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 
@@ -13,11 +15,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.aim.AimCalculator;
 import frc.robot.subsystems.aim.TableAimCalculator;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.tagtracker.TagTrackerInput;
 import frc.robot.lib.field.FieldInfo;
 
 public class Shooter extends SubsystemBase {
@@ -31,7 +35,8 @@ public class Shooter extends SubsystemBase {
   private AimCalculator aimCalculator;
   private final AimCalculator tableAimCalculator;
   private double SpeakerNonEstimatedDistance;
-
+  private double wristTrim = 0.0;
+  private double subwooferOffset = 1.245;
   /** Creates a new Shooter. */
   public Shooter(SwerveSubsystem _drivetrain) {
     indexerMotor.setInverted(true);
@@ -50,16 +55,29 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Note In Shooter", !beamBrake.get());
-    double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getDrive().swerveDrivePoseEstimator.getEstimatedPosition().getTranslation());
+    //double SpeakerDistance = getSpeakerPosition().getDistance(drivetrain.getDrive().swerveDrivePoseEstimator.getEstimatedPosition().getTranslation());
+    double SpeakerDistance = getSpeakerPosition().getDistance(getEstimatePose().getTranslation());
     AimCalculator.Aim aim = aimCalculator.calculateAim(SpeakerDistance);
-    // SmartDashboard.putNumber("Distance to Speaker April Tag", SpeakerDistance);
+    //SmartDashboard.putNumber("Distance April Tag", SpeakerDistance);
     SpeakerNonEstimatedDistance = getSpeakerPosition().getDistance(drivetrain.getPose().getTranslation());
-    // SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
+    SmartDashboard.putNumber("Distance to Speaker", SpeakerNonEstimatedDistance);
+        SmartDashboard.putNumber("Distance to speaker in feet", ((SpeakerNonEstimatedDistance-subwooferOffset)*3.28));
     // SmartDashboard.putNumber("Speaker angle", getAngleToSpeaker());
     targetAim = aim;
     // This method will be called once per scheduler run
   }
-
+  private Pose2d getEstimatePose(){
+    Pose2d lastPose = new Pose2d();
+    double lastTimestamp = 0.0;
+    List<TagTrackerInput.VisionUpdate> visionData = drivetrain.getTagTracker().getNewUpdates();
+    for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
+      if (visionUpdate.timestamp > lastTimestamp) {
+        lastTimestamp = visionUpdate.timestamp;
+        lastPose = visionUpdate.estPose;
+      }
+     }
+     return lastPose;
+  }
   public void setSpeed(double speed) {
     shooterMotor1.set(speed);
     shooterMotor2.set(speed);
@@ -86,10 +104,23 @@ public class Shooter extends SubsystemBase {
   public AimCalculator.Aim getTargetAim() {
     return targetAim;
   }
+
+  public Command incrementTrimCommand() {
+    return this.runOnce(() -> wristTrim = wristTrim + 0.5);
+  }
+public Command decrementTrimCommand() {
+    return this.runOnce(() -> wristTrim = wristTrim - 0.5);
+  }
+
+
+
   public double getSpeakerDistance() {
-    return SpeakerNonEstimatedDistance;
+    return ((SpeakerNonEstimatedDistance-subwooferOffset)*3.28);
+    //removes the length of the subwoofer and converts to feet
   }
   public double getAngleToSpeaker(){
-    return -2.5954*Math.pow(getSpeakerDistance(), 3) + 27.224*Math.pow(getSpeakerDistance(), 2) - 97.353*getSpeakerDistance() + 147.07+1.5;
+
+    double angle = -0.0206*Math.pow(getSpeakerDistance(), 3) + 0.6783*Math.pow(getSpeakerDistance(), 2) - 8.0431*(getSpeakerDistance()) + 60.125;
+    return Math.max(angle + wristTrim, 25);
   }
 }

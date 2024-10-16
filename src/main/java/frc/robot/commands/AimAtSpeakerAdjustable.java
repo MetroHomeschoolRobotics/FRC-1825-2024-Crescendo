@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 
@@ -26,8 +27,8 @@ public class AimAtSpeakerAdjustable extends Command {
 
     wrist = _wrist;
     shooter = _shooter;
-    wristAngle = SmartDashboard.getNumber("SetWriteAngle", 0);
-    shooterSpeed = SmartDashboard.getNumber("SetShooterSpeed", 2000);
+    //wristAngle = SmartDashboard.getNumber("SetWriteAngle", 0);
+    // shooterSpeed = SmartDashboard.getNumber("SetShooterSpeed", 2000);
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -47,7 +48,7 @@ public class AimAtSpeakerAdjustable extends Command {
     if (shooter.getSpeedShooter1() >= shooterSpeed && shooter.getSpeedShooter2() >= shooterSpeed) {
       shooter.setIndexerSpeed(0.3);
     }
-    shooter.setSpeed(1);
+    shooter.setSpeed(Constants.maxShooterSpeed);
 
     wrist.setSpeed(speed, 100);
   }

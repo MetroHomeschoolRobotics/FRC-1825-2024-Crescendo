@@ -48,7 +48,7 @@ public class LobShot extends Command {
       shooter.setSpeed(0.7);
       // shooter.setSpeed(0.1);
 
-      if (shooter.getSpeedShooter1() >= 1000 && shooter.getSpeedShooter2() >= 1000 && anglePID.atSetpoint() || timer >= 2) {
+      if ((shooter.getSpeedShooter1() >= 750 /*&& shooter.getSpeedShooter2() >= 1000 */&& anglePID.atSetpoint() )|| timer >= 0.5) {
       // if (shooter.getSpeedShooter1() >= 200 && shooter.getSpeedShooter2() >= 200 && anglePID.atSetpoint() || timer >= 2) {
         shooter.setIndexerSpeed(0.3);
       }

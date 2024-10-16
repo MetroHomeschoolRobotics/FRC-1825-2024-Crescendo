@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.305747338767405,
-        "y": 0.7183134366268737
+        "x": 8.94579792737403,
+        "y": 0.7489697984762701
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.34127918760888,
-        "y": 1.3026557164225447
+        "x": 5.981329776215505,
+        "y": 1.3333120782719412
       },
       "isLocked": false,
       "linkedName": "Note8 1"
@@ -51,13 +51,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -40.15599962491938,
+    "rotation": 139.80843744514843,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 178.83086067209257,
     "velocity": 0
   },
   "useDefaultConstraints": false

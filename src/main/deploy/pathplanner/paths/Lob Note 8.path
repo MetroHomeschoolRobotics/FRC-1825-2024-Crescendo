@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.279245949796248,
+        "y": 0.7695773652416873
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.290554494152468,
+        "y": 0.7283630219434352
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.063356561495732,
+        "y": 1.668518293558327
+      },
+      "prevControl": {
+        "x": 7.070170401210368,
+        "y": 1.3853519011385853
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Lob Note 6-7"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 2.5,
+    "maxAngularVelocity": 500.0,
+    "maxAngularAcceleration": 500.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 153.9156149946089,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": -179.73926922020743,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

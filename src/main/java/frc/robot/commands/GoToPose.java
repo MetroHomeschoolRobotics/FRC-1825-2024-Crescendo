@@ -2,20 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.swervedrive.auto;
+package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.AngleCalculator;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
-public class LowerElevator extends Command {
+public class GoToPose extends Command {
 
-  private Elevator elevator;
+  private AngleCalculator angleCalc;
+  private SwerveSubsystem swerveSubsystem;
 
-  /** Creates a new LowerElevator. */
-  public LowerElevator(Elevator _elevator) {
-    addRequirements(_elevator);
-    elevator = _elevator;
+  /** Creates a new GoToPose. */
+  public GoToPose() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -25,9 +24,7 @@ public class LowerElevator extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    elevator.setSpeed(1,100);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -36,6 +33,6 @@ public class LowerElevator extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return elevator.isLowest();
+    return false;
   }
 }
