@@ -192,7 +192,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShootToAngle2", new ShootToAngle(shooter, wrist, 21)); // new WaitCommand(0.8));
     NamedCommands.registerCommand("ShootToAngle4", new ShootToAngle(shooter, wrist, 25));
     NamedCommands.registerCommand("TurnToSpeaker", new GoToSpeaker(drivebase, shooter));
-    NamedCommands.registerCommand("LobNote", new LobShot(shooter, wrist, 33.0));
+    NamedCommands.registerCommand("LobNote", new LobShot(shooter, wrist, 33.0).andThen(new SetWristToAngle(wrist, 57)));
 
     // Sets the default option on the auto chooser to No Auto
     _autoChooser.setDefaultOption("No Auto", new WaitCommand(10));

@@ -9,11 +9,13 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Intake;
 
 public class LobShot extends Command {
 
   private Shooter shooter;
   private Wrist wrist;
+  private Shooter indexer;
 
   private double timer;
   private double angle;
@@ -72,6 +74,7 @@ public class LobShot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return anglePID2.atSetpoint();
+    // anglePID2.atSetpoint();
+    return !shooter.noteInShooter();
   }
 }

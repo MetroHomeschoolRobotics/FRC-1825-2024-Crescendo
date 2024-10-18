@@ -52,7 +52,9 @@ public class AutoIntake extends Command {
 
       }
 
-      timer+=0.04;    
+      timer+=0.02;
+      // Made the timer increment by 0.02 since that's what the loop time is supposed to be
+      // JB. 10/17/2024
   }
   // Called once the command ends or is interrupted.
   @Override
@@ -64,6 +66,6 @@ public class AutoIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      return indexer.noteInShooter() || timer >= 6;
+      return indexer.noteInShooter() || timer >= 4;
   }
 }
