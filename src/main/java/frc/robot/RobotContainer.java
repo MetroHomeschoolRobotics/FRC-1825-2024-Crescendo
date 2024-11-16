@@ -42,6 +42,8 @@ import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
+import org.photonvision.PhotonCamera;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
 /**
@@ -60,8 +62,10 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Elevator elevator = new Elevator();
   private final Wrist wrist = new Wrist();
-  // private final PhotonCamera camera = new PhotonCamera("OV5647");
   private final Shooter shooter = new Shooter(drivebase);
+
+  // Define the camera
+  PhotonCamera camera = new PhotonCamera("Arducam_OV9281_USB_Camera");
 
   // Define the controllers
   // Replace with CommandPS4Controller or CommandJoystick if needed

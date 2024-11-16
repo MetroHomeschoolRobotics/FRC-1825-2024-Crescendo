@@ -12,6 +12,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -71,6 +72,9 @@ public class SwerveSubsystem extends SubsystemBase
 
   //private SwerveModulePosition[] prevPositions;
   //private Rotation2d prevGyroAngle;
+ 
+ // private final DifferentialDrivePoseEstimator m_poseEstimator = new DifferentialDrivePoseEstimator(swerveDrive.getKinematics(), getHeading(), timer, maximumSpeed, getPose());
+ // TODO figure this out - Joseph 11/15/2024
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
    *
@@ -111,7 +115,7 @@ public class SwerveSubsystem extends SubsystemBase
     tagTracker = new TagTrackerInput(
                 FieldInfo.CRESCENDO_2024,
                 new TagTrackerInput.CameraInfo( // 16 ft + 1
-                        "ov9281",
+                        "Arducam_OV9281_USB_Camera",
                         new Pose3d(new Translation3d(0, Units.inchesToMeters(10.21875), 0), new Rotation3d())));
     setupPathPlanner();
   }
@@ -376,20 +380,21 @@ int lastNumberOfTargets;
   //   prevPositions = positions;
   //   prevGyroAngle = gyroAngle;
 
-    // List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
-    // //System.out.println("Got " + visionData.size() + " tags");
-    // // // //Rotation2d rotate = new Rotation2d(Math.PI);
-    // for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
-    //   //System.out.print(visionUpdate.estPose);
-    //   // take out the rotation aspect of the vision tracking TODO Check if this is correct / test with an actual battery
-    //   //Pose2d poseUpdated = new Pose2d(visionUpdate.estPose.getTranslation(), getHeading());
-    //   //taking this out to try using the regular addvisionmeausurment function - J.B.
+     List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
+     //System.out.println("Got " + visionData.size() + " tags");
+     // // //Rotation2d rotate = new Rotation2d(Math.PI);
+     for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
+       //System.out.print(visionUpdate.estPose);
+       // take out the rotation aspect of the vision tracking TODO Check if this is correct / test with an actual battery
+       //Pose2d poseUpdated = new Pose2d(visionUpdate.estPose.getTranslation(), getHeading());
+       //taking this out to try using the regular addvisionmeausurment function - J.B.
       
-    //   swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
-    //   for(int i=0; i<3; i++) {
-    //   SmartDashboard.putNumber("stddev" + i, visionUpdate.stdDevs.get(i));
-    //   }
-  // }
+       swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
+       for(int i=0; i<3; i++) {
+       SmartDashboard.putNumber("stddev" + i, visionUpdate.stdDevs.get(i));
+       //Uncommenting this and testing it again with the new pi 5 11/15/2024
+       }
+   }
     
     swerveDrive.updateOdometry();
 
