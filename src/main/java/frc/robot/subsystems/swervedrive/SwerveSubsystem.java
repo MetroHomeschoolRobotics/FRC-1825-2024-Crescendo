@@ -401,12 +401,20 @@ int lastNumberOfTargets;
     
     
     // TODO add pose estimation
-    // Optional<EstimatedRobotPose> estematedPose = tagTracking.getEstimatedPose3d(lastVisionPose);
-    // Pose2d currentVisionPose = estematedPose.get().estimatedPose.toPose2d();
-
-    // swerveDrive.addVisionMeasurement(currentVisionPose, estematedPose.get().timestampSeconds);
     
-    // lastVisionPose = currentVisionPose;
+    Optional<EstimatedRobotPose> poseEstimator = tagTracking.getEstimatedPose3d(lastVisionPose);
+
+    if(poseEstimator.isPresent() && poseEstimator != null && tagTracking.hasTargets()) {
+
+      Pose2d currentVisionPose = poseEstimator.get().estimatedPose.toPose2d();
+      double timestampSec = poseEstimator.get().timestampSeconds;
+
+      System.out.println("3rd Print: " + currentVisionPose);
+
+      swerveDrive.addVisionMeasurement(currentVisionPose, timestampSec);
+      
+      lastVisionPose = currentVisionPose;
+    }
     
     
     swerveDrive.updateOdometry();

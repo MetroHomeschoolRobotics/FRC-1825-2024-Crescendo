@@ -41,9 +41,6 @@ public class OrangePiTagTracking extends SubsystemBase {
     
     SmartDashboard.putBoolean("Sees an apriltag", orangePi.getLatestResult().hasTargets());
 
-    // photonPoseEstimator.
-    
-
     // This method will be called once per scheduler run
   }
 
@@ -75,12 +72,27 @@ public double skew() {
   return getBestTarget().getSkew();
 }
 
+
+
+
+
+
+
 public Optional<EstimatedRobotPose> getEstimatedPose3d(Pose2d previousPose) {
 
   photonPoseEstimator.setReferencePose(previousPose);
 
+  //System.out.println("1st Print: " + photonPoseEstimator.update().get().estimatedPose);
+
   return photonPoseEstimator.update();
 }
+
+
+
+
+
+
+
 
 public Transform3d getCameraToTarget() {
   return getBestTarget().getBestCameraToTarget();
