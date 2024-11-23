@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonUtils;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -30,7 +31,7 @@ public class OrangePiTagTracking extends SubsystemBase {
   private AprilTagFieldLayout tagLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
   PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(
-    tagLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, orangePi, Constants.tagCameraPosition);
+    tagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, orangePi, Constants.tagCameraPosition);
 
   /** Creates a new OrangePiTagTracking. */
   public OrangePiTagTracking() {}
@@ -40,7 +41,9 @@ public class OrangePiTagTracking extends SubsystemBase {
   public void periodic() {
     
     SmartDashboard.putBoolean("Sees an apriltag", orangePi.getLatestResult().hasTargets());
-
+    // System.out.println(getCameraToTarget());
+    // System.out.println(getTagID());
+    // System.out.println(getYaw()); 
     // This method will be called once per scheduler run
   }
 
@@ -80,9 +83,7 @@ public double skew() {
 
 public Optional<EstimatedRobotPose> getEstimatedPose3d(Pose2d previousPose) {
 
-  photonPoseEstimator.setReferencePose(previousPose);
-
-  //System.out.println("1st Print: " + photonPoseEstimator.update().get().estimatedPose);
+  photonPoseEstimator.setLastPose(previousPose);
 
   return photonPoseEstimator.update();
 }
@@ -95,8 +96,10 @@ public Optional<EstimatedRobotPose> getEstimatedPose3d(Pose2d previousPose) {
 
 
 public Transform3d getCameraToTarget() {
+
   return getBestTarget().getBestCameraToTarget();
 }
+
 
 public double getLinearDistanceFromTarget() {
   // this uses the distance formula to get the linear distance from (x,y) difference

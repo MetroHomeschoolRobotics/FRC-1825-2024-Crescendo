@@ -65,7 +65,7 @@ public class SwerveSubsystem extends SubsystemBase
   private final SwerveDrive swerveDrive;
   private final OrangePiTagTracking tagTracking = new OrangePiTagTracking();
   private double timer = 0;
-  private Pose2d lastVisionPose = new Pose2d();
+  private Pose2d lastPose = new Pose2d();
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
@@ -365,55 +365,21 @@ public class SwerveSubsystem extends SubsystemBase
 int lastNumberOfTargets;
   @Override
   public void periodic()
- {
-  //   // Update estimator
-  //   // Do refresh here, so we get the most up-to-date data
-  //   SwerveModulePosition[] positions = swerveDrive.getModulePositions();
-  //   Rotation2d gyroAngle = swerveDrive.getGyro().getRotation3d().toRotation2d();
-  //   if (prevPositions != null) {
-  //     Twist2d twist = swerveDrive.kinematics.toTwist2d(positions);
-  //     // Logger.recordOutput("Drive/Estimated Twist", twist);
-
-  //     // We trust the gyro more than the kinematics estimate
-  //     twist.dtheta = gyroAngle.getRadians() - prevGyroAngle.getRadians();
-
-  //     estimator.update(twist, swerveDrive);
-  //   }
-  //   prevPositions = positions;
-  //   prevGyroAngle = gyroAngle;
-
-    // List<TagTrackerInput.VisionUpdate> visionData = tagTracker.getNewUpdates();
-    // //System.out.println("Got " + visionData.size() + " tags");
-    // // // //Rotation2d rotate = new Rotation2d(Math.PI);
-    // for (TagTrackerInput.VisionUpdate visionUpdate : visionData) {
-    //   //System.out.print(visionUpdate.estPose);
-    //   // take out the rotation aspect of the vision tracking TODO Check if this is correct / test with an actual battery
-    //   //Pose2d poseUpdated = new Pose2d(visionUpdate.estPose.getTranslation(), getHeading());
-    //   //taking this out to try using the regular addvisionmeausurment function - J.B.
-      
-    //   swerveDrive.addVisionMeasurement(visionUpdate.estPose, visionUpdate.timestamp, visionUpdate.stdDevs);
-    //   for(int i=0; i<3; i++) {
-    //   SmartDashboard.putNumber("stddev" + i, visionUpdate.stdDevs.get(i));
-    //   }
-    // }
-    
-    
-    
-    
+ {  
     // TODO add pose estimation
     
-    Optional<EstimatedRobotPose> poseEstimator = tagTracking.getEstimatedPose3d(lastVisionPose);
+    Optional<EstimatedRobotPose> poseEstimator = tagTracking.getEstimatedPose3d(lastPose);
 
     if(poseEstimator.isPresent() && poseEstimator != null && tagTracking.hasTargets()) {
 
       Pose2d currentVisionPose = poseEstimator.get().estimatedPose.toPose2d();
       double timestampSec = poseEstimator.get().timestampSeconds;
 
-      System.out.println("3rd Print: " + currentVisionPose);
+      // System.out.println("VisionPose: " + poseEstimator.get().);
 
       swerveDrive.addVisionMeasurement(currentVisionPose, timestampSec);
       
-      lastVisionPose = currentVisionPose;
+      lastPose = getPose();
     }
     
     
