@@ -32,7 +32,7 @@ public final class Constants {
   public static final double driveGearRatioL3 = 6.12;
 
   // must be in meters TODO find the position of the camera (yaw, y,  is correct)
-  public static final Transform3d tagCameraPosition = new Transform3d(0.323, 0, 0.579, new Rotation3d(0, 28.5, 0)); 
+  public static final Transform3d tagCameraPosition = new Transform3d(0.323, 0, 0.579, new Rotation3d(0, Math.toRadians(-28.5), 0)); 
 
   public static final class AutonConstants
   {
