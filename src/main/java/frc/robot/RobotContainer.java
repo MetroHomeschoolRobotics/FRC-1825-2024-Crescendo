@@ -30,6 +30,7 @@ import frc.robot.commands.RunShooter;
 import frc.robot.commands.RunTagTracking;
 import frc.robot.commands.RunWrist;
 import frc.robot.commands.ShootToSpeaker;
+import frc.robot.commands.goToTarget;
 import frc.robot.commands.auto.AutoIntake;
 import frc.robot.commands.auto.IntakeBackwards;
 import frc.robot.commands.auto.LowerElevator;
@@ -132,7 +133,8 @@ public class RobotContainer {
     // driver commands
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));// ☺
     driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox)); // ☺
-    
+    driverXbox.b().whileTrue(new goToTarget(drivebase, tagTracking)); // 
+
     // TODO this is unlikely to work. it was supposed to turn to the speaker based on pos
     // driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter)); 
     // driverXbox.b().whileTrue(drivebase.driveToPose(new Pose2d(2.90, 5.54, null)));
