@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.File;
 import java.io.IOException;
+
+import com.pathplanner.lib.commands.PathfindingCommand;
+
 import swervelib.parser.SwerveParser;
 
 /**
@@ -51,6 +54,8 @@ public class Robot extends TimedRobot
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
+
+    PathfindingCommand.warmupCommand().schedule();
   }
 
   /**

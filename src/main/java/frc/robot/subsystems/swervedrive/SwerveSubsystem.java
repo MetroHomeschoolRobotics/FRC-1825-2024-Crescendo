@@ -69,7 +69,7 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
-  public double maximumSpeed = Units.feetToMeters(16.6);
+  public double maximumSpeed = Constants.maxSpeedMPerSec;
 
   private TagTrackerInput tagTracker;
   //private SwerveKinematics kinematics;
@@ -204,12 +204,12 @@ public class SwerveSubsystem extends SubsystemBase
    * @param pose Target {@link Pose2d} to go to.
    * @return PathFinding command
    */
-  public Command driveToPose(Pose2d pose)
+  public Command driveToPose(Pose2d pose, double maxSpeedMPS, double maxAccelMPSsq)
   {
 // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-        swerveDrive.getMaximumVelocity(), 4.0,
-        swerveDrive.getMaximumAngularVelocity(), Units.degreesToRadians(720));
+        maxSpeedMPS, maxAccelMPSsq,
+        swerveDrive.getMaximumAngularVelocity(), Units.degreesToRadians(360));
 
 // Since AutoBuilder is configured, we can use it to build pathfinding commands
     return AutoBuilder.pathfindToPose(
@@ -370,7 +370,7 @@ int lastNumberOfTargets;
     
     Optional<EstimatedRobotPose> poseEstimator = tagTracking.getEstimatedPose3d(lastPose);
 
-    if(poseEstimator.isPresent() && poseEstimator != null && tagTracking.hasTargets()) {
+    if(poseEstimator.isPresent() && poseEstimator != null && tagTracking.hasTargets() && tagTracking.getPoseAmbiguity() < 0.2) {
 
       Pose2d currentVisionPose = poseEstimator.get().estimatedPose.toPose2d();
       double timestampSec = poseEstimator.get().timestampSeconds;

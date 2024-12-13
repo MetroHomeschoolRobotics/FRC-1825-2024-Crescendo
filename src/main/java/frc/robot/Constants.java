@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.pathplanner.lib.util.PIDConstants;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -31,6 +33,25 @@ public final class Constants {
   public static final double wheelDiameterInches = 3.9365;
   public static final double driveGearRatioL3 = 6.12;
 
+  public static final double maxSpeedMPerSec = 4.88; // TODO find the acutal speed
+  public static final double maxAccelMPerSec = 4.00; // TODO find the acutal acceleration
+
+
+
+
+  public static final Pose2d redAmpPose = new Pose2d(14.71, 7.66, new Rotation2d(Math.PI/2));
+  public static final Pose2d redLoadingRightPose = new Pose2d(0.65, 1.28, new Rotation2d(Units.degreesToRadians(-119.91)));
+  public static final Pose2d redLoadingLeftPose = new Pose2d(1.54, 0.76, new Rotation2d(Units.degreesToRadians(119.91)));
+
+  public static final Pose2d blueAmpPose = new Pose2d(1.78, 7.66, new Rotation2d(Math.PI/2));
+  public static final Pose2d blueLoadingRightPose = new Pose2d(14.92, 0.72, new Rotation2d(Units.degreesToRadians(-59.26)));
+  public static final Pose2d blueLoadingLeftPose = new Pose2d(15.86, 1.25, new Rotation2d(Units.degreesToRadians(-59.26)));
+
+
+
+
+
+  
   // must be in meters TODO find the position of the camera (yaw, y,  is correct)
   public static final Transform3d tagCameraPosition = new Transform3d(0.323, 0, 0.579, new Rotation3d(0, Math.toRadians(-28.5), 0)); 
 

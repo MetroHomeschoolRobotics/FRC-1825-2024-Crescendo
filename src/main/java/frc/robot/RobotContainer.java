@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,6 +20,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtAmp;
 import frc.robot.commands.AimAtSpeakerAdjustable;
 import frc.robot.commands.DischargeShooter;
+import frc.robot.commands.GoToPose;
 import frc.robot.commands.GoToSpeaker;
 import frc.robot.commands.LobShot;
 import frc.robot.commands.PrechargeShooter;
@@ -42,6 +44,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.OrangePiTagTracking;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.TrajectorySubsystem;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -63,6 +66,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/neo"));
+  private final TrajectorySubsystem trajectorySubsystem = new TrajectorySubsystem();
   private final Intake intake = new Intake();
   private final Elevator elevator = new Elevator();
   private final Wrist wrist = new Wrist();
@@ -133,7 +137,7 @@ public class RobotContainer {
     // driver commands
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));// ☺
     driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox)); // ☺
-    driverXbox.b().whileTrue(new goToTarget(drivebase, tagTracking)); // 
+    driverXbox.b().whileTrue(drivebase.driveToPose(new Pose2d(14.65, 7.00, new Rotation2d(Math.PI/2)), 2, 1));
 
     // TODO this is unlikely to work. it was supposed to turn to the speaker based on pos
     // driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter)); 

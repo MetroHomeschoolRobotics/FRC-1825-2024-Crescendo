@@ -75,6 +75,10 @@ public double skew() {
   return getBestTarget().getSkew();
 }
 
+public double getPoseAmbiguity() {
+  return getBestTarget().getPoseAmbiguity();
+}
+
 
 
 
