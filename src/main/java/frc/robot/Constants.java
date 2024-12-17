@@ -39,7 +39,7 @@ public final class Constants {
 
 
 
-  public static final Pose2d redAmpPose = new Pose2d(14.71, 7.66, new Rotation2d(Math.PI/2));
+  public static final Pose2d redAmpPose = new Pose2d(14.71, 7.62, new Rotation2d(Math.PI/2));
   public static final Pose2d redLoadingRightPose = new Pose2d(0.65, 1.28, new Rotation2d(Units.degreesToRadians(-119.91)));
   public static final Pose2d redLoadingLeftPose = new Pose2d(1.54, 0.76, new Rotation2d(Units.degreesToRadians(119.91)));
 

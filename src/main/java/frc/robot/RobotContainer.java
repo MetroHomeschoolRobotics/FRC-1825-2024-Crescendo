@@ -20,7 +20,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtAmp;
 import frc.robot.commands.AimAtSpeakerAdjustable;
 import frc.robot.commands.DischargeShooter;
-import frc.robot.commands.GoToPose;
+import frc.robot.commands.IsAtPose;
 import frc.robot.commands.GoToSpeaker;
 import frc.robot.commands.LobShot;
 import frc.robot.commands.PrechargeShooter;
@@ -130,14 +130,17 @@ public class RobotContainer {
   private void configureBindings() {
     // Bind all your commands to controller conditions
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
+    double wristSpeed = 0.8;
 
     //NOTICE ☺ means its tested and works (9/27/24)
 
     // driver commands
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));// ☺
     driverXbox.povUp().whileTrue(new SetRobotPoseToSpeaker(drivebase, driverXbox)); // ☺
-    driverXbox.b().whileTrue(drivebase.driveToPose(new Pose2d(14.65, 7.00, new Rotation2d(Math.PI/2)), 2, 1));
+    driverXbox.b().whileTrue(drivebase.driveToPose(Constants.redAmpPose, 3, 2, 360, 180).deadlineWith(new IsAtPose(drivebase.atPose(Constants.redAmpPose)))
+                            .andThen(new AimAtAmp(wrist, shooter, elevator)
+                            .andThen(new SetWristToAngle(wrist, 55, wristSpeed)
+                            .alongWith(new LowerElevator(elevator)))));
 
     // TODO this is unlikely to work. it was supposed to turn to the speaker based on pos
     // driverXbox.rightTrigger().whileTrue(new GoToSpeaker(drivebase, shooter)); 
@@ -150,7 +153,7 @@ public class RobotContainer {
         .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming)); // ☺
 
     m_manipulatorController.x().whileTrue(new RunShooter(shooter, wrist)); // 
-    double wristSpeed = 0.8;
+    
 
     // amp shot
     m_manipulatorController.a()
